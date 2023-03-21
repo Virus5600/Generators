@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Password Generator</title>
+
+		<!-- BOOTSTRAP 4 -->
+		<link rel="stylesheet" href="../assets/libs/bootstrap-4.6.2/css/bootstrap.min.css">
+
+		<!-- DARK -->
+		<link rel="stylesheet" href="../assets/libs/bootstrap-dark-4.0.0/dist/css/bootstrap-dark-prefers-light.min.css">
+
+		<!-- CUSTOM CLASSES -->
+		<link rel="stylesheet" href="styles/index.css">
+	</head>
+
+	<body class="min-vh-100 d-flex flex-column">
+		<form action="javascript:validate();" class="m-auto card col-10 col-md-6 col-lg-3 px-0 needs-validation" novalidate>
+			<!-- HEADER -->
+			<h4 class="card-header">Password Generator</h4>
+
+			<!-- CARD BODY -->
+			<div class="card-body">
+				<!-- Use Range -->
+				<div class="form-group d-flex">
+					<div class="custom-control custom-switch custom-switch-md mx-auto">
+						<input type="checkbox" class="custom-control-input" id="useRange" name="use_range">
+						<label for="useRange" class="custom-control-label pl-1">Use Min-Max</label>
+					</div>
+				</div>
+
+				<!-- Length -->
+				<div class="form-group">
+					<div class="row mb-2">
+						<div class="col-12 col-md-6">
+							<label for="range_min" class="form-label">Min Range</label>
+							<input type="number" id="range_min" name="range_min" class="form-control" min="0" max="8" value="5" disabled required>
+						</div>
+						
+						<div class="col-12 col-md-6">
+							<label for="range_max" class="form-label">Max Range</label>
+							<input type="number" id="range_max" name="range_max" class="form-control" min="5" max="255" value="8" disabled required>
+						</div>
+					</div>
+					
+					<div class="row my-2">
+						<div class="col">
+							<label for="length" class="form-label">Password Length</label>
+							<input type="number" id="length" name="length" class="form-control" min="0" max="5" value="8" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col">
+							<span class="feedback"></span>
+						</div>
+					</div>
+				</div>
+
+				<!-- ACCEPTED VALUES -->
+				<div class="form-group">
+					<label for="chars" class="form-label">Characters Accepted</label>
+					
+					<div class="row">
+						<div class="col">
+							<div class="custom-control custom-switch custom-switch-md mx-auto my-2">
+								<input type="checkbox" class="custom-control-input" id="alpha" name="chars[]" checked>
+								<label for="alpha" class="custom-control-label pl-1">Alphabet</label>
+							</div>
+
+							<div class="custom-control custom-switch custom-switch-md mx-auto my-2">
+								<input type="checkbox" class="custom-control-input" id="numeric" name="chars[]" checked>
+								<label for="numeric" class="custom-control-label pl-1">Numeric</label>
+							</div>
+
+							<div class="custom-control custom-switch custom-switch-md mx-auto my-2">
+								<input type="checkbox" class="custom-control-input" id="spec" name="chars[]" checked>
+								<label for="spec" class="custom-control-label pl-1">Special Characters</label>
+							</div>
+						</div>
+					</div>
+
+					<span class="feedback"></span>
+				</div>
+			</div>
+
+			<!-- FOOTER -->
+			<div class="card-footer d-flex">
+				<div class="btn-group mx-auto">
+					<button class="btn btn-primary" id="generate" type="submit">
+						Generate
+					</button>
+				</div>
+			</div>
+		</form>
+
+		<script type="text/javascript" src="../assets/libs/jquery-3.6.4/jquery-3.6.4.min.js"></script>
+		<script type="text/javascript" src="../assets/libs/bootstrap-4.6.2/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../assets/libs/bootstrap-dark-4.0.0/dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="scripts/index.js"></script>
+	</body>
+</html>
