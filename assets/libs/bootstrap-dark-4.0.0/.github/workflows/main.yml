@@ -1,0 +1,76 @@
+name: Build and deploy
+
+on:
+    push:
+        branches: [main, master]
+        paths:
+            - 'scss/**'
+            # - readme.md
+
+    pull_request:
+        branches: [main, master]
+        
+    workflow_dispatch:
+
+jobs:
+    build-and-test:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os:
+                    - ubuntu-latest
+                    # - macos-latest
+                    # - windows-latest
+                node_version:
+                    - 14
+                architecture:
+                    - x64
+        name: Node ${{ matrix.node_version }} - ${{ matrix.architecture }} on ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Setup node
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node_version }}
+                  architecture: ${{ matrix.architecture }}
+
+            - run: npm i
+            - run: npm run build
+            - run: npm test
+
+    deploy:
+        runs-on: ubuntu-latest
+        needs: build-and-test
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: 14
+                  registry-url: https://registry.npmjs.org/
+
+            - uses: dotnet/nbgv@master
+              id: nbgv
+              with:
+                  stamp: package.json
+                  setCommonVars: true
+                  setAllVars: true
+            - run: |
+                  echo 'NpmPackageVersion: ${{ steps.nbgv.outputs.NpmPackageVersion }}'
+
+            - run: npm install
+            - run: npm run build
+            - run: npm publish --access=public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: v${{ steps.nbgv.outputs.NpmPackageVersion }}
+                  release_name: v${{ steps.nbgv.outputs.NpmPackageVersion }} Release
+                  draft: false
+                  prerelease: ${{ github.event_name != 'push' }}

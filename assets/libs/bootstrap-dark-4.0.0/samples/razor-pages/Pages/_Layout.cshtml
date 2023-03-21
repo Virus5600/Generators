@@ -1,0 +1,167 @@
+@{
+    var title = ViewData["Title"] == null ? "Dark Bootstrap 4 theme" : $"{ViewData["Title"]} - Dark Bootstrap 4 theme";
+    var loadToggleCss = true;
+    var bodyCssClass = "";
+    if (loadToggleCss)
+    {
+        bodyCssClass = "bootstrap-dark";
+    }
+    var navBarCssClass = loadToggleCss ? "navbar-themed" : "navbar-dark bg-dark";
+
+    // This overrides the previous settings
+    var useCombined = true;
+    var usePrefered = true;
+    var defaultTheme = Context.Request.Query.ContainsKey("default-theme")
+    ? Context.Request.Query["default-theme"].FirstOrDefault() ?? "dark"
+    : "dark";
+    if (usePrefered)
+    {
+        loadToggleCss = false;
+        bodyCssClass = "";
+        navBarCssClass = "navbar-themed";
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Dark Bootstrap 4 theme</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="~/css/site.css">
+    @if (usePrefered)
+    {
+        if (defaultTheme == "dark")
+        {
+            if (useCombined)
+            {
+                <link rel="stylesheet" href="~/css/bootstrap-dark-prefers-light.css">
+            }
+            else
+            {
+                <link rel="stylesheet" href="~/css/bootstrap-dark.css">
+                <link rel="stylesheet" href="~/css/bootstrap-prefers-light.css">
+            }
+        }
+        else
+        {
+            if (useCombined)
+            {
+                <link rel="stylesheet" href="~/css/bootstrap-light-prefers-dark.css">
+            }
+            else
+            {
+                <link rel="stylesheet" href="~/css/bootstrap-light.css">
+                <link rel="stylesheet" href="~/css/bootstrap-prefers-dark.css">
+            }
+        }
+    }
+    else if (loadToggleCss)
+    {
+        <link rel="stylesheet" href="~/css/toggle-bootstrap.css">
+        <link rel="stylesheet" href="~/css/toggle-bootstrap-dark.css">
+        <link rel="stylesheet" href="~/css/toggle-bootstrap-print.css">
+    }
+    else
+    {
+        <link rel="stylesheet" href="~/css/bootstrap-dark.css">
+    }
+</head>
+
+<body class="@bodyCssClass">
+    <nav class="navbar navbar-expand-lg border-bottom @navBarCssClass" id="main-nav-bar">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" asp-page="index">Navbar</a>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+                <li class="nav-item active">
+                    <a class="nav-link" asp-page="index" asp-route-default-theme="@defaultTheme">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="typography" asp-route-default-theme="@defaultTheme">Typography</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="tables" asp-route-default-theme="@defaultTheme">Tables</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="cards" asp-route-default-theme="@defaultTheme">Cards</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="listgroup" asp-route-default-theme="@defaultTheme">List Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="jumbotron" asp-route-default-theme="@defaultTheme">Jumbotron</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="forms" asp-route-default-theme="@defaultTheme">Forms</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="toasts" asp-route-default-theme="@defaultTheme">Toasts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="code" asp-route-default-theme="@defaultTheme">Code</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="themed" asp-route-default-theme="@defaultTheme">Themed</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#!">Disabled</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="footer" asp-route-default-theme="@defaultTheme">Footer</a>
+                </li>
+            </ul>
+            @{
+                var darkLinkText = "Dark";
+                var darkLinkHref ="javascript:document.getElementsByTagName('body')[0].setAttribute('class', 'bootstrap-dark');";
+
+                var lightLinkText = "Light";
+                var lightLinkHref = "javascript:document.getElementsByTagName('body')[0].setAttribute('class', 'bootstrap');";
+                if (usePrefered)
+                {
+                    darkLinkText = "Default: dark (prefers: light)";
+                    lightLinkText = "Default: light (prefers: dark)";
+                    darkLinkHref = "?default-theme=dark";
+                    lightLinkHref = "?default-theme=light";
+                }
+            }
+            <ul class="navbar-nav mt-2 mt-md-0 my-2">
+                <li class="nav-item mx-2">
+                    <a class="nav-link"
+                        href="@darkLinkHref">@darkLinkText</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link"
+                        href="@lightLinkHref">@lightLinkText</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search">
+            </form>
+        </div>
+    </nav>
+
+    @RenderBody()
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+
+    @RenderSection("scripts", false)
+</body>
+
+</html>
