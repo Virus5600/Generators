@@ -1,3 +1,4 @@
+/* CUSTOM SWITCH */
 .custom-switch.custom-switch-xs .custom-control-label::after,
 .custom-switch.custom-switch-xs .custom-control-label::before {
 	transform: scale(75%);
@@ -21,4 +22,16 @@
 .custom-switch.custom-switch-xl .custom-control-label::after,
 .custom-switch.custom-switch-xl .custom-control-label::before {
 	transform: scale(175%);
+}
+
+/* PASSWORD CARD */
+.password-card {
+	opacity: 0;
+	transform: translate(-5%, 100%) scale(0, 0);
+	transition: 0.5s cubic-bezier(0.5, 0, 0.5, 1);
+}
+
+.password-card.show {
+	transform: translate(0%) scale(100%, 100%);
+	opacity: 1;
 }
