@@ -1,6 +1,10 @@
+// Utility
+import UniqueArray from "../../assets/js/unique-array/unique-array.mod.js";
+
+// Validator
 import Validator from "./Validation/Validator.js";
 
-const validation = {
+var validation = {
 	rules: {
 		"use_range": ["sometimes", "boolean"],
 		"range_min": ["sometimes", "numeric", "min:0", "max:$range_max"],
@@ -29,14 +33,18 @@ const validation = {
 		"chars": {
 			"required": `Character Accepted is required`,
 			"array": `Malformed data, please refresh the page`,
+			"min": `Please select at least 1 option`,
 		},
 		"chars.*": {
 			"boolean": `Malformed data, please refresh the page`,
 		}
 	}
-}
+};
 
 $(document).ready(function() {
+	// Initialize necessary utilities
+	UniqueArray();
+
 	// ENABLE/DISABLE RANGE OPTION
 	$(`#useRange`).on('change', (e) => {
 		let obj = $(e.currentTarget);
@@ -86,8 +94,24 @@ window.validate = function(form) {
 	let valids = $(`input:valid`).not(`:disabled, [disabled]`);
 	let invalids = $(`input:invalid`).not(`:disabled, [disabled]`);
 
+	// Set validation input
+	validation.values = form.serializeFormJSON();
+	console.table(validation.values);
+
+	// Update some rule values
+	let variableRule = ['range_min', 'range_max'];
+	for (let r of variableRule) {
+		validation.rules[r].find((v, k) => {
+			if (v.match(/\$\w+/g)) {
+				// console.log(v);
+				// console.log(validation.rules[r][k] = v.replace(/\$\w+/, validation.values.));
+				// console.log(v);
+			}
+		});
+	}
+
 	let validator = new Validator(
-		form.serializeArray(),
+		validation.values,
 		validation.rules,
 		validation.message
 	);
