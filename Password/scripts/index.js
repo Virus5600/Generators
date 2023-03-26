@@ -1,17 +1,17 @@
 // Utility
-import UniqueArray from "../../assets/js/unique-array/unique-array.mod.js";
+import UniqueArray from "../../assets/js/unique-array/unique-array.mod";
 
 // Validator
-import Validator from "./Validation/Validator.js";
+import Validator from "./Validation/Validator";
 
 var validation = {
 	rules: {
 		"use_range": ["sometimes", "boolean"],
 		"range_min": ["sometimes", "numeric", "min:0", "max:$range_max"],
 		"range_max": ["sometimes", "numeric", "min:$range_min", "max:255"],
-		"length": ["sometimes", "numeric", "between:0,255"],
+		"length": ["sometimes", "numeric", "between:0,5"],
 		"chars": ["required", "array", "min:1"],
-		"chars.*": ["sometimes", "boolean"]
+		"chars.*": ["sometimes", "in:alpha,numeric,spec"]
 	},
 	message: {
 		"use_range": {
@@ -19,16 +19,16 @@ var validation = {
 		},
 		"range_min": {
 			"numeric": `Minimum range should be a number`,
-			"min": `Minimum value should be :val`,
-			"max": `Maximum value should be :val`,
+			"min": `Minimum value should be :min`,
+			"max": `Maximum value should be :max`,
 		},
 		"range_max": {
-			"min": `Maximum value should be :val`,
-			"max": `Maximum value should be :val`,
+			"min": `Maximum value should be :min`,
+			"max": `Maximum value should be :max`,
 		},
 		"length": {
 			"length.numeric": `Length should be a number`,
-			"length.between": `Length should be a value between :val_min and :val_max`,
+			"length.between": `Length should be a value between :min and :max`,
 		},
 		"chars": {
 			"required": `Character Accepted is required`,
@@ -66,7 +66,7 @@ $(document).ready(function() {
 		let target = $(`#range_max`);
 		let newMin = obj.val();
 
-		newMin = newMin.match(/^\d+$/g).length > 0 ? parseInt(newMin) : parseInt(target.attr('min'));
+		newMin = newMin.match(/^-?\d+$/g).length > 0 ? parseInt(newMin) : parseInt(target.attr('min'));
 
 		target.attr('min', newMin);
 	}).trigger('change');
@@ -76,7 +76,7 @@ $(document).ready(function() {
 		let target = $(`#range_min`);
 		let newMax = obj.val();
 
-		newMax = newMax.match(/^\d+$/g).length > 0 ? parseInt(newMax) : parseInt(target.attr('max'));
+		newMax = newMax.match(/^-?\d+$/g).length > 0 ? parseInt(newMax) : parseInt(target.attr('max'));
 
 		target.attr('max', newMax);
 	}).trigger('change');
@@ -96,16 +96,18 @@ window.validate = function(form) {
 
 	// Set validation input
 	validation.values = form.serializeFormJSON();
-	console.table(validation.values);
 
 	// Update some rule values
 	let variableRule = ['range_min', 'range_max'];
 	for (let r of variableRule) {
 		validation.rules[r].find((v, k) => {
 			if (v.match(/\$\w+/g)) {
-				// console.log(v);
-				// console.log(validation.rules[r][k] = v.replace(/\$\w+/, validation.values.));
-				// console.log(v);
+				let targetKey = v.match(/(\$)(\w+)/)[2];
+
+				if (!Object.keys(validation.values).includes(targetKey))
+					return;
+
+				validation.rules[r][k] = v.replace(/(\$)(\w+)/, validation.values[targetKey]);
 			}
 		});
 	}
@@ -115,6 +117,23 @@ window.validate = function(form) {
 		validation.rules,
 		validation.message
 	);
+	debugger;
+
+	let invalidFields = validator.invalidFields();
+	let validFields = validator.validFields();
+
+	$.each(validator.fields(), (k, v) => {
+		$(`[data-validation]`).text("");
+	});
+
+	$.each(invalidFields, (k, v) => {
+		console.log(v);
+		$(`[data-validation]`).text(function() {
+			let obj = $(this);
+			if (obj.attr('data-validation').match(v))
+				obj.text(validator.first(v)).addClass("text-danger");
+		});
+	});
 
 	// Update their class
 	fields.removeClass("is-valid is-invalid");
