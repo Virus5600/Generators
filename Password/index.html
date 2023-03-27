@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Password Generator</title>
+		<title>String Generator</title>
 
 		<!-- BOOTSTRAP 4 -->
 		<link rel="stylesheet" href="../assets/libs/bootstrap-4.6.2/css/bootstrap.min.css">
@@ -23,12 +23,12 @@
 	</head>
 
 	<body class="min-vh-100 d-flex flex-column">
-		<form action="javascript:validate($(`#password_form`));" id="password_form" class="m-auto card col-10 col-md-6 col-lg-3 px-0 needs-validation" novalidate>
+		<form action="javascript:validate($(`#string_form`));" id="string_form" class="m-auto card col-10 col-md-6 col-lg-3 px-0 needs-validation" novalidate>
 			<!-- HEADER -->
-			<h4 class="card-header">Password Generator</h4>
+			<h4 class="card-header">String Generator</h4>
 
 			<!-- CARD BODY -->
-			<div class="card-body position-relative">
+			<div class="card-body position-relative d-flex flex-column">
 				<!-- Use Range -->
 				<div class="form-group d-flex">
 					<div class="custom-control custom-switch custom-switch-md mx-auto">
@@ -56,7 +56,7 @@
 					<!-- FIXED -->
 					<div class="row my-2" id="length_fixed">
 						<div class="col">
-							<label for="length" class="form-label">Password Length</label>
+							<label for="length" class="form-label">String Length</label>
 							<input type="number" id="length" name="length" class="form-control" min="0" max="255" value="8" required>
 						</div>
 					</div>
@@ -94,16 +94,21 @@
 					<span class="feedback small " data-validation="chars chars.*"></span>
 				</div>
 
-				<div class="m-auto card password-card">
-					<h5 class="card-header">Generated Password</h5>
-
-					<div class="card-body">
-						<div class="form-control text-muted h-auto" id="generated_password"></div>
-					</div>
-
-					<div class="card-footer d-flex flex-row align-middle justify-content-center">
-						<div class="btn-group">
-							<button class="btn btn-primary" type="button" data-copy-target="#generated_password">Copy</button>
+				<!-- GENERATED STRING -->
+				<div class="window minimized">
+					<div class="my-auto card string-card">
+						<h5 class="card-header d-flex flex-row justify-content-between window-header">
+							<span>Generated String</span>
+							
+							<span class="maximize ml-auto mr-0" title="Maximize"></span>
+						</h5>
+	
+						<div class="card-body">
+							<div class="form-control text-muted h-auto" id="generated_string"></div>
+						</div>
+	
+						<div class="card-footer d-flex flex-row align-middle justify-content-center">
+							<button class="btn btn-primary" type="button" data-copy-target="#generated_string">Copy</button>
 						</div>
 					</div>
 				</div>

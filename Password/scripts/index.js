@@ -62,6 +62,7 @@ $(document).ready(function() {
 		}
 	}).trigger('change');
 
+	// RANGE MIN SETTER
 	$(`#range_min`).on('change', (e) => {
 		let obj = $(e.currentTarget);
 		let target = $(`#range_max`);
@@ -72,6 +73,7 @@ $(document).ready(function() {
 		target.attr('min', newMin);
 	}).trigger('change');
 
+	// RANGE MAX SETTER
 	$(`#range_max`).on('change', (e) => {
 		let obj = $(e.currentTarget);
 		let target = $(`#range_min`);
@@ -82,14 +84,28 @@ $(document).ready(function() {
 		target.attr('max', newMax);
 	}).trigger('change');
 
+	// FORM RESETTER
 	$(`#reset`).on('click', (e) => {
-		$(`.password-card.active`).removeClass(`active`);
+		$(`string-card.show`).removeClass(`show`);
 		$(`[name]`).removeClass(`is-valid is-invalid`);
 		$(`form`)[0].reset();
 		
-		$(`#generated_password`).text("")
-			.closest(`.password-card`)
+		$(`#generated_string`).text("")
+			.closest(`string-card`)
 			.removeClass(`show`);
+	});
+
+	// MINIMIZE
+	$(document).on('click', `.minimize, .maximize`, (e) => {
+		let obj = $(e.target);
+
+		obj.toggleClass("maximize minimize");
+		obj.attr("title",
+			obj.hasClass("minimize") ? "Minimize" : "Maximize"
+		);
+
+		obj.closest(".window")
+			.toggleClass("minimized maximized")
 	});
 });
 
@@ -183,9 +199,13 @@ window.validate = function(form) {
 
 		regex += typeof values.use_range == 'undefined' ? `{${values.length}}` : `{${values.range_min},${values.range_max}}`;
 
-		$(`#generated_password`)
+		$(`#generated_string`)
 			.text(new RandExp(regex).gen())
-			.closest(`.password-card`)
-			.addClass(`show`);
+			.closest(`.string-card`)
+			.addClass(`show`)
+			.find(`.minimize`)
+			.addClass(`maximize`).removeClass(`minimize`)
+			.closest(`.window`)
+			.addClass(`maximized`).removeClass(`minimized`);
 	}
 }

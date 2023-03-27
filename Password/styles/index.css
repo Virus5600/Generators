@@ -24,14 +24,44 @@
 	transform: scale(175%);
 }
 
-/* PASSWORD CARD */
-.password-card {
+/* STRING CARD */
+.string-card,
+.window.minimized *:not(.window-header, .minimize, .maximize) {
 	opacity: 0;
 	transform: translate(-5%, 100%) scale(0, 0);
 	transition: 0.5s cubic-bezier(0.5, 0, 0.5, 1);
 }
 
-.password-card.show {
-	transform: translate(0%) scale(100%, 100%);
+.string-card.show,
+.window.maxmized *:not(.window-header, .minimize, .maximize) {
 	opacity: 1;
+	transform: translate(0%) scale(100%, 100%);
+}
+
+.window.minimized *:not(.window-header, .minimize, .maximize) { height: 0; }
+.window.maximized *:not(.window-header, .minimize, .maximize) { height: 100%; }
+
+/* MINIMIZE & MAXIMIZE */
+.minimize, .maximize {
+	width: 1.5em;
+	height: 1.5em;
+	border: 0.125em solid var(--light);
+	border-radius: 5px;
+	margin: auto 1em;
+	position: relative;
+	cursor: pointer;
+}
+.minimize::before {
+	content: "_";
+	font-size: 1.5em;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, -37.5%);
+}
+.maximize::before {
+	content: "\2750";
+	font-size: 1em;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, -6.5%);
 }
