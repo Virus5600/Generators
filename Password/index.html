@@ -9,6 +9,12 @@
 		<!-- DARK -->
 		<link rel="stylesheet" href="../assets/libs/bootstrap-dark-4.0.0/dist/css/bootstrap-dark-prefers-light.min.css">
 
+		<!-- Animate CSS 4.1.1 -->
+		<link rel="stylesheet" href="../assets/libs/animate.css-4.1.1/animate.min.css">
+		
+		<!-- SWEETALERT 2 -->
+		<link rel="stylesheet" href="../assets/libs/sweetalert2-10.16.9/dist/sweetalert2.all.min">
+		
 		<!-- CUSTOM CLASSES -->
 		<link rel="stylesheet" href="styles/index.css">
 
@@ -51,7 +57,7 @@
 					<div class="row my-2" id="length_fixed">
 						<div class="col">
 							<label for="length" class="form-label">Password Length</label>
-							<input type="number" id="length" name="length" class="form-control" min="0" max="5" value="8" required>
+							<input type="number" id="length" name="length" class="form-control" min="0" max="255" value="8" required>
 						</div>
 					</div>
 
@@ -94,6 +100,12 @@
 					<div class="card-body">
 						<div class="form-control text-muted" id="generated_password"></div>
 					</div>
+
+					<div class="card-footer d-flex flex-row align-middle justify-content-center">
+						<div class="btn-group">
+							<button class="btn btn-primary" type="button" data-copy-target="#generated_password">Copy</button>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -111,11 +123,17 @@
 			</div>
 		</form>
 
+		<!-- Libraries -->
 		<script type="text/javascript" src="../assets/libs/jquery-3.6.4/jquery-3.6.4.min.js"></script>
 		<script type="text/javascript" src="../assets/libs/bootstrap-4.6.2/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="../assets/libs/bootstrap-dark-4.0.0/dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../assets/libs/bootstrap-dark-4.0.0/dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../assets/libs/sweetalert2-10.16.9/dist/sweetalert2.all.min.js"></script>
 		
+		<!-- Utilities -->
 		<script type="text/javascript" src="../assets/js/serialize-form-json.js"></script>
+		<script type="text/javascript" src="../assets/js/copy-to-clipboard.js"></script>
+		<script type="text/javascript" src="../assets/libs/randexp.js-0.5.3/build/randexp.min.js"></script>
 
 		<script type="module" src="./scripts/index.js"></script>
 	</body>

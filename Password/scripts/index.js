@@ -1,5 +1,6 @@
 // Utility
 import UniqueArray from "../../assets/js/unique-array/unique-array.mod";
+import SwalFlash from "../../assets/js/swal-flash/swal-flash.mod";
 
 // Validator
 import Validator from "./Validation/Validator";
@@ -9,7 +10,7 @@ var validation = {
 		"use_range": ["sometimes", "boolean"],
 		"range_min": ["sometimes", "numeric", "min:0", "max:$range_max"],
 		"range_max": ["sometimes", "numeric", "min:$range_min", "max:255"],
-		"length": ["sometimes", "numeric", "between:0,5"],
+		"length": ["sometimes", "numeric", "between:0,255"],
 		"chars": ["required", "array", "min:1"],
 		"chars.*": ["sometimes", "in:alpha,numeric,spec"]
 	},
@@ -85,6 +86,10 @@ $(document).ready(function() {
 		$(`.password-card.active`).removeClass(`active`);
 		$(`[name]`).removeClass(`is-valid is-invalid`);
 		$(`form`)[0].reset();
+		
+		$(`#generated_password`).text("")
+			.closest(`.password-card`)
+			.removeClass(`show`);
 	});
 });
 
@@ -117,23 +122,9 @@ window.validate = function(form) {
 		validation.rules,
 		validation.message
 	);
-	debugger;
 
 	let invalidFields = validator.invalidFields();
 	let validFields = validator.validFields();
-
-	$.each(validator.fields(), (k, v) => {
-		$(`[data-validation]`).text("");
-	});
-
-	$.each(invalidFields, (k, v) => {
-		console.log(v);
-		$(`[data-validation]`).text(function() {
-			let obj = $(this);
-			if (obj.attr('data-validation').match(v))
-				obj.text(validator.first(v)).addClass("text-danger");
-		});
-	});
 
 	// Update their class
 	fields.removeClass("is-valid is-invalid");
@@ -147,4 +138,54 @@ window.validate = function(form) {
 	// Update validation message
 	valids.closest(`.form-group`).find("feedback").removeClass(`text-danger`);
 	invalids.closest(`.form-group`).find("feedback").addClass(`text-danger`);
+	
+	// Apply the validators validation
+	$.each(validFields, (k, v) => {
+		$(`[data-validation]`).text("");
+	});
+
+	$.each(invalidFields, (k, v) => {
+		let validationMsgFields = $(`[data-validation]`);
+		validationMsgFields.each(function() {
+			let obj = $(this);
+
+			if (obj.attr("data-validation").match(`(${v})`) != null) {
+				obj.closest(`.form-group`)
+					.find(`input, select, textarea`)
+					.not(":disabled, [disabled]")
+					.removeClass("is-valid")
+					.addClass("is-invalid");
+			};
+		});
+
+		validationMsgFields.text(function() {
+			let obj = $(this);
+			if (obj.attr('data-validation').match(v))
+				obj.text(validator.first(v)).addClass("text-danger");
+		});
+
+	});
+	
+	// If the validation failed, prevent the code from progressing further, then show a toast warning
+	if (validator.fails()) {
+		SwalFlash.error("Please re-check the data");
+		return;
+	}
+	else {
+		let values = validator.validate();
+		let chars = values.chars;
+		
+		let regex = "[";
+		regex += chars.includes("alpha") ? `a-zA-Z` : ``;
+		regex += chars.includes("numeric") ? `0-9` : ``;
+		regex += chars.includes("spec") ? `\\$\\&\\+\\,\\:\\;\\=\\?\\@\\#\\|\\'\\<\\>\\.\\^\\*\\(\\)\\%\\!\\-` : ``;
+		regex += "]";
+
+		regex += typeof values.use_range == 'undefined' ? `{${values.length}}` : `{${values.range_min},${values.range_max}}`;
+
+		$(`#generated_password`)
+			.text(new RandExp(regex).gen())
+			.closest(`.password-card`)
+			.addClass(`show`);
+	}
 }

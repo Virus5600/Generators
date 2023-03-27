@@ -5,14 +5,17 @@
 		var indexes = {};
 
 		$.each(a, function () {
+			let isArr = false;
+
 			if (this.name.match(/(\[\])/gi)) {
 				this.name = this.name.replaceAll(/(\[\])/gi, "");
+				isArr = true;
+				
+				if (typeof jsonForm[this.name] == 'undefined')
+					jsonForm[this.name] = Array();
 			}
 
-			if (jsonForm[this.name]) {
-				if (!jsonForm[this.name].push) {
-					jsonForm[this.name] = [jsonForm[this.name]];
-				}
+			if (isArr) {
 				jsonForm[this.name].push(this.value || '');
 			} else {
 				jsonForm[this.name] = this.value || '';

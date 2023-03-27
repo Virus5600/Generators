@@ -22,7 +22,7 @@ class Rule {
 	 * @param {String}	field			The name of the field being tested
 	 * @param {Any} 	value			The value to validate
 	 * @param {Array}	validatorValues	An array of values that the validator has. Only retrieves the first value due to how the rule works
-	 * @paramt {String} message			The message to use when the rule fails
+	 * @param {String} message			The message to use when the rule fails
 	 */
 	constructor(field, value, validatorValues = null, message = "The :attr field is incorrect.") {
 		message = message.replaceAll(/(:attr)/gi, field);
@@ -45,7 +45,7 @@ export class Required extends Rule {
 	 * 
 	 * @param {String}	field	The name of the field being tested
 	 * @param {Any}		value	The value to validate
-	 * @paramt {String} message	The message to use when the rule fails
+	 * @param {String} message	The message to use when the rule fails
 	 */
 	constructor(field, value, message = "The :attr field is required") {
 		super(field, value, undefined, message);
@@ -57,7 +57,8 @@ export class Required extends Rule {
 
 		return {
 			valid: this._valid,
-			message: this._message
+			message: this._message,
+			runOtherValidation: true
 		};
 	}
 }
@@ -68,24 +69,17 @@ export class Sometimes extends Rule {
 	 * 
 	 * @param {String}	field	The name of the field being tested
 	 * @param {Any} 	value	The value to validate
-	 * @paramt {String} message	The message to use when the rule fails
+	 * @param {String} message	The message to use when the rule fails
 	 */
 	constructor(field, value, message = "The :attr field is required to have a value, or leave it as blank") {
-		console.table({
-			field: field,
-			value: value,
-			message: messsage
-		});
 		super(field, value, undefined, message);
 	}
 
 	validate() {
+		this._valid = true;
 		let runOtherValidation = false;
-
-		if (typeof this._value == 'undefined') {
-			this._valid = true;
-		}
-		else {
+	
+		if (typeof this._value != 'undefined') {
 			runOtherValidation = true;
 		}
 
@@ -103,7 +97,7 @@ export class Boolean extends Rule {
 	 * 
 	 * @param {String}	field	The name of the field being tested
 	 * @param {Any} 	value	The value to validate
-	 * @paramt {String} message	The message to use when the rule fails
+	 * @param {String} message	The message to use when the rule fails
 	 */
 	constructor(field, value, message = "The :attr must be true or false") {
 		super(field, value, undefined, message);
@@ -135,7 +129,7 @@ export class Numeric extends Rule {
 	 * 
 	 * @param {String}	field	The name of the field being tested
 	 * @param {Any} 	value	The value to validate
-	 * @paramt {String} message	The message to use when the rule fails
+	 * @param {String} message	The message to use when the rule fails
 	 */
 	constructor(field, value, message = "The :attr should be a number") {
 		super(field, value, undefined, message);
@@ -167,7 +161,7 @@ export class Min extends Rule {
 	 * @param {String}	field			The name of the field being tested
 	 * @param {Any} 	value			The value to validate
 	 * @param {Array}	validatorValues	An array of values that the validator has. Only retrieves the first value due to how the rule works
-	 * @paramt {String} message			The message to use when the rule fails
+	 * @param {String} message			The message to use when the rule fails
 	 */
 	constructor(field, value, validatorValues, message = "The :attr must be at least :val") {
 		let e;
@@ -215,7 +209,7 @@ export class Max extends Rule {
 	 * @param {String}	field			The name of the field being tested
 	 * @param {Any} 	value			The value to validate
 	 * @param {Array}	validatorValues	An array of values that the validator has. Only retrieves the first value due to how the rule works
-	 * @paramt {String} message			The message to use when the rule fails
+	 * @param {String} message			The message to use when the rule fails
 	 */
 	constructor(field, value, validatorValues, message = "The :attr may not be greater than :val") {
 		let e;
@@ -263,7 +257,7 @@ export class Between extends Rule {
 	 * @param {String}	field			The name of the field being tested
 	 * @param {Any} 	value			The value to validate
 	 * @param {Array}	validatorValues	An array of values that the validator has. Only retrieves the first two values (min, max) due to how the rule works
-	 * @paramt {String} message			The message to use when the rule fails
+	 * @param {String} message			The message to use when the rule fails
 	 */
 	constructor(field, value, validatorValues, message = "The :attr may not be greater than :val") {
 		if (typeof validatorValues != 'object' || validatorValues.constructor.name != 'Array')
@@ -305,7 +299,7 @@ export class Array extends Rule {
 	 * 
 	 * @param {String}	field			The name of the field being tested
 	 * @param {Any} 	value			The value to validate
-	 * @paramt {String} message			The message to use when the rule fails
+	 * @param {String} message			The message to use when the rule fails
 	 */
 	constructor(field, value, message = "The :attr must be an array") {
 		super(field, value, undefined, message);
@@ -330,7 +324,7 @@ export class In extends Rule {
 	 * @param {String}	field			The name of the field being tested
 	 * @param {Any} 	value			The value to validate
 	 * @param {Array}	validatorValues	An array of values that the validator has. Only retrieves the first value due to how the rule works
-	 * @paramt {String} message			The message to use when the rule fails
+	 * @param {String}	message			The message to use when the rule fails
 	 */
 	constructor(field, value, validatorValues, message = "The selected :attr is invalid") {
 		if (typeof validatorValues != 'object' || validatorValues.constructor.name != 'Array')
@@ -342,9 +336,11 @@ export class In extends Rule {
 	}
 
 	validate() {
-		if (typeof this._value != 'undefined')
-			if (this._validatorValues.includes(this._value.toString()))
+		if (typeof this._value != 'undefined') {
+			if (this._validatorValues.includes(this._value.toString())) {
 				this._valid = true;
+			}
+		}
 
 		return {
 			valid: this._valid,
@@ -359,7 +355,7 @@ export class Nullable extends Rule {
 	 * 
 	 * @param {String}	field			The name of the field being tested
 	 * @param {Any} 	value			The value to validate
-	 * @paramt {String} message			The message to use when the rule fails
+	 * @param {String} message			The message to use when the rule fails
 	 */
 	constructor(field, value, message = "The :attr field can be null") {
 		super(field, value, message);

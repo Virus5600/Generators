@@ -44,7 +44,7 @@ export default class Validator {
 	/**
 	 * A private global variable container, identifying if this validator's validation has failed.
 	 */
-	#fails = false;
+	#failed = false;
 	/**
 	 * A private global variable container that determines if the validation has been run already.
 	 */
@@ -122,68 +122,11 @@ export default class Validator {
 	 * Runs the validation.
 	 */
 	#runValidation() {
-		// Iterate through the passed values
-		// for (let k of Object.keys(this.#valueList)) {
-		// 	// Identify their field name and values
-		// 	let field = k;
-		// 	let value = this.#valueList[k].value;
-			
-		// 	// Check if the parameter is an array or not
-		// 	let isArray = this.#isFieldArray(k);
-		// 	let index = 0;
-
-		// 	// Fetch the rules and messages for the array container if it is an array
-		// 	if (isArray) {
-		// 		// Validate the array container if it was not yet validated
-		// 		if (!this.#checkedFields.includes(field)) {
-		// 			let rules = Validator.#fetchRules(field, this.#ruleList, index, true);
-		// 			let messages = Validator.#fetchMessages(field, this.#messageList, index, true);
-					
-		// 			// The actual validation; LMAO
-		// 			this.#validateField(field, this.#valueList[field], rules, messages);
-
-		// 			this.#checkedFields.push(field);
-		// 		}
-
-		// 		// Iterate through the values of the array
-		// 		for (let arrV of this.#valueList[field]) {
-		// 			// If array, sets some more values
-		// 			if (this.#arrFieldsIndex.hasOwnProperty(field))
-		// 				index = this.#arrFieldsIndex[field] += 1;
-		// 			else
-		// 				index = this.#arrFieldsIndex[field] = 0;
-
-		// 			// Update field name to use the `{container}.{index}`
-		// 			let arrField = `${field}.${index}`;
-					
-		// 			let rules = Validator.#fetchRules(arrField, this.#ruleList, index);
-		// 			let messages = Validator.#fetchMessages(arrField, this.#messageList, index);
-
-		// 			// The actual validation; LMAO
-		// 			this.#validateField(arrField, arrV, rules, messages, isArray);
-
-		// 			this.#checkedFields.push(arrField);
-					
-		// 		}
-		// 	}
-		// 	// Otherwise, proceed to normal process
-		// 	else {
-		// 		let rules = Validator.#fetchRules(field, this.#ruleList, index);
-		// 		let messages = Validator.#fetchMessages(field, this.#messageList, index);
-
-		// 		// The actual validation; LMAO
-		// 		this.#validateField(field, this.#valueList[field], rules, messages);
-
-		// 		this.#checkedFields.push(field);
-		// 	}
-		// }
-		
-		debugger;
 		for (let k of Object.keys(this.#ruleList)) {
 			// Identify their field name and values
 			let field = k;
 			let index = 0;
-			let runOtherValidation = true;
+			let runOtherValidation = false;
 
 			// Check if the rule's key is an array or not
 			let isArray = this.#isFieldArray(field);
@@ -196,13 +139,15 @@ export default class Validator {
 			if (typeof this.#valueList[k] != 'undefined')
 				value = this.#valueList[k].value;
 
+			// Verify if a "required" rule exists. If it does, then just run the validation for that rule only.
+			if (rules.includes('required')) {
+				runOtherValidation = this.#validateField(field, this.#valueList[field], ["required"], messages);
+				rules.splice(rules.indexOf("required"), 1);
+			}
 			// Verify if a "sometimes" rule exists. If it does, then just run the validation for that rule only.
-			if (rules.includes('sometimes')) {
-				console.log(`\n[${field}/${k}] sometimes`);
+			else if (rules.includes('sometimes')) {
 				runOtherValidation = this.#validateField(field, this.#valueList[field], ["sometimes"], messages);
-				console.log(`[runOtherValidation] ${runOtherValidation}`);
 				rules.splice(rules.indexOf("sometimes"), 1);
-				debugger;
 			}
 
 			// The actual validation; LMAO
@@ -214,7 +159,7 @@ export default class Validator {
 		}
 
 		if (this.#errors.fields().length > 0)
-			this.fails = true;
+			this.#failed = true;
 
 		this.#validationDone = true;
 	}
@@ -322,7 +267,7 @@ export default class Validator {
 					rule = rule.validate();
 					ruleType = "string";
 
-					if (ogRule == 'sometimes') {
+					if (typeof rule.runOtherValidation == 'boolean') {
 						runOtherValidation = rule.runOtherValidation;
 					}
 				}
@@ -386,7 +331,6 @@ export default class Validator {
 					);
 
 					if (isArray) {
-						console.log(field);
 						this.#errors.add(
 							ruleType == 'function' ? `${field}.closure_${closureIndex}` : `${field}.${ogRule.split(":")[0]}`,
 							rule.message
@@ -407,7 +351,7 @@ export default class Validator {
 		if (!validationResult.includes(false))
 			this.#validated[field] = value;
 
-		return runOtherValidation;
+		return typeof runOtherValidation == 'undefined' ? true : runOtherValidation;
 	}
 
 	/**
@@ -439,7 +383,7 @@ export default class Validator {
 		if (!this.#validationDone)
 			this.#runValidation();
 
-		return this.#fails;
+		return this.#failed;
 	}
 
 	/**
