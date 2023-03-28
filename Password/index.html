@@ -95,27 +95,29 @@
 				</div>
 
 				<!-- GENERATED STRING -->
-				<div class="window minimized">
-					<div class="my-auto card string-card">
-						<h5 class="card-header d-flex flex-row justify-content-between window-header">
-							<span>Generated String</span>
-							
-							<span class="maximize ml-auto mr-0" title="Maximize"></span>
-						</h5>
-	
-						<div class="card-body">
-							<div class="form-control text-muted h-auto" id="generated_string"></div>
-						</div>
-	
-						<div class="card-footer d-flex flex-row align-middle justify-content-center">
-							<button class="btn btn-primary" type="button" data-copy-target="#generated_string">Copy</button>
+				<div class="collapse">
+					<div class="window minimized" id="stringCard">
+						<div class="my-auto card string-card">
+							<h5 class="card-header d-flex flex-row justify-content-between window-header">
+								<span>Generated String</span>
+								
+								<span class="maximize ml-auto mr-0" title="Minimize"></span>
+							</h5>
+		
+							<div class="card-body">
+								<div class="form-control text-muted h-auto" id="generated_string"></div>
+							</div>
+		
+							<div class="card-footer d-flex flex-row align-middle justify-content-center">
+								<button class="btn btn-primary" type="button" data-copy-target="#generated_string">Copy</button>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
 			<!-- FOOTER -->
-			<div class="card-footer d-flex">
+			<div class="card-footer d-flex justify-content-between" id="stringGenFooter">
 				<div class="btn-group mx-auto">
 					<button class="btn btn-primary" id="generate" type="submit">
 						Generate

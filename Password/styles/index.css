@@ -1,3 +1,7 @@
+* {
+	transition: 0.5s cubic-bezier(0.5, 0, 0.5, 1);
+}
+
 /* CUSTOM SWITCH */
 .custom-switch.custom-switch-xs .custom-control-label::after,
 .custom-switch.custom-switch-xs .custom-control-label::before {
@@ -25,21 +29,28 @@
 }
 
 /* STRING CARD */
-.string-card,
-.window.minimized *:not(.window-header, .minimize, .maximize) {
-	opacity: 0;
-	transform: translate(-5%, 100%) scale(0, 0);
+.window {
 	transition: 0.5s cubic-bezier(0.5, 0, 0.5, 1);
 }
 
-.string-card.show,
-.window.maxmized *:not(.window-header, .minimize, .maximize) {
-	opacity: 1;
-	transform: translate(0%) scale(100%, 100%);
+.string-card,
+.window.minimized {
+	opacity: 0;
+	transform: translate(-5%, 100%) scale(0, 0);
 }
 
-.window.minimized *:not(.window-header, .minimize, .maximize) { height: 0; }
-.window.maximized *:not(.window-header, .minimize, .maximize) { height: 100%; }
+.string-card.show,
+.window.maxmized {
+	opacity: 1;
+	transform: scale(100%, 100%);
+}
+
+.window.minimized { 
+	transform: translate(50%, 50%) scale(0%);
+}
+.window.maximized { 
+	transform: translate(0%, 0%) scale(100%);
+}
 
 /* MINIMIZE & MAXIMIZE */
 .minimize, .maximize {
@@ -64,4 +75,33 @@
 	position: absolute;
 	left: 50%;
 	transform: translate(-50%, -6.5%);
+}
+
+/* INSERT ANIMATION */
+@keyframes insert-anim {
+	from {
+		opacity: 0;
+		transform: scale(0);
+		-o-transform: scale(0);
+		-ms-transform: scale(0);
+		-moz-transform: scale(0);
+		-webkit-transform: scale(0);
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
+		-o-transform: scale(1);
+		-ms-transform: scale(1);
+		-moz-transform: scale(1);
+		-webkit-transform: scale(1);
+	}
+}
+
+.insert {
+	-webkit-animation: 0.5s cubic-bezier(0.5, 0, 0.5, 1) insert-anim;
+	-moz-animation: 0.5s cubic-bezier(0.5, 0, 0.5, 1) insert-anim;
+	-ms-animation: 0.5s cubic-bezier(0.5, 0, 0.5, 1) insert-anim;
+	-o-animation: 0.5s cubic-bezier(0.5, 0, 0.5, 1) insert-anim;
+	animation: 0.5s cubic-bezier(0.5, 0, 0.5, 1) insert-anim;
 }

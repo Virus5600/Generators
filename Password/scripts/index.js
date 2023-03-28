@@ -95,17 +95,38 @@ $(document).ready(function() {
 			.removeClass(`show`);
 	});
 
-	// MINIMIZE
+	// MINIMIZE/MAXIMIZE
 	$(document).on('click', `.minimize, .maximize`, (e) => {
-		let obj = $(e.target);
+		let btn = $(e.target), obj;
 
-		obj.toggleClass("maximize minimize");
-		obj.attr("title",
-			obj.hasClass("minimize") ? "Minimize" : "Maximize"
-		);
+		if (typeof btn.attr('data-target') != 'undefined')
+			obj = $(btn.attr('data-target'));
+		else
+			obj = btn;
 
-		obj.closest(".window")
-			.toggleClass("minimized maximized")
+		let window = obj.closest(".window");
+		let collapser = window.closest(".collapse");
+		let others = $(`[data-parent="#${window.attr("id")}"]`);
+
+		if (window.hasClass("maximized")) {
+			others.addClass("maximize").removeClass("minimize").attr("title", "Maximize");
+			btn.addClass("maximize").removeClass("minimize").attr("title", "Maximize");
+			obj.addClass("maximize").removeClass("minimize").attr("title", "Maximize");
+			window.addClass("minimized").removeClass("maximized");
+			
+			setTimeout(
+				() => collapser.collapse("hide"),
+				250
+			);
+		}
+		else if (window.hasClass("minimized")) {
+			collapser.collapse("show");
+			others.addClass("minimize").removeClass("maximize").attr("title", "Minimize");
+			btn.addClass("minimize").removeClass("maximize").attr("title", "Minimize");
+			obj.addClass("minimize").removeClass("maximize").attr("title", "Minimize");
+
+			window.addClass("maximized").removeClass("minimized");
+		}
 	});
 });
 
@@ -203,9 +224,33 @@ window.validate = function(form) {
 			.text(new RandExp(regex).gen())
 			.closest(`.string-card`)
 			.addClass(`show`)
-			.find(`.minimize`)
-			.addClass(`maximize`).removeClass(`minimize`)
+			.find(`.minimize, .maximize`)
+			.addClass(`minimize`).removeClass(`maximize`)
 			.closest(`.window`)
 			.addClass(`maximized`).removeClass(`minimized`);
+		
+		let restoreAppendTarget = $(`#stringGenFooter`);
+		let restore = restoreAppendTarget.find(`#restorePassView`);
+		if (restore.length <= 0 ) {
+			restore = $(`
+				<span class="ml-auto mr-0 insert minimize" id="restorePassView" data-target=".window .minimize, .window .maximize" data-parent="#stringCard" title="Minimize"></span>
+			`);
+			
+			restoreAppendTarget.append(restore);
+			setTimeout(() => restore.removeClass(`insert`), 1000);
+			
+			let collapser = $(restore.attr('data-target')).closest(".collapse");
+			if (collapser.length > 0)
+				collapser.collapse("show");
+		}
+		else {
+			let collapser = $(restore.attr('data-target')).closest(".collapse");
+			collapser.collapse("show");
+
+			if (collapser.length > 0)
+				setTimeout(
+					() => restore.addClass(`minimize`).removeClass(`maximize`), 250
+				);
+		}
 	}
 }
