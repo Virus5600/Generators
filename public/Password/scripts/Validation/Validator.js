@@ -1,6 +1,6 @@
 // Utility
-import UniqueArray from "../../../assets/js/unique-array/unique-array.mod";
-import * as Rules from "./Rules";
+import UniqueArray from "../../../../assets/js/unique-array/unique-array.mod.js";
+import * as Rules from "./Rules.js";
 
 // Module
 import MessageBag from "./MessageBag.js";
@@ -128,16 +128,9 @@ export default class Validator {
 			let index = 0;
 			let runOtherValidation = false;
 
-			// Check if the rule's key is an array or not
-			let isArray = this.#isFieldArray(field);
 			// Fetch rules and messages
 			let rules = Validator.#fetchRules(field, this.#ruleList, index);
 			let messages = Validator.#fetchMessages(field, this.#messageList, index);
-
-			// Finally, fetch the value if there's a value present
-			let value;
-			if (typeof this.#valueList[k] != 'undefined')
-				value = this.#valueList[k].value;
 
 			// Verify if a "required" rule exists. If it does, then just run the validation for that rule only.
 			if (rules.includes('required')) {
@@ -241,7 +234,7 @@ export default class Validator {
 			let message = messages[rule];
 			let validatorValues;
 			let ruleType;
-
+			
 			if (typeof rule == "string") {
 				// If the rule contains a value (denoted by a colon (:)), removes the latter half of the rule
 				if (rule.split(":").length > 1) {

@@ -257,9 +257,9 @@ export class Between extends Rule {
 	 * @param {String}	field			The name of the field being tested
 	 * @param {Any} 	value			The value to validate
 	 * @param {Array}	validatorValues	An array of values that the validator has. Only retrieves the first two values (min, max) due to how the rule works
-	 * @param {String} message			The message to use when the rule fails
+	 * @param {String}	message			The message to use when the rule fails
 	 */
-	constructor(field, value, validatorValues, message = "The :attr may not be greater than :val") {
+	constructor(field, value, validatorValues, message = "The :attr must be between :min and :max") {
 		if (typeof validatorValues != 'object' || validatorValues.constructor.name != 'Array')
 			throw new Error(`Improper validator value format:\n\tNeeds array, ${typeof validatorValues} is passed`);
 		else if (validatorValues.length < 2)
