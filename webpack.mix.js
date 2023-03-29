@@ -19,8 +19,8 @@ mix.webpackConfig({
 		devtool: 'inline-source-map'
 	})
 	.js('src/js/util/util.js', 'dist/js/util')
-	// Password Modules
-	.js('src/js/password.js', 'dist/js/password')
-	.sass('src/sass/password.scss', 'dist/css/password')
+	// String Generator Modules
+	.js('src/js/string-generator.js', 'dist/js/string-generator')
+	.sass('src/sass/string-generator.scss', 'dist/css/string-generator')
 	.sourceMaps()
 	.disableNotifications();
