@@ -1,0 +1,11 @@
+{
+    "/String Generator/scripts/libs.js": "/String Generator/scripts/libs.js",
+    "/String Generator/styles/libs.css": "/String Generator/styles/libs.css",
+    "/resource/js/util/copy-to-clipboard.js": "/resource/js/util/copy-to-clipboard.js",
+    "/resource/js/util/serialize-form-json/serialize-form-json.js": "/resource/js/util/serialize-form-json/serialize-form-json.js",
+    "/resource/js/util/swal-flash/swal-flash.js": "/resource/js/util/swal-flash/swal-flash.js",
+    "/resource/js/util/swal-flash/swal-flash.mod.js": "/resource/js/util/swal-flash/swal-flash.mod.js",
+    "/resource/js/util/unique-array/unique-array.js": "/resource/js/util/unique-array/unique-array.js",
+    "/resource/js/util/unique-array/unique-array.mod.js": "/resource/js/util/unique-array/unique-array.mod.js",
+    "/resource/js/util/util.js": "/resource/js/util/util.js"
+}

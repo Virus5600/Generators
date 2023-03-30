@@ -1,5 +1,5 @@
 // Utility
-import UniqueArray from "../../../../assets/js/unique-array/unique-array.mod.js";
+import UniqueArray from "../../../resource/js/util/unique-array/unique-array.mod.js";
 import * as Rules from "./Rules.js";
 
 // Module

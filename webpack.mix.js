@@ -18,9 +18,10 @@ mix.webpackConfig({
 		},
 		devtool: 'inline-source-map'
 	})
-	.js('src/js/util/util.js', 'dist/js/util')
+	.copy('src/js/', 'public/resource/js/', false)
 	// String Generator Modules
-	.js('src/js/string-generator.js', 'dist/js/string-generator')
-	.sass('src/sass/string-generator.scss', 'dist/css/string-generator')
+	.js('src/modules/string-generator/scripts.js', 'String Generator/scripts/libs.js')
+	.sass('src/modules/string-generator/styles.scss', 'String Generator/styles/libs.css')
+	.setPublicPath("public/")
 	.sourceMaps()
 	.disableNotifications();
