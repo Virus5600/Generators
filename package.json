@@ -49,11 +49,13 @@
 		"webpack-cli": "^5.0.1"
 	},
 	"dependencies": {
+		"@electron/remote": "^2.0.9",
 		"@forevolve/bootstrap-dark": "^4.0.0",
 		"@fortawesome/fontawesome-free": "^6.2.0",
 		"autoprefixer": "10.4.5",
 		"bootstrap": "^4.6.2",
 		"bootstrap-select": "^1.13.18",
+		"electron-reloader": "^1.2.3",
 		"jquery": "^3.6.1",
 		"jquery-ui": "^1.13.2",
 		"laravel-mix": "^6.0.49",

@@ -2,9 +2,39 @@
 <html>
 	<head>
 		<title>Generators</title>
+		<!-- Bootstrap 4.6 | Dark (Prefers dark over light) | Sweetalert 2 -->
+		<link rel="stylesheet" href="resources/libs.css">
+		<script type="text/javascript" src="resources/libs.js"></script>
 	</head>
 
 	<body class="min-vh-100 d-flex flex-column">
-		<a href="Password/index.html">STRING GEN</a>
+		<div id="title-bar">
+			<div id="title">
+				<img src="resources/favicon.ico" alt="Generator">
+				<span>Generator</span>
+			</div>
+
+			<div id="title-bar-btns">
+				 <button id="min-btn">
+					<i class="fas fa-window-minimize"></i>
+				 </button>
+				 
+				 <button id="max-btn">
+					<i class="fas fa-window-maximize"></i>
+				</button>
+				
+				<button id="close-btn">
+					<i class="fa fa-x"></i>
+				 </button>
+			</div>
+		</div>
+
+	   <div class="d-flex flex-column p-2">
+		   <a href="String Generator/index.html">STRING GEN</a>
+	   </div>
+
+	   <!-- Libraries -->
+	   <script type="text/javascript" src="./resources/libs.js"></script>
+	   <script type="text/javascript" src="./resources/js/frameless.js" defer></script>
 	</body>
 </html>

@@ -18,7 +18,12 @@ mix.webpackConfig({
 		},
 		devtool: 'inline-source-map'
 	})
-	.copy('src/js/', 'public/resource/js/', false)
+	.copy('src/js/*(!frameless.js)*', 'public/resources/js/', false)
+	.copy('src/css/', 'public/resources/css/', false)
+	.copy('src/resources/', 'public/resources/', false)
+	// Landing Page Modules
+	.js('src/modules/scripts.js', '/resources/libs.js')
+	.sass('src/modules/styles.scss', '/resources/libs.js')
 	// String Generator Modules
 	.js('src/modules/string-generator/scripts.js', 'String Generator/scripts/libs.js')
 	.sass('src/modules/string-generator/styles.scss', 'String Generator/styles/libs.css')

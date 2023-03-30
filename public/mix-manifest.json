@@ -1,11 +1,17 @@
 {
+    "/resources/libs.js": "/resources/libs.js",
     "/String Generator/scripts/libs.js": "/String Generator/scripts/libs.js",
     "/String Generator/styles/libs.css": "/String Generator/styles/libs.css",
-    "/resource/js/util/copy-to-clipboard.js": "/resource/js/util/copy-to-clipboard.js",
-    "/resource/js/util/serialize-form-json/serialize-form-json.js": "/resource/js/util/serialize-form-json/serialize-form-json.js",
-    "/resource/js/util/swal-flash/swal-flash.js": "/resource/js/util/swal-flash/swal-flash.js",
-    "/resource/js/util/swal-flash/swal-flash.mod.js": "/resource/js/util/swal-flash/swal-flash.mod.js",
-    "/resource/js/util/unique-array/unique-array.js": "/resource/js/util/unique-array/unique-array.js",
-    "/resource/js/util/unique-array/unique-array.mod.js": "/resource/js/util/unique-array/unique-array.mod.js",
-    "/resource/js/util/util.js": "/resource/js/util/util.js"
+    "/resources/libs.css": "/resources/libs.css",
+    "/resources/js/frameless.js": "/resources/js/frameless.js",
+    "/resources/css/custom-scrollbar.css": "/resources/css/custom-scrollbar.css",
+    "/resources/css/frameless.css": "/resources/css/frameless.css",
+    "/resources/favicon.ico": "/resources/favicon.ico",
+    "/resources/js/util/copy-to-clipboard.js": "/resources/js/util/copy-to-clipboard.js",
+    "/resources/js/util/serialize-form-json/serialize-form-json.js": "/resources/js/util/serialize-form-json/serialize-form-json.js",
+    "/resources/js/util/swal-flash/swal-flash.js": "/resources/js/util/swal-flash/swal-flash.js",
+    "/resources/js/util/swal-flash/swal-flash.mod.js": "/resources/js/util/swal-flash/swal-flash.mod.js",
+    "/resources/js/util/unique-array/unique-array.js": "/resources/js/util/unique-array/unique-array.js",
+    "/resources/js/util/unique-array/unique-array.mod.js": "/resources/js/util/unique-array/unique-array.mod.js",
+    "/resources/js/util/util.js": "/resources/js/util/util.js"
 }
