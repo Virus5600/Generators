@@ -7,8 +7,7 @@
     "/resources/js/frameless.js": "/resources/js/frameless.js",
     "/resources/css/custom-scrollbar.css": "/resources/css/custom-scrollbar.css",
     "/resources/css/frameless.css": "/resources/css/frameless.css",
-    "/resources/favicon-png.png": "/resources/favicon-png.png",
-    "/resources/favicon.ico": "/resources/favicon.ico",
+    "/resources/favicon.png": "/resources/favicon.png",
     "/resources/js/util/copy-to-clipboard.js": "/resources/js/util/copy-to-clipboard.js",
     "/resources/js/util/serialize-form-json/serialize-form-json.js": "/resources/js/util/serialize-form-json/serialize-form-json.js",
     "/resources/js/util/swal-flash/swal-flash.js": "/resources/js/util/swal-flash/swal-flash.js",
@@ -16,7 +15,5 @@
     "/resources/js/util/unique-array/unique-array.js": "/resources/js/util/unique-array/unique-array.js",
     "/resources/js/util/unique-array/unique-array.mod.js": "/resources/js/util/unique-array/unique-array.mod.js",
     "/resources/js/util/util.js": "/resources/js/util/util.js",
-    "/resources/Virus5600 with BG.png": "/resources/Virus5600 with BG.png",
-    "/resources/Virus5600.png": "/resources/Virus5600.png",
-    "/resources/favicon.png": "/resources/favicon.png"
+    "/resources/Virus5600.png": "/resources/Virus5600.png"
 }

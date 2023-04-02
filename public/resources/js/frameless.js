@@ -1,4 +1,5 @@
 const remote = require('@electron/remote');
+const { first } = require('lodash');
 const win = remote.getCurrentWindow();
 const winContent = remote.getCurrentWebContents();
 let initialized = false;
@@ -96,5 +97,40 @@ function prependTitleBar() {
 	const body = document.querySelector(`body`);
 	body.insertAdjacentHTML('afterbegin', goBack);
 	body.insertAdjacentHTML('afterbegin', titleBar);
-	win.setIcon(__dirname + favicon);
+	
+	// Favicon Update
+	let updateFavSuccess = updateFavicon(favicon) ? null : updateFavicon(document.querySelector(`link[rel=icon]`).href);
+	if (!updateFavSuccess)
+		console.warn("Failed to set favicon")
+}
+
+function updateFavicon(favicon) {
+	let firstSuccess = true;
+	let secondSuccess = true;
+
+	try {
+		// First Attempt
+		try {
+			winContent.setIcon(__dirname + favicon);
+			console.log("winContent 1st ran");
+			win.setIcon(__dirname + favicon);
+			console.log("win 1st ran");
+		} catch (e) {
+			firstSuccess = false;
+			console.warn("First attempt to set icon failed\nUsing: " + favicon);
+		}
+		
+		// Second Attempt
+		if (!firstSuccess) {
+			winContent.setIcon(favicon);
+			console.log("winContent 2nd ran");
+			win.setIcon(favicon);
+			console.log("win 2nd ran");
+		}
+	} catch (ex) {
+		secondSuccess = false;
+		console.warn("Second attempt to set icon failed\nUsing: " + favicon);
+	}
+
+	return (firstSuccess || secondSuccess);
 }
