@@ -1,4 +1,4 @@
-<p align="center"><img src="placeholder.jpg" width="400" alt="Generators Icon"></p>
+<p align="center"><img src="https://github.com/Virus5600/Generators/blob/a6fcb1cade4d966d310877d69a49ec18b98a1cc1/src/resources/favicon.png" height="100" alt="Generators Icon"></p>
 <h1 align="center">Generators</h1>
 
 ![GitHub all releases](https://img.shields.io/github/downloads/virus5600/generators/total?color=green&label=Downloads&logo=github)
