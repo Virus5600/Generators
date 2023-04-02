@@ -1,40 +1,44 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Generators</title>
 		<!-- Bootstrap 4.6 | Dark (Prefers dark over light) | Sweetalert 2 -->
 		<link rel="stylesheet" href="resources/libs.css">
 		<script type="text/javascript" src="resources/libs.js"></script>
+		
+		<!-- Favicon -->
+		<link rel="icon" href="resources/favicon.png" data-alt="./resources/favicon.png">
+
+		<!-- Title -->
+		<title>Generators</title>
 	</head>
 
 	<body class="min-vh-100 d-flex flex-column">
-		<div id="title-bar">
-			<div id="title">
-				<img src="resources/favicon.ico" alt="Generator">
-				<span>Generator</span>
-			</div>
 
-			<div id="title-bar-btns">
-				 <button id="min-btn">
-					<i class="fas fa-window-minimize"></i>
-				 </button>
-				 
-				 <button id="max-btn">
-					<i class="fas fa-window-maximize"></i>
-				</button>
-				
-				<button id="close-btn">
-					<i class="fa fa-x"></i>
-				 </button>
+		<div class="container-fluid my-3">
+			<!-- Features -->
+			<div class="card">
+				<h5 class="card-header text-center">Generator</h5>
+	
+				<div class="card-body d-flex flex-row overflow-x-scroll justify-content-center" draggable="false">
+					<!-- String Generator -->
+					<a class="app" href="String Generator/index.html">
+						<img src="String Generator/assets/favicon.png" alt="String Generator" class="app-thumbnail">
+						
+						<div class="app-title-container">
+							<span class="app-title">
+								String Generator
+								<small class="app-description">Generates random strings</small>
+							</span>
+						</div>
+					</a>
+
+					<!-- ADD APP HERE -->
+				</div>
 			</div>
 		</div>
 
-	   <div class="d-flex flex-column p-2">
-		   <a href="String Generator/index.html">STRING GEN</a>
-	   </div>
-
-	   <!-- Libraries -->
-	   <script type="text/javascript" src="./resources/libs.js"></script>
-	   <script type="text/javascript" src="./resources/js/frameless.js" defer></script>
+		<!-- Libraries -->
+		<script type="text/javascript" src="./resources/libs.js"></script>
+		<script type="text/javascript" src="./resources/js/frameless.js" defer></script>
 	</body>
 </html>

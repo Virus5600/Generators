@@ -13,7 +13,7 @@ const createWindow = () => {
 		width: 650,
 		height: 1250,
 		frame: false,
-		icon: path.join(__dirname, '../resources/favicon.ico'),
+		icon: path.join(__dirname, '../resources/favicon.png'),
 		webPreferences: {
             enableRemoteModule: true,
 			contextIsolation: false,

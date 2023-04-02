@@ -1,5 +1,5 @@
 // Utility
-import UniqueArray from "../../../resource/js/util/unique-array/unique-array.mod.js";
+import UniqueArray from "../../../resources/js/util/unique-array/unique-array.mod.js";
 import * as Rules from "./Rules.js";
 
 // Module
@@ -353,6 +353,8 @@ export default class Validator {
 	 * @param {String}	field	THe name of the field that will be tested
 	 * 
 	 * @return {Boolean}		Returns a boolean value, which is either a `true`, if the field is an array; or `false` if it isn't
+	 * 
+	 * @deprecated
 	 */
 	#isFieldArray(field) {
 		if (field.constructor.name === 'String') {

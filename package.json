@@ -1,9 +1,10 @@
 {
 	"name": "generators",
-	"version": "1.0.0-build2",
+	"version": "1.0.0-beta",
 	"description": "A series of mini-applications that all create a library of generator application",
 	"main": "public/index.js",
-	"license": "GPL-3.0",
+	"license": "UNLICENSED",
+	"private": true,
 	"author": {
 		"name": "Virus5600",
 		"email": "satchi5600@gmail.com"
@@ -84,7 +85,7 @@
 				"msi",
 				"nsis"
 			],
-			"icon": "src/resources/favicon.ico"
+			"icon": "src/resources/favicon.png"
 		},
 		"nsis": {
 			"oneClick": false,

@@ -21,6 +21,8 @@ mix.webpackConfig({
 	.copy('src/js/*(!frameless.js)*', 'public/resources/js/', false)
 	.copy('src/css/', 'public/resources/css/', false)
 	.copy('src/resources/', 'public/resources/', false)
+	// Additional Styles
+	.sass('src/sass/general.scss', '/resources/css')
 	// Landing Page Modules
 	.js('src/modules/scripts.js', '/resources/libs.js')
 	.sass('src/modules/styles.scss', '/resources/libs.js')

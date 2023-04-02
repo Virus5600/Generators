@@ -1,6 +1,6 @@
 // Utility
-import UniqueArray from "../../resource/js/util/unique-array/unique-array.mod.js";
-import SwalFlash from "../../resource/js/util/swal-flash/swal-flash.mod.js";
+import UniqueArray from "../../resources/js/util/unique-array/unique-array.mod.js";
+import SwalFlash from "../../resources/js/util/swal-flash/swal-flash.mod.js";
 
 // Validator
 import Validator from "./Validation/Validator.js";

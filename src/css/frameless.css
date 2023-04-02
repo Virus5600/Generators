@@ -19,6 +19,7 @@ body {
 
 	display: flex;
 	flex-direction: row;
+	z-index: 1000;
 
 	background-color: #ececec;
 	color: #171717;
@@ -98,4 +99,10 @@ body {
 		background-color: #171717;
 		color: #FFF;
 	}
+}
+
+/* Sweet alert 2 modification */
+body.swal2-toast-shown .swal2-container.swal2-top-end,
+body.swal2-toast-shown .swal2-container.swal2-top-right {
+	top: 32px !important;
 }
