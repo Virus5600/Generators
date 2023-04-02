@@ -1,0 +1,10 @@
+$axis: (x, y);
+$values: (auto, hidden, scroll, visible, );
+
+@each $a in $axis {
+	@each $v in $values {
+		.overflow-#{$a}-#{$v} {
+			overflow-#{$a}: #{$v};
+		}
+	}
+}

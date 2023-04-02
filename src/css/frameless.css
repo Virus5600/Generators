@@ -1,0 +1,108 @@
+body {
+	padding: 0px;
+	padding-top: 32px;
+	margin: 0px; 
+}
+
+#title-bar {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+
+	-webkit-app-region: drag;
+	-webkit-user-select: none;
+	padding: none;
+	margin: 0px;
+	height: 32px;
+	font-size: 1em;
+
+	display: flex;
+	flex-direction: row;
+	z-index: 1000;
+
+	background-color: #ececec;
+	color: #171717;
+}
+
+#title {
+	margin: auto 6px;
+	display: flex;
+	flex-direction: row;
+	vertical-align: middle;
+}
+
+#title > img {
+	object-fit: contain;
+	max-width: 100%;
+	max-height: 20px;
+	margin: auto .5em;
+}
+
+#title-bar-btns {
+	-webkit-app-region: no-drag;
+
+	display: flex;
+	position: fixed;
+	top: 0px;
+	right: 0px;
+}
+
+#title-bar-btns > button {
+	border: none;
+	background-color: transparent;
+	width: 46px;
+	height: 32px;
+	font-size: 12px;
+	transition: 0.125s ease;
+
+	background-color: transparent;
+	color: #171717;
+}
+
+#title-bar-btns > button:hover {
+	background-color: #bebebe;
+	color: #171717;
+}
+
+#title-bar-btns > #close-btn {
+	background-color: #E81123;
+	color: #171717;
+}
+
+#title-bar-btns > #close-btn:hover {
+	background-color: #F1707A;
+	color: #171717;
+}
+
+/* DARK/LIGHT MODE */
+@media (prefers-color-scheme: dark) {
+	#title-bar-btns > button {
+		background-color: #171717;
+		color: #FFF;
+	}
+	#title-bar-btns > button:hover {
+		background-color: #bebebe;
+		color: #FFF;
+	}
+
+	#title-bar-btns > #close-btn {
+		background-color: #E81123;
+		color: #FFF;
+	}
+	#title-bar-btns > #close-btn:hover {
+		background-color: #F1707A;
+		color: #FFF;
+	}
+
+	#title-bar {
+		background-color: #171717;
+		color: #FFF;
+	}
+}
+
+/* Sweet alert 2 modification */
+body.swal2-toast-shown .swal2-container.swal2-top-end,
+body.swal2-toast-shown .swal2-container.swal2-top-right {
+	top: 32px !important;
+}
