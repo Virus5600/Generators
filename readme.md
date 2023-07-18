@@ -25,12 +25,11 @@ Contains various mini applications that helps complete various tasks. These vari
 		<td valign="center">
 			Generates random strings based on provided input
 		</td>
-	<tr>
-
+	</tr>
 	<tr>
 		<td valign="center">
 			<a href="#">
-				<img src="https://raw.githubusercontent.com/Virus5600/Generators/9fc7b230a4872842436edc592a652bb2c94aff5a/public/String%20Generator/assets/favicon.png" width="64">
+				<img src="https://github.com/Virus5600/Generators/blob/02a66417142562b6ae252dacedc789591d63fba3/public/DTR%20Generator/assets/favicon.png" width="64">
 			</a>
 		</td>
 		<td valign="center">
