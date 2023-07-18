@@ -26,13 +26,20 @@
 	border-radius: .5em;
 	overflow: hidden;
 
+	margin: 1rem;
+
+	display: flex;
+
 	&, * {
 		transition: 0.5s ease;
 	}
 	
 	img.app-thumbnail {
-		max-width: 100%;
+		max-width: 87.5%;
+		max-height: 87.5%;
 		object-fit: cover;
+
+		margin: auto;
 	}
 
 	.app-title-container {

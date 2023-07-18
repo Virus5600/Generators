@@ -1,0 +1,64 @@
+:root {
+	--dtr-cell-width: 3.5rem;
+	--dtr-cell-height: 1.5rem;
+}
+
+.dtr {
+	max-width: calc(var(--dtr-cell-width) * 7);
+	min-width: calc(var(--dtr-cell-width) * 7);
+	width: calc(var(--dtr-cell-width) * 7);
+
+	max-height: calc(var(--dtr-cell-height) * 47);
+	min-height: calc(var(--dtr-cell-height) * 47);
+	height: calc(var(--dtr-cell-height) * 47);
+
+	display: flex;
+	flex-direction: column;
+
+	padding: .25rem;
+
+	.dtr-row {
+		max-width: calc(var(--dtr-cell-width) * 7);
+		min-width: calc(var(--dtr-cell-width) * 7);
+		width: calc(var(--dtr-cell-width) * 7);
+
+		max-height: var(--dtr-cell-height);
+		min-height: var(--dtr-cell-height);
+		height: var(--dtr-cell-height);
+
+		display: flex;
+		flex-direction: row;
+
+		margin: 0.25rem;
+
+		.dtr-cell {
+
+			max-width: var(--dtr-cell-width);
+			min-width: var(--dtr-cell-width);
+			width: var(--dtr-cell-width);
+
+			@for $i from 1 through 7 {
+				&.dtr-cell-#{$i} {
+					max-width: calc(var(--dtr-cell-width) * $i);
+					min-width: calc(var(--dtr-cell-width) * $i);
+					width: calc(var(--dtr-cell-width) * $i);
+				}
+			}
+
+			vertical-align: middle;
+			text-align: center;
+
+			max-height: var(--dtr-cell-height);
+			min-height: var(--dtr-cell-height);
+			height: var(--dtr-cell-height);
+
+			&.date {
+				text-align: right;
+			}
+
+			&.underline {
+				border-bottom: 2px solid #343a40;
+			}
+		}
+	}
+}

@@ -26,6 +26,22 @@ Contains various mini applications that helps complete various tasks. These vari
 			Generates random strings based on provided input
 		</td>
 	<tr>
+
+	<tr>
+		<td valign="center">
+			<a href="#">
+				<img src="https://raw.githubusercontent.com/Virus5600/Generators/9fc7b230a4872842436edc592a652bb2c94aff5a/public/String%20Generator/assets/favicon.png" width="64">
+			</a>
+		</td>
+		<td valign="center">
+			<a href="#">
+				DTR Generator
+			</a>
+		</td>
+		<td valign="center">
+			Helps generate a DTR easily
+		</td>
+	<tr>
 </table>
 
 ## License

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Bootstrap 4.6 | Dark (Prefers dark over light) | Animate CSS 4.1.1 | Sweetalert 2 -->
+		<link rel="stylesheet" href="styles/libs.css">
+		<script type="text/javascript" src="scripts/libs.js"></script>
+
+		<!-- Custom Styling -->
+		<link rel="stylesheet" href="styles/index.css">
+
+		<!-- Favicon -->
+		<link rel="icon" href="assets/favicon.png" data-alt="./assets/favicon.png">
+
+		<!-- "Go Back" target -->
+		<meta name="go-back" content="../index.html" title="Generator">
+
+		<!-- Title -->
+		<title>DTR Generator</title>
+	</head>
+
+	<body class="min-vh-100 d-flex flex-column custom-scrollbar">
+		<div class="m-auto card col-10 px-0">
+			<!-- HEADER -->
+			<h4 class="card-header">Daily Time Record (DTR) Generator</h4>
+
+			<!-- CARD BODY -->
+			<div class="card-body position-relative d-flex flex-column">
+				
+				<div class="row">
+					<!-- FORM -->
+					<div class="col-12 col-lg-6">
+						
+					</div>
+
+					<!-- DTR -->
+					<div class="col-12 col-lg-6 d-flex justify-content-center">
+						<div class="dtr border border-dark" id="dtrSample">
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7">DAILY TIME RECORD</div>
+							</div>
+
+							<!-- EMPLOYEE NAME -->
+							<div class="dtr-row">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell dtr-cell-5 underline" data-name></div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<!-- DATE PERIOD -->
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-3">For the period of:</div>
+								<div class="dtr-cell dtr-cell-3 underline" data-period></div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<div class="dtr-row">
+								<!-- REGULAR DAYS -->
+								<div class="dtr-cell dtr-cell-2">Regular Days:</div>
+								<div class="dtr-cell underline" data-days></div>
+
+								<!-- SATURDAYS -->
+								<div class="dtr-cell dtr-cell-2">Saturdays:</div>
+								<div class="dtr-cell underline" data-saturday></div>
+								
+								<div class="dtr-cell"></div>
+							</div>
+
+							<!-- LINE BREAK -->
+							<div class="dtr-row">
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell border border-dark small font-italic font-weight-bold">IN</div>
+								<div class="dtr-cell border border-dark small font-italic font-weight-bold">OUT</div>
+								<div class="dtr-cell border border-dark small font-italic font-weight-bold text-danger">LUNCH</div>
+								<div class="dtr-cell border border-dark small font-italic font-weight-bold">IN</div>
+								<div class="dtr-cell border border-dark small font-italic font-weight-bold">OUT</div>
+								<div class="dtr-cell"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- FOOTER -->
+			<div class="card-footer d-flex justify-content-between" id="stringGenFooter">
+				<div class="btn-group mx-auto">
+					<button class="btn btn-primary" id="generate" type="button">
+						Generate
+					</button>
+
+					<button class="btn btn-secondary" id="reset" type="button">
+						Reset
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Libraries -->
+		<script type="text/javascript" src="./scripts/libs.js"></script>
+
+		<!-- Custom Scripts -->
+		<script type="text/javascript" src="./../resources/js/frameless.js" defer></script>
+	</body>
+</html>
