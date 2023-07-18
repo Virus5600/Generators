@@ -394,7 +394,7 @@ export default class Validator {
 	}
 
 	/**
-	 * Validates the fields provided and returns a JSON objec, containing all the values from the fields that passed.
+	 * Validates the fields provided and returns a JSON object, containing all the values from the fields that passed.
 	 * 
 	 * @return {Object}		A JSON object, containing a key-value pair format of fields and their values that passed the validation.
 	 */
@@ -436,7 +436,7 @@ export default class Validator {
 	}
 
 	/**
-	 * Retrtieves an array of field names that are invalid
+	 * Retrieves an array of field names that are invalid
 	 * 
 	 * @return {Array}		An array of field names that failed the validation
 	 */
@@ -445,7 +445,7 @@ export default class Validator {
 	}
 
 	/**
-	 * Retrtieves an array of field names that are valid
+	 * Retrieves an array of field names that are valid
 	 * 
 	 * @return {Array}		An array of field names that passed the validation
 	 */
@@ -454,7 +454,7 @@ export default class Validator {
 	}
 
 	/**
-	 * Retrtieves all the field names that are used in this validator
+	 * Retrieves all the field names that are used in this validator
 	 * 
 	 * @return {Array}		An array of all the field names used in this Validator
 	 */
