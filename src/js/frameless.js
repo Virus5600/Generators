@@ -87,7 +87,7 @@ function prependTitleBar() {
 	if (goBackURI) {
 		goBack = `
 			<h3 class="mx-3 my-2">
-				<a href="${goBackURI}" class="text-decoration-none">
+				<a href="${goBackURI}" class="text-decoration-none link-body-emphasis">
 					<i class="fas fa-chevron-left mr-2"></i> ${goBackTitle}
 				</a>
 			</h3>

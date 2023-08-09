@@ -12,9 +12,9 @@
 	min-width: calc(var(--dtr-cell-width) * 7);
 	width: calc(var(--dtr-cell-width) * 7);
 
-	max-height: calc(var(--dtr-cell-height) * 47);
-	min-height: calc(var(--dtr-cell-height) * 47);
-	height: calc(var(--dtr-cell-height) * 47);
+	max-height: calc(var(--dtr-cell-height) * 48);
+	min-height: calc(var(--dtr-cell-height) * 48);
+	height: calc(var(--dtr-cell-height) * 48);
 
 	display: flex;
 	flex-direction: column;
@@ -65,4 +65,8 @@
 			}
 		}
 	}
+}
+
+#printContainer {
+	display: none;
 }

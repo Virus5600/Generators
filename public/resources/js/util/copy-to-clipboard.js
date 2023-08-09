@@ -1,3 +1,6 @@
+if (!window.Swal)
+	window.Swal = require("node_modules/sweetalert2/dist/sweetalert2.all.min.js");
+
 $(document).ready(() => {
 	$(document).on('click', `[data-copy-target], [data-copy-text], [data-copy]`, (e) => {
 		let element = e.currentTarget;

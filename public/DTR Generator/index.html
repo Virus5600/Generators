@@ -18,7 +18,7 @@
 		<title>DTR Generator</title>
 	</head>
 
-	<body class="min-vh-100 d-flex flex-column custom-scrollbar">
+	<body class="min-vh-100 d-flex flex-column custom-scrollbar py-5" data-bs-theme="dark">
 		<div class="m-auto card col-10 px-0">
 			<!-- HEADER -->
 			<h4 class="card-header">Daily Time Record (DTR) Generator</h4>
@@ -28,7 +28,7 @@
 				
 				<div class="row">
 					<!-- FORM -->
-					<div class="col-12 col-lg-6">
+					<div class="col-12 col-lg-6 my-3">
 						<form action="javascript:void(0);" class="form">
 
 							<!-- JOB ORDER -->
@@ -65,250 +65,170 @@
 									<!-- Days 1 to 7 -->
 									<tr>
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 1
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-1" value="1" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-1" class="btn btn-outline-secondary w-100">1</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 2
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-2" value="2" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-2" class="btn btn-outline-secondary w-100">2</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 3
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-3" value="3" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-3" class="btn btn-outline-secondary w-100">3</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 4
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-4" value="4" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-4" class="btn btn-outline-secondary w-100">4</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 5
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-5" value="5" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-5" class="btn btn-outline-secondary w-100">5</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 6
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-6" value="6" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-6" class="btn btn-outline-secondary w-100">6</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 7
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-7" value="7" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-7" class="btn btn-outline-secondary w-100">7</label>
 										</td>
-
 									</tr>
-
+									
 									<!-- Days 8 to 14 -->
 									<tr>
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 8
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-8" value="8" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-8" class="btn btn-outline-secondary w-100">8</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 9
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-9" value="9" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-9" class="btn btn-outline-secondary w-100">9</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 10
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-10" value="10" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-10" class="btn btn-outline-secondary w-100">10</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 11
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-11" value="11" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-11" class="btn btn-outline-secondary w-100">11</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 12
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-12" value="12" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-12" class="btn btn-outline-secondary w-100">12</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 13
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-13" value="13" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-13" class="btn btn-outline-secondary w-100">13</label>
 										</td>
 
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 14
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-14" value="14" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-14" class="btn btn-outline-secondary w-100">14</label>
 										</td>
 									</tr>
-
+									
 									<!-- Days 15 to 21 -->
 									<tr>
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 15
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-15" value="15" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-15" class="btn btn-outline-secondary w-100">15</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 16
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-16" value="16" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-16" class="btn btn-outline-secondary w-100">16</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 17
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-17" value="17" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-17" class="btn btn-outline-secondary w-100">17</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 18
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-18" value="18" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-18" class="btn btn-outline-secondary w-100">18</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 19
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-19" value="19" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-19" class="btn btn-outline-secondary w-100">19</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 20
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-20" value="20" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-20" class="btn btn-outline-secondary w-100">20</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 21
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-21" value="21" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-21" class="btn btn-outline-secondary w-100">21</label>
 										</td>
 									</tr>
 
 									<!-- Days 22 to 28 -->
 									<tr>
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 22
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-22" value="22" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-22" class="btn btn-outline-secondary w-100">22</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 23
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-23" value="23" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-23" class="btn btn-outline-secondary w-100">23</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 24
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-24" value="24" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-24" class="btn btn-outline-secondary w-100">24</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 25
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-25" value="25" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-25" class="btn btn-outline-secondary w-100">25</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 26
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-26" value="26" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-26" class="btn btn-outline-secondary w-100">26</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 27
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-27" value="27" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-27" class="btn btn-outline-secondary w-100">27</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 28
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-28" value="28" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-28" class="btn btn-outline-secondary w-100">28</label>
 										</td>
 									</tr>
 
 									<!-- Days 29 to 31 -->
 									<tr>
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 29
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-29" value="29" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-29" class="btn btn-outline-secondary w-100">29</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 30
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-30" value="30" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-30" class="btn btn-outline-secondary w-100">30</label>
 										</td>
+
 										<td>
-											<div class="btn-group-toggle" data-toggle="buttons">
-												<label class="btn btn-outline-secondary w-100">
-													<input type="checkbox"> 31
-												</label>
-											</div>
+											<input type="checkbox" class="btn-check" id="date-31" value="31" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-31" class="btn btn-outline-secondary w-100">31</label>
 										</td>
 									</tr>
 								</table>
@@ -317,8 +237,8 @@
 					</div>
 
 					<!-- DTR -->
-					<div class="col-12 col-lg-6 d-flex justify-content-center">
-						<div class="dtr border border-dark" id="dtrSample">
+					<div class="col-12 col-lg-6 my-3 d-flex justify-content-center" data-bs-theme="light">
+						<div class="dtr border border-secondary m-2" id="dtrSample">
 							<div class="dtr-row">
 								<div class="dtr-cell dtr-cell-7">DAILY TIME RECORD</div>
 							</div>
@@ -326,25 +246,25 @@
 							<!-- EMPLOYEE NAME -->
 							<div class="dtr-row">
 								<div class="dtr-cell"></div>
-								<div class="dtr-cell dtr-cell-5 underline" data-name></div>
+								<div class="dtr-cell dtr-cell-5 underline" data-dtr-name>[EMPLOYEE NAME]</div>
 								<div class="dtr-cell"></div>
 							</div>
 
 							<!-- DATE PERIOD -->
 							<div class="dtr-row">
 								<div class="dtr-cell dtr-cell-3">For the period of:</div>
-								<div class="dtr-cell dtr-cell-3 underline" data-period></div>
+								<div class="dtr-cell dtr-cell-3 underline" data-dtr-period>[PERIOD]</div>
 								<div class="dtr-cell"></div>
 							</div>
 
 							<div class="dtr-row">
 								<!-- REGULAR DAYS -->
 								<div class="dtr-cell dtr-cell-2">Regular Days:</div>
-								<div class="dtr-cell underline" data-days></div>
+								<div class="dtr-cell underline" data-dtr-days>[DAYS]</div>
 
 								<!-- SATURDAYS -->
 								<div class="dtr-cell dtr-cell-2">Saturdays:</div>
-								<div class="dtr-cell underline" data-saturday></div>
+								<div class="dtr-cell underline" data-dtr-saturday>[???]</div>
 								
 								<div class="dtr-cell"></div>
 							</div>
@@ -353,22 +273,86 @@
 							<div class="dtr-row">
 							</div>
 
+							<div class="dtr-row" id="dtrHeader">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell border border-secondary small fst-italic fw-bold">IN</div>
+								<div class="dtr-cell border border-secondary small fst-italic fw-bold">OUT</div>
+								<div class="dtr-cell border border-secondary small fst-italic fw-bold text-danger">LUNCH</div>
+								<div class="dtr-cell border border-secondary small fst-italic fw-bold">IN</div>
+								<div class="dtr-cell border border-secondary small fst-italic fw-bold">OUT</div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7"></div>
+							</div>
+
+							<!-- JO SIGNATURE -->
 							<div class="dtr-row">
 								<div class="dtr-cell"></div>
-								<div class="dtr-cell border border-dark small font-italic font-weight-bold">IN</div>
-								<div class="dtr-cell border border-dark small font-italic font-weight-bold">OUT</div>
-								<div class="dtr-cell border border-dark small font-italic font-weight-bold text-danger">LUNCH</div>
-								<div class="dtr-cell border border-dark small font-italic font-weight-bold">IN</div>
-								<div class="dtr-cell border border-dark small font-italic font-weight-bold">OUT</div>
+								<div class="dtr-cell dtr-cell-5 underline" data-dtr-name></div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7 small fst-italic text-center">
+									I certify on my honour that the above is a true and correct
+								</div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7 small fst-italic text-center">
+									report of hours worked, recorded daily at the time of
+								</div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7 small fst-italic text-center">
+									arrival at and departure from the office.
+								</div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7"></div>
+							</div>
+
+							<!-- VERIFIED BY -->
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7 small fst-italic text-center">
+									Verified as to and per the prescribed office hours:
+								</div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell dtr-cell-5 underline"></div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell dtr-cell-5 small fw-bold" data-dtr-verifier>[VERIFIER NAME]</div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell dtr-cell-5 small fst-italic" data-dtr-verifier-position>[VERIFIER POSITION]</div>
 								<div class="dtr-cell"></div>
 							</div>
 						</div>
 					</div>
 				</div>
+
+				<!-- GENERATED DTRS -->
+				<div class="row">
+					<div class="col-12 overflow-auto d-flex flex-row bg-white text-dark" id="generatedDTR" data-bs-theme="light">
+					</div>
+				</div>
 			</div>
 
 			<!-- FOOTER -->
-			<div class="card-footer d-flex justify-content-between" id="stringGenFooter">
+			<div class="card-footer d-flex justify-content-between" id="dtrGenFooter">
 				<div class="btn-group mx-auto">
 					<button class="btn btn-primary" id="generate" type="button">
 						Generate
@@ -378,6 +362,12 @@
 						Reset
 					</button>
 				</div>
+			</div>
+		</div>
+
+		<!-- FOR PRINTING -->
+		<div id="printContainer" class="bg-white text-dark" data-bs-theme="light">
+			<div class="row">
 			</div>
 		</div>
 

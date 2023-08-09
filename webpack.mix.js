@@ -19,7 +19,10 @@ mix.webpackConfig({
 		devtool: 'inline-source-map'
 	})
 	.copy('src/js/*(!frameless.js)*', 'public/resources/js/', false)
+	.copy('src/js/util/*(!util.js)*', 'public/resources/js/util/', false)
+
 	.copy('src/css/', 'public/resources/css/', false)
+	
 	.copy('src/resources/', 'public/resources/', false)
 	
 	// Additional Styles
