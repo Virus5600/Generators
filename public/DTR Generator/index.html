@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<!-- Bootstrap 4.6 | Dark (Prefers dark over light) | Animate CSS 4.1.1 | Sweetalert 2 -->
+		<!-- Bootstrap 4.6 | Dark (Prefers dark over light) | Sweetalert 2 -->
 		<link rel="stylesheet" href="styles/libs.css">
-		<script type="text/javascript" src="scripts/libs.js"></script>
+		<!-- General Styles -->
+		<link rel="stylesheet" href="../resources/css/general.css">
 
 		<!-- Custom Styling -->
 		<link rel="stylesheet" href="styles/index.css">
@@ -19,7 +20,7 @@
 	</head>
 
 	<body class="min-vh-100 d-flex flex-column custom-scrollbar py-5" data-bs-theme="dark">
-		<div class="m-auto card col-10 px-0">
+		<div class="m-auto card col-10 px-0" id="body">
 			<!-- HEADER -->
 			<h4 class="card-header">Daily Time Record (DTR) Generator</h4>
 
@@ -355,10 +356,17 @@
 			<div class="card-footer d-flex justify-content-between" id="dtrGenFooter">
 				<div class="btn-group mx-auto">
 					<button class="btn btn-primary" id="generate" type="button">
+						<i class="fas fa-gear me-2"></i>
 						Generate
 					</button>
 
+					<button class="btn btn-success" id="print" type="button">
+						<i class="fas fa-print transition-2 me-2"></i>
+						Print
+					</button>
+
 					<button class="btn btn-secondary" id="reset" type="button">
+						<i class="fas fa-arrow-rotate-left me-2"></i>
 						Reset
 					</button>
 				</div>
