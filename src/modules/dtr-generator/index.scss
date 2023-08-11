@@ -68,5 +68,44 @@
 }
 
 #printContainer {
+	padding: 0;
 	display: none;
+
+	&.print-enabled {
+		display: block !important;
+
+		--dtr-cell-width: calc(3.5rem * .90625);
+		--dtr-cell-height: calc(1.5rem * .875);
+
+		& * {
+			font-size: .8125rem;
+		}
+
+		& .underline {
+			border-color: var(--bs-black);
+		}
+
+		& > .row {
+			& > * {
+				display: flex;
+			}
+
+			& > *:nth-child(odd) {
+				justify-content: right;
+			}
+
+			& > *:nth-child(even) {
+				justify-content: left;
+				break-after: page;
+			}
+
+			& > * {
+				padding: 0;
+			}
+		}
+	}
+}
+
+.print-enabled {
+	display: none !important;
 }

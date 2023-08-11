@@ -117,7 +117,7 @@ function updateFavicon(favicon) {
 			console.log("win 1st ran");
 		} catch (e) {
 			firstSuccess = false;
-			console.warn("First attempt to set icon failed\nUsing: " + favicon);
+			console.warn("First attempt to set icon failed\nUsing: " + favicon, e);
 		}
 		
 		// Second Attempt
@@ -129,7 +129,7 @@ function updateFavicon(favicon) {
 		}
 	} catch (ex) {
 		secondSuccess = false;
-		console.warn("Second attempt to set icon failed\nUsing: " + favicon);
+		console.warn("Second attempt to set icon failed\nUsing: " + favicon, ex);
 	}
 
 	return (firstSuccess || secondSuccess);

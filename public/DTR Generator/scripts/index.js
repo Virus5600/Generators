@@ -5,7 +5,7 @@ const dataAttr = [
 	'days',
 	'saturday',
 	'verifier',
-	'verifier-positions'
+	'verifier-position'
 ];
 
 $(document).ready(() => {
@@ -22,8 +22,64 @@ $(document).ready(() => {
 		$(`#jobOrderList`).change();
 	});
 
+	// Drag clicking checkboxes
+	const DRAGCHECK = {
+		enabled: false,
+		state: false,
+		group: null,
+		enable(obj) {
+			try {
+				DRAGCHECK.enabled = true;
+				DRAGCHECK.state = !obj.is(`:checked`);
+				DRAGCHECK.group = `[name=\"${obj.attr(`name`)}\"]`;
+			} catch (e) {
+				console.error(e);
+				return false;
+			}
+			return true;
+		},
+		disable(callback) {
+			try {
+				DRAGCHECK.enabled = false;
+				DRAGCHECK.state = false;
+				DRAGCHECK.group = null;
+
+				if (typeof callback != 'undefined')
+					callback();
+			} catch (e) {
+				console.error(e);
+				return false;
+			}
+			return true;
+		}
+	};
+
+	$(document).on(`mousedown`, `[data-dragcheck]`, (e) => {
+		let obj = $(e.currentTarget);
+		let target = obj.find(obj.attr(`data-dragcheck`));
+
+		DRAGCHECK.enable(target ?? obj);
+	}).on(`mouseover mouseleave`, `[data-dragcheck]`, (e) => {
+		if (DRAGCHECK.enabled) {
+			let obj = $(e.currentTarget);
+			let state = DRAGCHECK.state ? `:not(:checked)` : `:checked`;
+			
+			let target = obj.attr(`data-dragcheck`);
+			target = target ? obj.find(target) : obj;
+
+			if (target.is(state) && target.is(DRAGCHECK.group)) {
+				target.trigger(`click`);
+				DTR.reset();
+			}
+		}
+	});
+
+	$(document).on(`mouseup`, (e) => {
+		DRAGCHECK.disable();
+	});
+
 	$(`#reset`).on(`click`, (e) => {
-		window.location = window.location;
+		confirmLeave(window.location, undefined, `This will reset all fields.`);
 	});
 
 	// Adding a little animation on hover (for the footer buttons) //
@@ -53,7 +109,6 @@ $(document).ready(() => {
 			.css(`--fa-bounce-jump-scale-y`, `1.5`)
 			.css(`--fa-bounce-land-scale-x`, `1`)
 			.css(`--fa-bounce-land-scale-y`, `1`);
-
 	}).on(`mouseleave blur`, (e) => {
 		$($(e.currentTarget).find(`*:first`))
 			.removeClass(`fa-bounce`)
@@ -90,6 +145,7 @@ $(document).ready(() => {
 });
 
 const DTR = {
+	list: [],
 	displayContent(e) {
 		DTR.reset();
 
@@ -98,25 +154,23 @@ const DTR = {
 
 		reader.onload = () => {
 			content = reader.result;
-
-			let list = [];
 			let toAppend = `<ul>`;
 
 			$.each(content.split("\n"), (k, v) => {
-				list.push(v);
+				DTR.list.push(v);
 				toAppend += `<li>${v.replaceAll(`\t`, `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`)}</li>`;
 			});
 
 			toAppend += `</ul>`;
 
 			$(`#listPreview`).html(toAppend);
-			DTR.preview(list);
+			DTR.preview();
 		};
 
 		if (e.target.files.length > 0)
 			reader.readAsText(e.target.files[0]);
 	},
-	preview(list) {
+	preview() {
 		let dates = "";
 
 		for (let i = 1; i <= 31; i++) {
@@ -135,6 +189,7 @@ const DTR = {
 			`;
 		}
 
+		DTR.reset();
 		$(dates).insertAfter(`#dtrSample #dtrHeader`);
 		$(`[data-dtr-toggle]`).attr(`data-dtr-displayed`, `true`);
 
@@ -162,12 +217,22 @@ const DTR = {
 			dataAttr.forEach((attr) => {
 				let obj = DTR.find(`[${prefix}-${attr}]`);
 
-				if (attr == 'name')
+				if (attr == 'name') {
 					obj.text(name);
-				else
-					obj.text(`${attr}`);
+				}
+				else {
+					let attrVal = $(`[name=${attr}]`).val();
+					obj.text(attrVal ?? ``);
+				}
 
 			});
+
+			DTR.find(`.border-secondary`)
+				.removeClass(`border-secondary`)
+				.addClass(`border-black`);
+
+			DTR.find(`.dtr.m-2`)
+				.removeClass(`m-2`);
 			
 			toAppend += DTR.html();
 			toAppendPrint += `<div class="col-6">${DTR.html()}</div>`;
@@ -181,6 +246,13 @@ const DTR = {
 			$(`#print`).prop(`disabled`, false);
 	},
 	print() {
+		const elms =  $(`body > *:not(script, style, link)`);
+		elms.addClass(`print-enabled`);
 
+		window.print();
+
+		setTimeout(() => {
+			elms.removeClass(`print-enabled`);
+		}, 1000);
 	}
 };

@@ -2,6 +2,7 @@
 @use "../fontawesome.scss";
 
 // Bootstrap
+@use "../mixins/colors";
 @use "bootstrap";
 
 @use "../../css/frameless";
