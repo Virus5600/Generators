@@ -1,5 +1,5 @@
 // Utility
-import UniqueArray from "../../../resources/js/util/unique-array/unique-array.mod.js";
+import UniqueArray from "../../../js/util/unique-array/unique-array.mod.js";
 import * as Rules from "./Rules.js";
 
 // Module
@@ -141,6 +141,11 @@ export default class Validator {
 			else if (rules.includes('sometimes')) {
 				runOtherValidation = this.#validateField(field, this.#valueList[field], ["sometimes"], messages);
 				rules.splice(rules.indexOf("sometimes"), 1);
+			}
+			// Verify if a "nullable" rule exists. If it does, then just run the validation for that rule only.
+			else if (rules.includes(`nullable`)) {
+				runOtherValidation = this.#validateField(field, this.#valueList[field], ["nullable"], messages);
+				rules.splice(rules.indexOf("nullable"), 1);
 			}
 
 			// The actual validation; LMAO

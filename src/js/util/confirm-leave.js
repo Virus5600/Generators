@@ -6,7 +6,7 @@
  * @param isLivewire Boolean value. Whether the value of `urlTo` is a livewire event or not
  * @param livewireComponent Object value. Required whenever `isLivewire` is `true`. This identifies what component will call the provided livewire action
  */
-function confirmLeave(urlTo, title="Are you sure?", message = "You have unsave changes.", isLivewire = false, livewireComponent = null) {
+function confirmLeave(urlTo, title = "Are you sure?", message = "You have unsave changes.", isLivewire = false, livewireComponent = null) {
 	Swal.fire({
 		icon: 'warning',
 		html: `<h4>${title}</h4><p>${message}</p>`,
@@ -32,4 +32,26 @@ function confirmLeave(urlTo, title="Are you sure?", message = "You have unsave c
 			}
 		}
 	});
+}
+
+/**
+ * Warns the user about the action they are doing.
+ * @param title String value. Title of the confirmation.
+ * @param message String value. Message of the confirmation.
+ */
+async function confirmAction(title = "Are you sure?", message = "This action is undoable") {
+	let returnVal = false;
+
+	await Swal.fire({
+		icon: 'warning',
+		html: `<h4>${title}</h4><p>${message}</p>`,
+		showDenyButton: true,
+		confirmButtonText: 'Yes',
+		denyButtonText: 'No'
+	}).then((result) => {
+		if (result.isConfirmed)
+			returnVal = true;
+	});
+
+	return returnVal;
 }

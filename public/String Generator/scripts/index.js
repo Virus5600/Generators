@@ -3,7 +3,7 @@ import UniqueArray from "../../resources/js/util/unique-array/unique-array.mod.j
 import SwalFlash from "../../resources/js/util/swal-flash/swal-flash.mod.js";
 
 // Validator
-import Validator from "./Validation/Validator.js";
+import Validator from "../../resources/js/util/validator/Validator.js";
 
 var validation = {
 	rules: {

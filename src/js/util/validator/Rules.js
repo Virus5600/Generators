@@ -362,7 +362,37 @@ export class Nullable extends Rule {
 	}
 
 	validate() {
-		if (this._value === null)
+		let runOtherValidation = true;
+		this._valid = true;
+
+		if (this._value === null || this._value === "") {
+			runOtherValidation = false;
+		}
+
+		return {
+			valid: this._valid,
+			message: this._message,
+			runOtherValidation: runOtherValidation
+		};
+	}
+}
+
+export class String extends Rule {
+	/**
+	 * Tests whether the value is a string or not.
+	 * @param {String}	field			The name of the field being tested
+	 * @param {Any} 	value			The value to validate
+	 * @param {String} message			The message to use when the rule fails
+	 */
+	constructor(field, value, message = "The :attr field is not a string") {
+		super(field, value, message);
+	}
+
+	validate() {
+		let response = this._value.match(/[a-zA-Z0-9\.,\\\/"'\(\)\[\]{}\-\+_=\*\&%\!@#\$\^<>\?\s]+/);
+		response = response ?? [];
+
+		if (response.length == 1)
 			this._valid = true;
 
 		return {
