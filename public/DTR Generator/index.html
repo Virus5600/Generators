@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Bootstrap 4.6 | Dark (Prefers dark over light) | Sweetalert 2 -->
+		<link rel="stylesheet" href="styles/libs.css">
+		<!-- General Styles -->
+		<link rel="stylesheet" href="../resources/css/general.css">
+
+		<!-- Custom Styling -->
+		<link rel="stylesheet" href="styles/index.css">
+
+		<!-- Favicon -->
+		<link rel="icon" href="assets/favicon.png" data-alt="./assets/favicon.png">
+
+		<!-- "Go Back" target -->
+		<meta name="go-back" content="../index.html" title="Generator">
+
+		<!-- Title -->
+		<title>DTR Generator</title>
+	</head>
+
+	<body class="min-vh-100 d-flex flex-column custom-scrollbar py-5" data-bs-theme="dark">
+		<div class="m-auto card col-10 px-0" id="body">
+			<!-- HEADER -->
+			<h4 class="card-header">Daily Time Record (DTR) Generator</h4>
+
+			<!-- CARD BODY -->
+			<div class="card-body position-relative d-flex flex-column">
+				
+				<div class="row">
+					<!-- FORM -->
+					<div class="col-12 col-lg-6 my-3">
+						<form action="javascript:DTR.validate(this);" class="form" id="form">
+
+							<!-- JOB ORDER -->
+							<div class="form-group my-3">
+								<label id="jobOrderLabel" for="jobOrderList" class="form-label required before">Upload List of Job Orders</label>
+								<input type="file" class="form-control-file d-none" id="jobOrderList" aria-describedby="jobOrderLabel" name="jobOrders" required>
+								<button type="button" class="btn btn-outline-secondary w-100 py-1 w-100" id="listUploadBtn">Upload</button>
+								<div id="listPreview" class="form-control my-3 bg-secondary fit-content"></div>
+							</div>
+
+							<!-- PERIOD -->
+							<div class="form-group my-3">
+								<label for="periodInput" id="periodLabel" class="form-label required before">Period</label>
+								<input type="text" class="form-control" id="periodInput" aria-describedby="periodLabel" name="period" required>
+								<small class="feedback" data-validation="period"></small>
+							</div>
+
+							<div class="row my-3">
+								<!-- DAYS -->
+								<div class="col-12 col-lg-6 form-group">
+									<label for="daysInput" id="daysLabel" class="form-label">Days</label>
+									<input type="number" class="form-control" id="daysInput" aria-describedby="daysLabel" min="1" max="20" name="days">
+									<small class="feedback" data-validation="days"></small>
+								</div>
+								
+								<!-- SATURDAYS -->
+								<div class="col-12 col-lg-6 form-group">
+									<label for="saturdayInput" id="saturdayLabel" class="form-label">Saturdays</label>
+									<input type="number" class="form-control" id="saturdayInput" aria-describedby="saturdayLabel" min="0" max="5" name="saturday">
+									<small class="feedback" data-validation="saturday"></small>
+								</div>
+							</div>
+
+
+							<!-- DEPARTMENT HEAD -->
+							<div class="row my-3">
+								<div class="col-12 col-lg-6 form-group">
+									<label for="verifierInput" id="verifierLabel" class="form-label required before">Verifier Name</label>
+									<input type="text" class="form-control" id="verifierInput" aria-describedby="verifierLabel" name="verifier" required>
+									<small class="feedback" data-validation="verifier"></small>
+								</div>
+
+								<div class="col-12 col-lg-6 form-group">
+									<label for="verifierPosInput" id="verifierPosLabel" class="form-label required before">Verifier Position</label>
+									<input type="text" class="form-control" id="verifierPosInput" aria-describedby="verifierPosLabel" name="verifier-position" required>
+									<small class="feedback" data-validation="verifier-position"></small>
+								</div>
+							</div>
+
+							<!-- DATE RANGE -->
+							<div class="form-group my-3">
+								<label for="dates[]" id="dates[]Label" class="form-label required before">Dates</label>
+								<table class="w-100">
+									<!-- Days 1 to 7 -->
+									<tr>
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-1" value="1" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-1" class="btn btn-outline-secondary w-100">1</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-2" value="2" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-2" class="btn btn-outline-secondary w-100">2</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-3" value="3" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-3" class="btn btn-outline-secondary w-100">3</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-4" value="4" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-4" class="btn btn-outline-secondary w-100">4</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-5" value="5" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-5" class="btn btn-outline-secondary w-100">5</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-6" value="6" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-6" class="btn btn-outline-secondary w-100">6</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-7" value="7" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-7" class="btn btn-outline-secondary w-100">7</label>
+										</td>
+									</tr>
+									
+									<!-- Days 8 to 14 -->
+									<tr>
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-8" value="8" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-8" class="btn btn-outline-secondary w-100">8</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-9" value="9" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-9" class="btn btn-outline-secondary w-100">9</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-10" value="10" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-10" class="btn btn-outline-secondary w-100">10</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-11" value="11" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-11" class="btn btn-outline-secondary w-100">11</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-12" value="12" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-12" class="btn btn-outline-secondary w-100">12</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-13" value="13" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-13" class="btn btn-outline-secondary w-100">13</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-14" value="14" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-14" class="btn btn-outline-secondary w-100">14</label>
+										</td>
+									</tr>
+									
+									<!-- Days 15 to 21 -->
+									<tr>
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-15" value="15" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-15" class="btn btn-outline-secondary w-100">15</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-16" value="16" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-16" class="btn btn-outline-secondary w-100">16</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-17" value="17" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-17" class="btn btn-outline-secondary w-100">17</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-18" value="18" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-18" class="btn btn-outline-secondary w-100">18</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-19" value="19" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-19" class="btn btn-outline-secondary w-100">19</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-20" value="20" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-20" class="btn btn-outline-secondary w-100">20</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-21" value="21" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-21" class="btn btn-outline-secondary w-100">21</label>
+										</td>
+									</tr>
+
+									<!-- Days 22 to 28 -->
+									<tr>
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-22" value="22" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-22" class="btn btn-outline-secondary w-100">22</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-23" value="23" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-23" class="btn btn-outline-secondary w-100">23</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-24" value="24" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-24" class="btn btn-outline-secondary w-100">24</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-25" value="25" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-25" class="btn btn-outline-secondary w-100">25</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-26" value="26" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-26" class="btn btn-outline-secondary w-100">26</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-27" value="27" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-27" class="btn btn-outline-secondary w-100">27</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-28" value="28" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-28" class="btn btn-outline-secondary w-100">28</label>
+										</td>
+									</tr>
+
+									<!-- Days 29 to 31 -->
+									<tr>
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-29" value="29" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-29" class="btn btn-outline-secondary w-100">29</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-30" value="30" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-30" class="btn btn-outline-secondary w-100">30</label>
+										</td>
+
+										<td data-dragcheck="input[name='dates[]']">
+											<input type="checkbox" class="btn-check" id="date-31" value="31" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
+											<label for="date-31" class="btn btn-outline-secondary w-100">31</label>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</form>
+					</div>
+
+					<!-- DTR -->
+					<div class="col-12 col-lg-6 my-3 d-flex justify-content-center" data-bs-theme="light">
+						<div class="dtr border border-secondary m-2" id="dtrSample">
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7">DAILY TIME RECORD</div>
+							</div>
+
+							<!-- EMPLOYEE NAME -->
+							<div class="dtr-row">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell dtr-cell-5 underline" data-dtr-name>[EMPLOYEE NAME]</div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<!-- DATE PERIOD -->
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-3">For the period of:</div>
+								<div class="dtr-cell dtr-cell-3 underline" data-dtr-period>[PERIOD]</div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<div class="dtr-row">
+								<!-- REGULAR DAYS -->
+								<div class="dtr-cell dtr-cell-2">Regular Days:</div>
+								<div class="dtr-cell underline" data-dtr-days>[DAYS]</div>
+
+								<!-- SATURDAYS -->
+								<div class="dtr-cell dtr-cell-2">Saturdays:</div>
+								<div class="dtr-cell underline" data-dtr-saturday>[???]</div>
+								
+								<div class="dtr-cell"></div>
+							</div>
+
+							<!-- LINE BREAK -->
+							<div class="dtr-row">
+							</div>
+
+							<div class="dtr-row" id="dtrHeader">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell border border-secondary small fst-italic fw-bold">IN</div>
+								<div class="dtr-cell border border-secondary small fst-italic fw-bold">OUT</div>
+								<div class="dtr-cell border border-secondary small fst-italic fw-bold text-danger">LUNCH</div>
+								<div class="dtr-cell border border-secondary small fst-italic fw-bold">IN</div>
+								<div class="dtr-cell border border-secondary small fst-italic fw-bold">OUT</div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7"></div>
+							</div>
+
+							<!-- JO SIGNATURE -->
+							<div class="dtr-row">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell dtr-cell-5 underline" data-dtr-name></div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7 small fst-italic text-center">
+									I certify on my honour that the above is a true and
+								</div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7 small fst-italic text-center">
+									correct report of hours worked, recorded daily at
+								</div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7 small fst-italic text-center">
+									the time of arrival at and departure from the office.
+								</div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7"></div>
+							</div>
+
+							<!-- VERIFIED BY -->
+							<div class="dtr-row">
+								<div class="dtr-cell dtr-cell-7 small fst-italic text-center">
+									Verified as to and per the prescribed office hours:
+								</div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell dtr-cell-5 underline"></div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell dtr-cell-5 small fw-bold" data-dtr-verifier>[VERIFIER NAME]</div>
+								<div class="dtr-cell"></div>
+							</div>
+
+							<div class="dtr-row">
+								<div class="dtr-cell"></div>
+								<div class="dtr-cell dtr-cell-5 small fst-italic" data-dtr-verifier-position>[VERIFIER POSITION]</div>
+								<div class="dtr-cell"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- GENERATED DTRS -->
+				<div class="row">
+					<div class="col-12 overflow-auto d-flex flex-row bg-white text-dark" id="generatedDTR" data-bs-theme="light">
+					</div>
+				</div>
+			</div>
+
+			<!-- FOOTER -->
+			<div class="card-footer d-flex justify-content-between" id="dtrGenFooter">
+				<div class="btn-group mx-auto">
+					<button class="btn btn-primary" id="generate" type="button" for="form">
+						<i class="fas fa-gear me-2"></i>
+						Generate
+					</button>
+
+					<button class="btn btn-success" id="print" type="button">
+						<i class="fas fa-print transition-2 me-2"></i>
+						Print
+					</button>
+
+					<button class="btn btn-secondary" id="reset" type="button">
+						<i class="fas fa-arrow-rotate-left me-2"></i>
+						Reset
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- FOR PRINTING -->
+		<div id="printContainer" class="bg-white text-dark" data-bs-theme="light">
+			<div class="row">
+			</div>
+		</div>
+
+		<!-- Libraries -->
+		<script type="text/javascript" src="./scripts/libs.js"></script>
+
+		<!-- Custom Scripts -->
+		<script type="text/javascript" src="./../resources/js/frameless.js" defer></script>
+		<script type="text/javascript" src="./../resources/js/util/confirm-leave.js" defer></script>
+		<script type="text/javascript" src="./../resources/js/util/serialize-form-json/serialize-form-json.js"></script>
+		
+		<script type="module" src="./scripts/index.js"></script>
+	</body>
+</html>

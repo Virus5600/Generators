@@ -2,20 +2,24 @@
 	$.fn.serializeFormJSON = function () {
 		var jsonForm = {};
 		var a = this.serializeArray();
-		var indexes = {};
 
 		$.each(a, function () {
+			let isArray = false;
 			if (this.name.match(/(\[\])/gi)) {
+				isArray = true;
 				this.name = this.name.replaceAll(/(\[\])/gi, "");
 			}
 
 			if (jsonForm[this.name]) {
-				if (!jsonForm[this.name].push) {
-					jsonForm[this.name] = [jsonForm[this.name]];
-				}
-				jsonForm[this.name].push(this.value || '');
+				if (isArray)
+					jsonForm[this.name].push(this.value || '');
+				else
+					jsonForm[this.name] = this.value;
 			} else {
-				jsonForm[this.name] = this.value || '';
+				if (isArray)
+					jsonForm[this.name] = [this.value || ''];
+				else
+					jsonForm[this.name] = this.value || '';
 			}
 		});
 		return jsonForm;
