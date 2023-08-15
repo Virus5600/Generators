@@ -197,11 +197,25 @@ const DTR = {
 			dates += `
 				<div class="dtr-row" data-date="${date.attr("id")}">
 					<div class="dtr-cell text-end px-1">${i}</div>
-					<div class="dtr-cell border border-secondary small" data-update>${date.prop(`checked`) ? "08:00" : ""}</div>
-					<div class="dtr-cell border border-secondary small" data-update>${date.prop(`checked`) ? "12:00" : ""}</div>
+					
+					<div class="dtr-cell border border-secondary small" data-update>
+						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? "08:00" : ""}" readonly>
+					</div>
+					
+					<div class="dtr-cell border border-secondary small" data-update>
+						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? "12:00" : ""}" readonly>
+					</div>
+					
 					<div class="dtr-cell border border-secondary small fst-italic fw-bold text-danger" data-update>${date.prop(`checked`) ? "BRK" : ""}</div>
-					<div class="dtr-cell border border-secondary small" data-update>${date.prop(`checked`) ? "01:00" : ""}</div>
-					<div class="dtr-cell border border-secondary small" data-update>${date.prop(`checked`) ? "05:00" : ""}</div>
+					
+					<div class="dtr-cell border border-secondary small" data-update>
+						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? "01:00" : ""}" readonly>
+					</div>
+					
+					<div class="dtr-cell border border-secondary small" data-update>
+						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? "05:00" : ""}" readonly>
+					</div>
+					
 					<div class="dtr-cell"></div>
 				</div>
 			`;
@@ -332,8 +346,8 @@ const DTR = {
 		}
 	},
 	generate() {
-		let target = $(`#generatedDTR`), printTarget = $(`#printContainer > .row`);
-		let toAppend = ``, toAppendPrint = ``;
+		let target = $(`#generatedDTR`);
+		let toAppend = ``;
 
 		$(`#listPreview li`).each((k, v) => {
 			let name = $(v).text().trim();
@@ -345,14 +359,26 @@ const DTR = {
 				.parent();
 
 			dataAttr.forEach((attr) => {
-				let obj = DTR.find(`[${prefix}-${attr}]`);
+				let verifier = attr == `verifier` || attr == `verifier-position`;
+				let obj = DTR.find(`[${prefix}-${attr}] ${verifier ? `` : `input`}`.trim());
+				
+				obj.addClass(`text-black`)
+					.removeAttr(`readonly`)
+					.prop(`readonly`, false);
 
 				if (attr == 'name') {
-					obj.text(name);
+					if (verifier)
+						obj.text(name);
+					else
+						obj.val(name).attr(`value`, name);
 				}
 				else {
 					let attrVal = $(`[name=${attr}]`).val();
-					obj.text(attrVal ?? ``);
+					
+					if (verifier)
+						obj.text(attrVal ?? ``);
+					else
+						obj.val(attrVal ?? ``).attr(`value`, attrVal ?? ``);
 				}
 
 			});
@@ -363,27 +389,41 @@ const DTR = {
 
 			DTR.find(`.dtr.m-2`)
 				.removeClass(`m-2`);
+
+			DTR.find(`[data-update] > input`)
+				.removeAttr(`readonly`)
+				.prop(`readonly`, false)
+				.addClass(`text-black`);
 			
 			toAppend += DTR.html();
-			toAppendPrint += `<div class="col-6">${DTR.html()}</div>`;
 			// TODO: Implement Inputs for the generated preview.
 		});
 		
 		target.html(toAppend)
 			.addClass(`py-3`);
-		printTarget.html(toAppendPrint);
 
 		if ($(`#print`).prop(`disabled`))
 			$(`#print`).prop(`disabled`, false);
 	},
 	print() {
+		// DATA PARSING
+		const printTarget = $(`#printContainer > .row`);
+		let toAppend = ``;
+
+		$(`#generatedDTR`).children().each((k, v) => {
+			let data = $(v);
+
+			toAppend += `<div class="col-6">${data.html()}</div>`;
+		});
+
+		// ACTUAL PRINTING
 		const elms =  $(`body > *:not(script, style, link)`);
 		elms.addClass(`print-enabled`);
 
-		window.print();
+		// window.print();
 
-		setTimeout(() => {
-			elms.removeClass(`print-enabled`);
-		}, 1000);
+		// setTimeout(() => {
+		// 	elms.removeClass(`print-enabled`);
+		// }, 1000);
 	}
 };
