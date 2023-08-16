@@ -26,6 +26,17 @@
 
 			<!-- CARD BODY -->
 			<div class="card-body position-relative d-flex flex-column">
+
+				<div class="container-fluid">
+					<p>To insert the list of JOs (Job Orders), upload a <code>.txt</code> file containing the full name of each employee per line similar to this:</p>
+					<pre class="border p-2"><code>Doug D. Sims<br>Cristina A. Dougherty<br>Dee J. Coon, Jr.<br>Hugo L. Davidson<br>...</code></pre>
+
+					<div class="d-flex flex-row">
+						<button type="button" class="btn btn-secondary mx-auto" id="tutorial">Tutorial</button>
+					</div>
+				</div>
+
+				<hr>
 				
 				<div class="row">
 					<!-- FORM -->
@@ -33,7 +44,7 @@
 						<form action="javascript:DTR.validate(this);" class="form" id="form">
 
 							<!-- JOB ORDER -->
-							<div class="form-group my-3">
+							<div class="form-group my-3" id="jobOrderArea">
 								<label id="jobOrderLabel" for="jobOrderList" class="form-label required before">Upload List of Job Orders</label>
 								<input type="file" class="form-control-file d-none" id="jobOrderList" aria-describedby="jobOrderLabel" name="jobOrders" required>
 								<button type="button" class="btn btn-outline-secondary w-100 py-1 w-100" id="listUploadBtn">Upload</button>
@@ -41,7 +52,7 @@
 							</div>
 
 							<!-- PERIOD -->
-							<div class="form-group my-3">
+							<div class="form-group my-3" id="periodArea">
 								<label for="periodInput" id="periodLabel" class="form-label required before">Period</label>
 								<input type="text" class="form-control" id="periodInput" aria-describedby="periodLabel" name="period" required>
 								<small class="feedback" data-validation="period"></small>
@@ -49,14 +60,14 @@
 
 							<div class="row my-3">
 								<!-- DAYS -->
-								<div class="col-12 col-lg-6 form-group">
+								<div class="col-12 col-lg-6 form-group" id="daysArea">
 									<label for="daysInput" id="daysLabel" class="form-label">Days</label>
 									<input type="number" class="form-control" id="daysInput" aria-describedby="daysLabel" min="1" max="20" name="days">
 									<small class="feedback" data-validation="days"></small>
 								</div>
 								
 								<!-- SATURDAYS -->
-								<div class="col-12 col-lg-6 form-group">
+								<div class="col-12 col-lg-6 form-group" id="saturdayArea">
 									<label for="saturdayInput" id="saturdayLabel" class="form-label">Saturdays</label>
 									<input type="number" class="form-control" id="saturdayInput" aria-describedby="saturdayLabel" min="0" max="5" name="saturday">
 									<small class="feedback" data-validation="saturday"></small>
@@ -66,13 +77,13 @@
 
 							<!-- DEPARTMENT HEAD -->
 							<div class="row my-3">
-								<div class="col-12 col-lg-6 form-group">
+								<div class="col-12 col-lg-6 form-group" id="verifierArea">
 									<label for="verifierInput" id="verifierLabel" class="form-label required before">Verifier Name</label>
 									<input type="text" class="form-control" id="verifierInput" aria-describedby="verifierLabel" name="verifier" required>
 									<small class="feedback" data-validation="verifier"></small>
 								</div>
 
-								<div class="col-12 col-lg-6 form-group">
+								<div class="col-12 col-lg-6 form-group" id="verifierPosArea">
 									<label for="verifierPosInput" id="verifierPosLabel" class="form-label required before">Verifier Position</label>
 									<input type="text" class="form-control" id="verifierPosInput" aria-describedby="verifierPosLabel" name="verifier-position" required>
 									<small class="feedback" data-validation="verifier-position"></small>
@@ -80,7 +91,7 @@
 							</div>
 
 							<!-- DATE RANGE -->
-							<div class="form-group my-3">
+							<div class="form-group my-3" id="datesArea">
 								<label for="dates[]" id="dates[]Label" class="form-label required before">Dates</label>
 								<table class="w-100">
 									<!-- Days 1 to 7 -->

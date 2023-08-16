@@ -15,153 +15,6 @@ const dataAttr = [
 	'verifier-position'
 ];
 
-$(document).ready(() => {
-	UniqueArray();
-
-	$(`#form input, #form textarea, #form select`).on(`keydown`, (e) => {
-		let key = e.which || e.keycode;
-		
-		if (key == 13)
-			DTR.validate();
-	});
-
-	$(`#listUploadBtn`).on('click', (e) => {
-		$(`#jobOrderList`).click();
-	});
-
-	$(`#jobOrderList`).on('change', DTR.displayContent);
-
-	$(document).on(`click`, `[data-dtr-toggle][data-dtr-displayed=true]`, (e) => {
-		let obj = $(e.currentTarget);
-
-		DTR.reset();
-		$(`#jobOrderList`).change();
-	});
-
-	// Drag clicking checkboxes
-	const DRAGCHECK = {
-		enabled: false,
-		state: false,
-		group: null,
-		enable(obj) {
-			try {
-				DRAGCHECK.enabled = true;
-				DRAGCHECK.state = !obj.is(`:checked`);
-				DRAGCHECK.group = `[name=\"${obj.attr(`name`)}\"]`;
-			} catch (e) {
-				console.error(e);
-				return false;
-			}
-			return true;
-		},
-		disable(callback) {
-			try {
-				DRAGCHECK.enabled = false;
-				DRAGCHECK.state = false;
-				DRAGCHECK.group = null;
-
-				if (typeof callback != 'undefined')
-					callback();
-			} catch (e) {
-				console.error(e);
-				return false;
-			}
-			return true;
-		}
-	};
-
-	$(document).on(`mousedown`, `[data-dragcheck]`, (e) => {
-		let obj = $(e.currentTarget);
-		let target = obj.find(obj.attr(`data-dragcheck`));
-
-		DRAGCHECK.enable(target ?? obj);
-	}).on(`mouseover mouseleave`, `[data-dragcheck]`, (e) => {
-		if (DRAGCHECK.enabled) {
-			let obj = $(e.currentTarget);
-			let state = DRAGCHECK.state ? `:not(:checked)` : `:checked`;
-			
-			let target = obj.attr(`data-dragcheck`);
-			target = target ? obj.find(target) : obj;
-
-			if (target.is(state) && target.is(DRAGCHECK.group)) {
-				target.trigger(`click`);
-				DTR.reset();
-			}
-		}
-	});
-
-	$(document).on(`mouseup`, (e) => {
-		DRAGCHECK.disable();
-	});
-
-	$(`#reset`).on(`click`, (e) => {
-		confirmLeave(window.location, undefined, `This will reset all fields.`);
-	});
-
-	// Adding a little animation on hover (for the footer buttons) //
-	// GENERATE BTN
-	$(`#generate:not([disabled])`).on(`mouseenter focus`, (e) => {
-		$($(e.currentTarget).find(`*:first`))
-			.addClass(`fa-spin`)
-			.css(`--fa-animation-duration`, `1.125s`)
-			.css(`--fa-animation-iteration-count`, 1)
-			.css(`--fa-animation-timing`, `ease-out`);
-	}).on(`mouseleave blur`, (e) => {
-		$($(e.currentTarget).find(`*:first`))
-			.removeClass(`fa-spin`)
-			.css(`--fa-animation-duration`, ``)
-			.css(`--fa-animation-iteration-count`, ``)
-			.css(`--fa-animation-timing`, ``);
-	});
-
-	// PRINT BTN
-	$(`#print:not([disabled])`).on(`mouseenter focus`, (e) => {
-		let obj = $($(e.currentTarget).find(`*:first`));
-		
-		obj.addClass(`fa-bounce`)
-			.css(`--fa-animation-duration`, `1.5s`)
-			.css(`--fa-animation-iteration-count`, 1)
-			.css(`--fa-bounce-jump-scale-x`, `1.5`)
-			.css(`--fa-bounce-jump-scale-y`, `1.5`)
-			.css(`--fa-bounce-land-scale-x`, `1`)
-			.css(`--fa-bounce-land-scale-y`, `1`);
-	}).on(`mouseleave blur`, (e) => {
-		$($(e.currentTarget).find(`*:first`))
-			.removeClass(`fa-bounce`)
-			.css(`--fa-animation-duration`, ``)
-			.css(`--fa-animation-iteration-count`, ``)
-			.css(`--fa-animation-iteration-count`, ``)
-			.css(`--fa-bounce-jump-scale-x`, ``)
-			.css(`--fa-bounce-jump-scale-y`, ``)
-			.css(`--fa-bounce-land-scale-x`, ``)
-			.css(`--fa-bounce-land-scale-y`, ``);
-	});
-	
-	// RESET BTN
-	$(`#reset:not([disabled])`).on(`mouseenter focus`, (e) => {
-		$($(e.currentTarget).find(`*:first`))
-			.addClass(`fa-spin fa-spin-reverse`)
-			.css(`--fa-animation-duration`, `.5s`)
-			.css(`--fa-animation-iteration-count`, 1)
-			.css(`--fa-animation-timing`, `ease-in-out`);
-	}).on(`mouseleave blur`, (e) => {
-		$($(e.currentTarget).find(`*:first`))
-			.removeClass(`fa-spin fa-spin-reverse`)
-			.css(`--fa-animation-duration`, ``)
-			.css(`--fa-animation-iteration-count`, ``)
-			.css(`--fa-animation-timing`, ``);
-	});
-
-	// BUTTON DISABLES
-	$(`#generate`)
-		.on(`click`, DTR.validate)
-		.prop(`disabled`, true);
-
-	$(`#print`)
-		.on(`click`, DTR.print)
-		.prop(`disabled`, true);
-});
-
 const DTR = {
 	list: [],
 	displayContent(e) {
@@ -413,17 +266,287 @@ const DTR = {
 		$(`#generatedDTR`).children().each((k, v) => {
 			let data = $(v);
 
-			toAppend += `<div class="col-6">${data.html()}</div>`;
+			// Cleanup input fields
+			data.find(`input`).each((i, o) => {
+				let input = $(o);
+				let parent = input.parent();
+				let grandParent = parent.parent();
+
+				parent.html(input.val());
+
+				if (input.val().length <= 0)
+					grandParent.find(`[data-update]`).html(``);
+			});
+
+			toAppend += `<div class="col-6">${data[0].outerHTML}</div>`;
 		});
+
+		printTarget.html(toAppend);
 
 		// ACTUAL PRINTING
 		const elms =  $(`body > *:not(script, style, link)`);
 		elms.addClass(`print-enabled`);
 
-		// window.print();
+		window.print();
 
-		// setTimeout(() => {
-		// 	elms.removeClass(`print-enabled`);
-		// }, 1000);
+		setTimeout(() => {
+			elms.removeClass(`print-enabled`);
+		}, 1000);
 	}
 };
+
+const TUTORIAL = {
+	components: {
+		"#jobOrderArea": {
+			title: `Insert List of Job Orders`,
+			content: `asd`
+		},
+		"#periodArea": {
+			title: ``,
+			content: ``
+		},
+		"#daysArea": {
+			title: ``,
+			content: ``
+		},
+		"#saturdayArea": {
+			title: ``,
+			content: ``
+		},
+		"#evrifierArea": {
+			title: ``,
+			content: ``
+		},
+		"#verifierPosArea": {
+			title: ``,
+			content: ``
+		},
+		"#datesArea": {
+			title: ``,
+			content: ``
+		},
+		"#dtrSample": {
+			title: ``,
+			content: ``
+		}
+	},
+	index: 0,
+	previous: "null",
+	previousPopover: null,
+	init() {
+		let body = $(`body`);
+		let backdrop = `<div class="backdrop" id="tutorial-backdrop"></div>`;
+
+		body.find(`.backdrop`).remove();
+
+		body.addClass(`highlight`)
+			.append(backdrop);
+
+		TUTORIAL.iterate(0);
+	},
+	iterate(index) {
+		const key = Object.keys(TUTORIAL.components)[index++];
+		const obj = TUTORIAL.components[key];
+
+		const overlay = `<div class="overlay" id="tutorial-overlay"></div>`
+		
+		if (TUTORIAL.previos != null &&
+			TUTORIAL.previous.length > 0) {
+			$(previous).find(`#tutorial-overlay`)
+				.remove();
+		}
+		let popoverElem = $(key).addClass(`position-relative target`)
+			.attr(`role`, `button`)
+			.attr(`data-bs-toggle`, `popover`)
+			.attr(`data-bs-trigger`, `focus`)
+			.attr(`data-bs-title`, obj.title)
+			.attr(`data-bs-content`, obj.content)
+			.append(overlay)
+
+		let popover = new bootstrap.Popover(popoverElem[0]);
+		popover.show();
+
+		TUTORIAL.index = index;
+		TUTORIAL.previous = key;
+		TUTORIAL.previousPopover = popover;
+	},
+	next() {
+		const keyLen = Object.keys(TUTORIAL.components).length;
+
+		if (TUTORIAL.index >= keyLen) {
+			TUTORIAL.end();
+			return;
+		}
+		else if (TUTORIAL.index < keyLen) {
+			let previous = $(TUTORIAL.previous);
+			previous.removeClass(`position-relative target`)
+				.removeAttr(`role`)
+				.removeAttr(`data-bs-toggle`)
+				.removeAttr(`data-bs-trigger`)
+				.removeAttr(`data-bs-title`)
+				.removeAttr(`data-bs-content`)
+				.find(`#tutorial-overlay`)
+				.remove();
+
+			TUTORIAL.previousPopover.hide();
+			TUTORIAL.previousPopover.dispose();
+		}
+
+		TUTORIAL.iterate(TUTORIAL.index);
+	},
+	end() {
+		TUTORIAL.index = null;
+		TUTORIAL.previous = 0;
+	}
+}
+
+$(document).ready(() => {
+	UniqueArray();
+
+	$(`#form input, #form textarea, #form select`).on(`keydown`, (e) => {
+		let key = e.which || e.keycode;
+		
+		if (key == 13)
+			DTR.validate();
+	});
+
+	$(`#listUploadBtn`).on('click', (e) => {
+		$(`#jobOrderList`).click();
+	});
+
+	$(`#jobOrderList`).on('change', DTR.displayContent);
+
+	$(document).on(`click`, `[data-dtr-toggle][data-dtr-displayed=true]`, (e) => {
+		let obj = $(e.currentTarget);
+
+		DTR.reset();
+		$(`#jobOrderList`).change();
+	});
+
+	// Drag clicking checkboxes
+	const DRAGCHECK = {
+		enabled: false,
+		state: false,
+		group: null,
+		enable(obj) {
+			try {
+				DRAGCHECK.enabled = true;
+				DRAGCHECK.state = !obj.is(`:checked`);
+				DRAGCHECK.group = `[name=\"${obj.attr(`name`)}\"]`;
+			} catch (e) {
+				console.error(e);
+				return false;
+			}
+			return true;
+		},
+		disable(callback) {
+			try {
+				DRAGCHECK.enabled = false;
+				DRAGCHECK.state = false;
+				DRAGCHECK.group = null;
+
+				if (typeof callback != 'undefined')
+					callback();
+			} catch (e) {
+				console.error(e);
+				return false;
+			}
+			return true;
+		}
+	};
+
+	$(document).on(`mousedown`, `[data-dragcheck]`, (e) => {
+		let obj = $(e.currentTarget);
+		let target = obj.find(obj.attr(`data-dragcheck`));
+
+		DRAGCHECK.enable(target ?? obj);
+	}).on(`mouseover mouseleave`, `[data-dragcheck]`, (e) => {
+		if (DRAGCHECK.enabled) {
+			let obj = $(e.currentTarget);
+			let state = DRAGCHECK.state ? `:not(:checked)` : `:checked`;
+			
+			let target = obj.attr(`data-dragcheck`);
+			target = target ? obj.find(target) : obj;
+
+			if (target.is(state) && target.is(DRAGCHECK.group)) {
+				target.trigger(`click`);
+				DTR.reset();
+			}
+		}
+	});
+
+	$(document).on(`mouseup`, (e) => {
+		DRAGCHECK.disable();
+	});
+
+	$(`#reset`).on(`click`, (e) => {
+		confirmLeave(window.location, undefined, `This will reset all fields.`);
+	});
+
+	// Adding a little animation on hover (for the footer buttons) //
+	// GENERATE BTN
+	$(`#generate:not([disabled])`).on(`mouseenter focus`, (e) => {
+		$($(e.currentTarget).find(`*:first`))
+			.addClass(`fa-spin`)
+			.css(`--fa-animation-duration`, `1.125s`)
+			.css(`--fa-animation-iteration-count`, 1)
+			.css(`--fa-animation-timing`, `ease-out`);
+	}).on(`mouseleave blur`, (e) => {
+		$($(e.currentTarget).find(`*:first`))
+			.removeClass(`fa-spin`)
+			.css(`--fa-animation-duration`, ``)
+			.css(`--fa-animation-iteration-count`, ``)
+			.css(`--fa-animation-timing`, ``);
+	});
+
+	// PRINT BTN
+	$(`#print:not([disabled])`).on(`mouseenter focus`, (e) => {
+		let obj = $($(e.currentTarget).find(`*:first`));
+		
+		obj.addClass(`fa-bounce`)
+			.css(`--fa-animation-duration`, `1.5s`)
+			.css(`--fa-animation-iteration-count`, 1)
+			.css(`--fa-bounce-jump-scale-x`, `1.5`)
+			.css(`--fa-bounce-jump-scale-y`, `1.5`)
+			.css(`--fa-bounce-land-scale-x`, `1`)
+			.css(`--fa-bounce-land-scale-y`, `1`);
+	}).on(`mouseleave blur`, (e) => {
+		$($(e.currentTarget).find(`*:first`))
+			.removeClass(`fa-bounce`)
+			.css(`--fa-animation-duration`, ``)
+			.css(`--fa-animation-iteration-count`, ``)
+			.css(`--fa-animation-iteration-count`, ``)
+			.css(`--fa-bounce-jump-scale-x`, ``)
+			.css(`--fa-bounce-jump-scale-y`, ``)
+			.css(`--fa-bounce-land-scale-x`, ``)
+			.css(`--fa-bounce-land-scale-y`, ``);
+	});
+	
+	// RESET BTN
+	$(`#reset:not([disabled])`).on(`mouseenter focus`, (e) => {
+		$($(e.currentTarget).find(`*:first`))
+			.addClass(`fa-spin fa-spin-reverse`)
+			.css(`--fa-animation-duration`, `.5s`)
+			.css(`--fa-animation-iteration-count`, 1)
+			.css(`--fa-animation-timing`, `ease-in-out`);
+	}).on(`mouseleave blur`, (e) => {
+		$($(e.currentTarget).find(`*:first`))
+			.removeClass(`fa-spin fa-spin-reverse`)
+			.css(`--fa-animation-duration`, ``)
+			.css(`--fa-animation-iteration-count`, ``)
+			.css(`--fa-animation-timing`, ``);
+	});
+
+	// BUTTON DISABLES
+	$(`#generate`)
+		.on(`click`, DTR.validate)
+		.prop(`disabled`, true);
+
+	$(`#print`)
+		.on(`click`, DTR.print)
+		.prop(`disabled`, true);
+
+	// TUTORIAL
+	$(`#tutorial`).on(`click`, TUTORIAL.init);
+	$(document).on(`click`, `#tutorial-overlay, #tutorial-backdrop`, TUTORIAL.next);
+});
