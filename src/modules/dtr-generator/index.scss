@@ -20,6 +20,8 @@
 
 		background-color: rgb(0, 0, 0, .5);
 		cursor: pointer;
+
+		display: flex;
 	}
 
 	.target {
@@ -36,6 +38,10 @@
 
 	.popover {
 		z-index: 10000;
+	}
+
+	#title-bar {
+		z-index: 10001;
 	}
 }
 

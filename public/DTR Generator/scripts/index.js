@@ -198,9 +198,14 @@ const DTR = {
 			return true;
 		}
 	},
-	generate() {
+	generate(tutorial = false, end = false) {
 		let target = $(`#generatedDTR`);
 		let toAppend = ``;
+
+		if (tutorial) {
+			DTR.generateTutorial(target, end);
+			return;
+		}
 
 		$(`#listPreview li`).each((k, v) => {
 			let name = $(v).text().trim();
@@ -292,6 +297,21 @@ const DTR = {
 		setTimeout(() => {
 			elms.removeClass(`print-enabled`);
 		}, 1000);
+	},
+	generateTutorial(target, end = false) {
+		let fs = require(`fs`);
+
+		if (end) {
+			target.html(``);
+			return;
+		}
+
+		fs.readFile("public/DTR Generator/assets/Sample Generated DTR.txt", (err, stream) => {
+			if (err)
+				throw err;
+
+			target.html(stream.toString());
+		});
 	}
 };
 
@@ -299,35 +319,51 @@ const TUTORIAL = {
 	components: {
 		"#jobOrderArea": {
 			title: `Insert List of Job Orders`,
-			content: `asd`
+			content: `Refer to the note above on what to upload; Upload a <code>.txt</code> file containing the full names of each employee. Each names must be placed in a single line.`
 		},
 		"#periodArea": {
-			title: ``,
-			content: ``
+			title: `Insert the Date Period`,
+			content: `Identifies the period for this DTR <br>(i.e.: <code>August 1-15, 2023</code>).`
 		},
 		"#daysArea": {
-			title: ``,
-			content: ``
+			title: `<b>[OPTIONAL]</b> Provide how many Days`,
+			content: `The <code>days</code> field determines how many days the employee attended work within the given period.`
 		},
 		"#saturdayArea": {
-			title: ``,
-			content: ``
+			title: `<b>[OPTIONAL]</b> Provide the Saturdays`,
+			content: `Similar to <code>days</code>, the <code>saturdays</code> identifies how many Saturday the employee worked within the given period.`
 		},
-		"#evrifierArea": {
-			title: ``,
-			content: ``
+		"#verifierArea": {
+			title: `Provide Verifier`,
+			content: `This is usually the head of the department, but on some occassions that they are not available, an OIC or PIC will be provided.`
 		},
 		"#verifierPosArea": {
-			title: ``,
-			content: ``
+			title: `Provide the Work Title of the Verifier`,
+			content: `The work title or position of the verifier will be provided here.`
 		},
 		"#datesArea": {
-			title: ``,
-			content: ``
+			title: `Select the Dates`,
+			content: `Select all the dates that falls within the provided <code>period</code>. These dates will reflect upon the DTR template and show that these are the days that the employees worked.`
 		},
 		"#dtrSample": {
-			title: ``,
-			content: ``
+			title: `Preview the General Template`,
+			content: `Everytime the selected <code>dates</code> changes, this DTR template will update and reflect what a generated one will look like.`
+		},
+		"#dtrGenFooter": {
+			title: `Generator Controls`,
+			content: `The control buttons are provided here<br>
+				<ul>
+					<li><b>Generate</b> - Generates the actual DTR preview with all the provided details included. This will give you an actual look into what a printed DTR will look like. It only activates once the list of JO are provided.</li>
+					<li><b>Print</b> - Activates after successfully generating a preview. This will allow you to print your DTR. Please print the DTR in a portrait orientation.</li>
+					<li><b>Reset</b> - Resets the entire form, removing all inputs and generated DTR preview.</li>
+				</ul>
+			`
+		},
+		"#generatedDTR": {
+			title: `Print Preview`,
+			content: `Once the <code>Generate</code> button is pressed and successful on it, the preview for the said DTR will be shown here.<br> The preview allows individual DTR editing to allow changes to the time and days they are present, allowing flexibility to time changes and absences.`,
+			callbackInit: () => {DTR.generate(true)},
+			callbackEnd: () => {DTR.generate(true, true)}
 		}
 	},
 	index: 0,
@@ -335,7 +371,7 @@ const TUTORIAL = {
 	previousPopover: null,
 	init() {
 		let body = $(`body`);
-		let backdrop = `<div class="backdrop" id="tutorial-backdrop"></div>`;
+		let backdrop = `<div class="backdrop" id="tutorial-backdrop"><span class="mt-auto ms-auto mb-3 me-3">Click anywhere outside the popup to proceed...</span></div>`;
 
 		body.find(`.backdrop`).remove();
 
@@ -348,6 +384,10 @@ const TUTORIAL = {
 		const key = Object.keys(TUTORIAL.components)[index++];
 		const obj = TUTORIAL.components[key];
 
+		if (Object.keys(obj).includes(`callbackInit`)) {
+			obj.callbackInit();
+		}
+
 		const overlay = `<div class="overlay" id="tutorial-overlay"></div>`
 		
 		if (TUTORIAL.previos != null &&
@@ -357,11 +397,20 @@ const TUTORIAL = {
 		}
 		let popoverElem = $(key).addClass(`position-relative target`)
 			.attr(`role`, `button`)
+			.attr(`data-bs-selector`, key)
+			.attr(`data-bs-html`, `true`)
+			.attr(`data-bs-placement`, `top`)
 			.attr(`data-bs-toggle`, `popover`)
 			.attr(`data-bs-trigger`, `focus`)
-			.attr(`data-bs-title`, obj.title)
-			.attr(`data-bs-content`, obj.content)
-			.append(overlay)
+			.attr(`data-bs-title`, obj.title ?? key)
+			.attr(`data-bs-content`, obj.content ?? key)
+			.append(overlay);
+
+			popoverElem[0].scrollIntoView({
+				behavior: `auto`,
+				block: `center`,
+				inline: `center`
+			});
 
 		let popover = new bootstrap.Popover(popoverElem[0]);
 		popover.show();
@@ -372,24 +421,31 @@ const TUTORIAL = {
 	},
 	next() {
 		const keyLen = Object.keys(TUTORIAL.components).length;
+		let prevObj = TUTORIAL.components[TUTORIAL.previous];
+
+		if (Object.keys(prevObj).includes(`callbackEnd`)) {
+			prevObj.callbackEnd();
+		};
+
+		let previous = $(TUTORIAL.previous);
+		previous.removeClass(`position-relative target`)
+			.removeAttr(`role`)
+			.removeAttr(`data-bs-html`)
+			.removeAttr(`data-bs-placement`)
+			.removeAttr(`data-bs-toggle`)
+			.removeAttr(`data-bs-trigger`)
+			.removeAttr(`data-bs-title`)
+			.removeAttr(`data-bs-content`)
+			.find(`#tutorial-overlay`)
+			.remove();
+
+		if (TUTORIAL.previousPopover != null) {
+			TUTORIAL.previousPopover.dispose();
+		}
 
 		if (TUTORIAL.index >= keyLen) {
 			TUTORIAL.end();
 			return;
-		}
-		else if (TUTORIAL.index < keyLen) {
-			let previous = $(TUTORIAL.previous);
-			previous.removeClass(`position-relative target`)
-				.removeAttr(`role`)
-				.removeAttr(`data-bs-toggle`)
-				.removeAttr(`data-bs-trigger`)
-				.removeAttr(`data-bs-title`)
-				.removeAttr(`data-bs-content`)
-				.find(`#tutorial-overlay`)
-				.remove();
-
-			TUTORIAL.previousPopover.hide();
-			TUTORIAL.previousPopover.dispose();
 		}
 
 		TUTORIAL.iterate(TUTORIAL.index);
@@ -397,6 +453,11 @@ const TUTORIAL = {
 	end() {
 		TUTORIAL.index = null;
 		TUTORIAL.previous = 0;
+		TUTORIAL.previousPopover = null;
+
+		let body = $(`body`);
+		body.removeClass(`highlight`)
+			.find(`.backdrop`).remove();
 	}
 }
 
