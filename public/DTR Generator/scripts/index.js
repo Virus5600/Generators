@@ -299,18 +299,13 @@ const DTR = {
 		}, 1000);
 	},
 	generateTutorial(target, end = false) {
-		let fs = require(`fs`);
+		import("../assets/Sample Generated DTR.js").then((mod) => {
+			if (end) {
+				target.html(``);
+				return;
+			}
 
-		if (end) {
-			target.html(``);
-			return;
-		}
-
-		fs.readFile("public/DTR Generator/assets/Sample Generated DTR.txt", (err, stream) => {
-			if (err)
-				throw err;
-
-			target.html(stream.toString());
+			target.prepend(mod.DTR_SAMPLE);
 		});
 	}
 };
@@ -362,13 +357,38 @@ const TUTORIAL = {
 		"#generatedDTR": {
 			title: `Print Preview`,
 			content: `Once the <code>Generate</code> button is pressed and successful on it, the preview for the said DTR will be shown here.<br> The preview allows individual DTR editing to allow changes to the time and days they are present, allowing flexibility to time changes and absences.`,
-			callbackInit: () => {DTR.generate(true)},
-			callbackEnd: () => {DTR.generate(true, true)}
+			callbackInit: () => {
+				DTR.generate(true);
+				setTimeout(
+					() => {
+						let target = $(`#generatedDTR`);
+						target.css(`scroll-margin-top`, `1rem`);
+
+						target[0].scrollIntoView({
+							behavior: `auto`,
+							block: `start`,
+							inline: `center`
+						});
+
+						setTimeout(
+							() => {
+								window.scrollTo(window.scrollX, target[0].offsetTop - 175);
+							},
+							500
+						);
+					},
+					500
+				);
+			},
+			callbackEnd: () => {
+				DTR.generate(true, true);
+			}
 		}
 	},
 	index: 0,
 	previous: "null",
 	previousPopover: null,
+	instantiated: false,
 	init() {
 		let body = $(`body`);
 		let backdrop = `<div class="backdrop" id="tutorial-backdrop"><span class="mt-auto ms-auto mb-3 me-3">Click anywhere outside the popup to proceed...</span></div>`;
@@ -378,6 +398,10 @@ const TUTORIAL = {
 		body.addClass(`highlight`)
 			.append(backdrop);
 
+		if (TUTORIAL.instantiated)
+			return;
+
+		TUTORIAL.instantiated = true;
 		TUTORIAL.iterate(0);
 	},
 	iterate(index) {
@@ -454,6 +478,7 @@ const TUTORIAL = {
 		TUTORIAL.index = null;
 		TUTORIAL.previous = 0;
 		TUTORIAL.previousPopover = null;
+		TUTORIAL.instantiated = false;
 
 		let body = $(`body`);
 		body.removeClass(`highlight`)
@@ -610,4 +635,5 @@ $(document).ready(() => {
 	// TUTORIAL
 	$(`#tutorial`).on(`click`, TUTORIAL.init);
 	$(document).on(`click`, `#tutorial-overlay, #tutorial-backdrop`, TUTORIAL.next);
+	$(document).on(`keydown`, (e) => { if (e.keyCode == 13 || e.which == 13) TUTORIAL.next(); });
 });
