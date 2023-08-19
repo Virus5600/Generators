@@ -15,38 +15,21 @@
 	<body class="min-vh-100 d-flex flex-column" data-bs-theme="dark">
 
 		<div class="container-fluid my-3">
-			<!-- Features -->
-			<div class="card">
-				<h5 class="card-header text-center">Generator</h5>
-	
-				<div class="card-body d-flex flex-row overflow-x-scroll justify-content-center" draggable="false">
-					<!-- String Generator -->
-					<a class="app" href="String Generator/index.html">
-						<img src="String Generator/assets/favicon.png" alt="String Generator" class="app-thumbnail">
-						
-						<div class="app-title-container">
-							<span class="app-title">
-								String Generator
-								<small class="app-description">Generates random strings</small>
-							</span>
-						</div>
-					</a>
+			<app-category data-category="Generator" data-add-class="my-3">
+				<sub-application
+					data-title="String Generator"
+					data-desc="Generates random strings"
+					data-img="String Generator/assets/favicon.png"
+					data-link="String Generator/index.html"
+					/>
 
-					<!-- DTR Generator -->
-					<a class="app" href="DTR Generator/index.html">
-						<img src="DTR Generator/assets/favicon.png" alt="Daily Time Record (DTR) Generator" class="app-thumbnail">
-
-						<div class="app-title-container">
-							<span class="app-title">
-								Daily Time Record (DTR) Generator
-								<small class="app-description">Helps generate a DTR easily</small>
-							</span>
-						</div>
-					</a>
-
-					<!-- ADD APP HERE -->
-				</div>
-			</div>
+				<sub-application
+					data-title="Daily Time Record (DTR) Generator"
+					data-desc="Helps generate a DTR easily"
+					data-img="DTR Generator/assets/favicon.png"
+					data-link="DTR Generator/index.html"
+					/>
+			</app-category>
 		</div>
 
 		<!-- Libraries -->

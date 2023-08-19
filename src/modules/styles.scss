@@ -9,113 +9,123 @@
 @use "../css/custom-scrollbar";
 
 // Custom Styles
-.app {
-	position: relative;
-	max-width: 10em;
-	min-width: 10em;
-	max-height: 10em;
-	min-height: 10em;
+.sub-application-list {
+	.app {
+		position: relative;
+		max-width: 10em;
+		min-width: 10em;
+		max-height: 10em;
+		min-height: 10em;
 
-	cursor: pointer;
-	user-select: none;
-	-webkit-user-drag: none;
+		cursor: pointer;
+		user-select: none;
+		-webkit-user-drag: none;
 
-	box-shadow: 0px 0px .25em .125em #ffffffbf;
-	border-radius: .5em;
-	overflow: hidden;
+		box-shadow: 0px 0px .25em .125em #ffffffbf;
+		border-radius: .5em;
+		overflow: hidden;
 
-	margin: 1rem;
+		margin: 1rem;
 
-	display: flex;
-
-	&, * {
-		transition: 0.5s ease;
-	}
-	
-	img.app-thumbnail {
-		max-width: 87.5%;
-		max-height: 87.5%;
-		object-fit: cover;
-
-		margin: auto;
-	}
-
-	.app-title-container {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		
-		background-color: rgba(0, 0, 0, 0.75);
 		display: flex;
-		flex-direction: column;
-		text-align: center;
-		vertical-align: middle;
 
-		opacity: 0;
+		&:first-child {
+			margin-left: auto;
+		}
+
+		&:last-child {
+			margin-right: auto;
+		}
+
+		&, * {
+			transition: 0.5s ease;
+		}
 		
-		.app-title {
+		img.app-thumbnail {
+			max-width: 87.5%;
+			max-height: 87.5%;
+			object-fit: cover;
+
 			margin: auto;
-			color: white;
-			font-size: 1.5em;
-			font-weight: bold;
-			line-height: 1em;
-			text-shadow: 0 0 0.5em black;
+		}
+
+		.app-title-container {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
 			
-			transform: translateY(-100%) scale(2);
+			background-color: rgba(0, 0, 0, 0.75);
+			display: flex;
+			flex-direction: column;
+			text-align: center;
+			vertical-align: middle;
 
-			.app-description {
-				text-align: center;
-				font-size: 0.5em;
-				font-weight: normal;
+			opacity: 0;
+			
+			.app-title {
+				margin: auto;
+				color: white;
+				font-size: 1.5em;
+				font-weight: bold;
+				line-height: 1em;
+				text-shadow: 0 0 0.5em black;
 				
-				position: relative;
-				display: -webkit-box;
-				-webkit-line-clamp: 4;
-				-webkit-box-orient: vertical;
-				overflow: hidden;
+				transform: translateY(-100%) scale(2);
 
-				margin-top: .625em;
-
-				&::before {
-					content: "";
-					color: #FFF;
-					text-decoration: underline;
-
-					display: block;
-					width: 87.5%;
-
-					border-top: solid 1px #FFF;
+				.app-description {
+					text-align: center;
+					font-size: 0.5em;
+					font-weight: normal;
 					
-					position: absolute;
-					left: 50%;
-					top: 0;
-					transform: translateX(-50%);
+					position: relative;
+					display: -webkit-box;
+					-webkit-line-clamp: 4;
+					-webkit-box-orient: vertical;
+					overflow: hidden;
+
+					margin-top: .625em;
+
+					&::before {
+						content: "";
+						color: #FFF;
+						text-decoration: underline;
+
+						display: block;
+						width: 87.5%;
+
+						border-top: solid 1px #FFF;
+						
+						position: absolute;
+						left: 50%;
+						top: 0;
+						transform: translateX(-50%);
+					}
 				}
 			}
 		}
-	}
 
-	&:hover {
-		transform: scale(1.0625);
-		box-shadow: 0px 0px .5em .25em #ffffffbf;
+		&:hover {
+			transform: scale(1.0625);
+			box-shadow: 0px 0px .5em .25em #ffffffbf;
 
-		.app-title-container {
-			opacity: 1;
+			.app-title-container {
+				opacity: 1;
 
-			.app-title {
-				transform: translateY(0) scale(1);
+				.app-title {
+					transform: translateY(0) scale(1);
+				}
 			}
 		}
-	}
 
-	&:active {
-		transform: scale(1.03125);
-		box-shadow: 0px 0px .25em .125em #ffffffbf;
+		&:active {
+			transform: scale(1.03125);
+			box-shadow: 0px 0px .25em .125em #ffffffbf;
 
-		&, * {
-			transition: 0.125s ease;
+			&, * {
+				transition: 0.125s ease;
+			}
 		}
 	}
 }
