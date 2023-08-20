@@ -20,6 +20,7 @@ mix.webpackConfig({
 	})
 	.copy('src/js/*(!frameless.js)*', 'public/resources/js/', false)
 	.copy('src/js/util/', 'public/resources/js/util/', false)
+	.copy('src/js/util/*', 'public/resources/js/util/', false)
 
 	.copy('src/css/', 'public/resources/css/', false)
 	
@@ -40,6 +41,11 @@ mix.webpackConfig({
 	.js('src/modules/dtr-generator/scripts.js', 'DTR Generator/scripts/libs.js')
 	.sass('src/modules/dtr-generator/styles.scss', 'DTR Generator/styles/libs.css')
 	.sass('src/modules/dtr-generator/index.scss', 'DTR Generator/styles/index.css')
+
+	// DTR Template Generator Modules
+	.js('src/modules/dtr-template-generator/scripts.js', 'DTR Template Generator/scripts/libs.js')
+	.sass('src/modules/dtr-template-generator/styles.scss', 'DTR Template Generator/styles/libs.css')
+	.sass('src/modules/dtr-template-generator/index.scss', 'DTR Template Generator/styles/index.css')
 	
 	// FINAL CONFIGURATIONS
 	.setPublicPath("public/")

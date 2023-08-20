@@ -1,0 +1,19 @@
+.btn {
+	&.box {
+		--btn-tmp-height: 50px !important;
+		
+		height: var(--btn-tmp-height);
+		width: var(--btn-tmp-height);
+	}
+}
+
+#builder {
+	--bs-heading-color: var(--bs-body-color);
+
+	min-height: 100vh;
+	background-color: white;
+
+	& > * {
+		
+	}
+}

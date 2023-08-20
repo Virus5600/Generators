@@ -1,0 +1,13 @@
+.btn.box {
+  --btn-tmp-height: 50px !important;
+  height: var(--btn-tmp-height);
+  width: var(--btn-tmp-height);
+}
+
+#builder {
+  --bs-heading-color: var(--bs-body-color);
+  min-height: 100vh;
+  background-color: white;
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiRFRSIFRlbXBsYXRlIEdlbmVyYXRvci9zdHlsZXMvaW5kZXguY3NzIiwibWFwcGluZ3MiOiJBQUNDO0VBQ0M7RUFFQTtFQUNBO0FBREY7O0FBS0E7RUFDQztFQUVBO0VBQ0E7QUFIRCxDIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vZ2VuZXJhdG9ycy8uL3NyYy9tb2R1bGVzL2R0ci10ZW1wbGF0ZS1nZW5lcmF0b3IvaW5kZXguc2NzcyJdLCJzb3VyY2VzQ29udGVudCI6WyIuYnRuIHtcclxuXHQmLmJveCB7XHJcblx0XHQtLWJ0bi10bXAtaGVpZ2h0OiA1MHB4ICFpbXBvcnRhbnQ7XHJcblx0XHRcclxuXHRcdGhlaWdodDogdmFyKC0tYnRuLXRtcC1oZWlnaHQpO1xyXG5cdFx0d2lkdGg6IHZhcigtLWJ0bi10bXAtaGVpZ2h0KTtcclxuXHR9XHJcbn1cclxuXHJcbiNidWlsZGVyIHtcclxuXHQtLWJzLWhlYWRpbmctY29sb3I6IHZhcigtLWJzLWJvZHktY29sb3IpO1xyXG5cclxuXHRtaW4taGVpZ2h0OiAxMDB2aDtcclxuXHRiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcclxuXHJcblx0JiA+ICoge1xyXG5cdFx0XHJcblx0fVxyXG59Il0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9*/

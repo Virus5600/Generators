@@ -13,7 +13,9 @@ try {
 const createWindow = () => {
 	const win = new BrowserWindow({
 		width: 650,
+		minWidth: 576,
 		height: 1250,
+		minHeight: 576,
 		frame: false,
 		icon: path.join(__dirname, '../resources/favicon.png'),
 		webPreferences: {
