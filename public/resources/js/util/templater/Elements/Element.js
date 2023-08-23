@@ -239,15 +239,12 @@ export default class Element {
 	 * The actual HTML element fetched from the newly created Element.
 	 */
 	#element = null;
-	
-	// PROTECTED VARIABLES
 	/**
-	 * All element properties are stored in here.
+	 * Contains the Popover instance of the element.
 	 */
-	_props = {};
+	#popover = null;
 
 	constructor(props) {
-		this._props = props;
 		this.#element = props.el;
 	}
 
@@ -283,9 +280,8 @@ export default class Element {
 	 */
 	text(text = null) {
 		if (text === null)
-			return this._props.textContent;
+			return this.#element.textContent;
 
-		this._props.textContent = text;
 		this.#element.innerText = text;
 
 		return this;
@@ -305,20 +301,63 @@ export default class Element {
 		if (property !== null) {
 			if (Object.keys(Element.PROPS).includes(property) || Object.values(Element.PROPS).includes(property)) {
 				if (value === null)
-					return this._props[property];
+					return this.#element[property];
 
-				this._props[property] = value;
 				this.#element[property] = value;
 				return this;
 			}
-			return this._props;
+			let obj = {};
+			for (let k of Object.keys(this.#element.__proto__))
+				obj[k] = this.#element[k];
+
+			return this.el;
 		}
 		return null;
 	}
+
+	/**
+	 * Assign the Popover instance provided to this element.
+	 * 
+	 * @param {Bootstrap.Popover}	popover	A created popover instance.
+	 * 
+	 * @return {Element}	An instance of this class, which allows for function chaining.
+	 */
+	createPopover(popover) {
+		if (popover == undefined || popover == null)
+			throw new Exception("Popover instance not provided.");
+
+		this.#popover = popover;
+		return this;
+	}
+
+	/**
+	 * Fetch the Popover instance assigned to this element.
+	 * 
+	 * @return {Bootstrap.Popover}	An instance of Bootstrap's Popover.
+	 */
+	getPopover() {
+		return this.#popover;
+	}
+
+	// OVERRIDE FUNCTIONS
+	getTools() {
+		throw new Error(`Unimplemented abstract method: getTools()`);
+	}
 }
+
+///////\\\\\\\
+// ELEMENTS \\
+///////\\\\\\\
 
 export class Header extends Element {
 	static TYPES = [`h1`, `h2`, `h3`, `h4`, `h5`, `h6`];
+	static TOOLS = {
+		types: {
+			type: `dropdown`,
+			values: Header.TYPES,
+			icon: `fa-heading`,
+		}
+	};
 
 	constructor(type = Header.TYPES[0], props = {}) {
 		if (!Header.TYPES.includes(type))
@@ -331,8 +370,68 @@ export class Header extends Element {
 
 		super(props);
 	}
+
+	getTools() {
+		let tools = ``;
+
+		Object.keys(Header.TOOLS).forEach((v) => {
+			let btnType = Header.TOOLS[v].type;
+
+			let btn = `
+				<button class="btn box btn-outline-secondary border-0" title="${v}" contenteditable="false">
+					<i class="fas ${Header.TOOLS[v].icon ?? `fa-gear`}" contenteditable="false"></i>
+				</button>
+			`;
+
+			if (btnType == 'button') {
+				tools += btn;
+			}
+			else if (btnType == 'dropdown'){
+				tools += `
+					<div class="dropdown btn box" type="button" data-bs-toggle="dropdown" aria-expanded="false" contenteditable="false">
+						${btn}
+
+						<ul class="dropdown-menu" contenteditable="false">`;
+
+				Header.TOOLS[v].values.forEach((t) => {
+					tools += `\n<li class="dropdown-item" contenteditable="false">${t}</li>`;
+				});
+						
+				tools += `
+						</ul>
+					</div>
+				`;
+			}			
+		});
+
+		return tools;
+	}
 }
 
 export class Paragraph extends Element {
+	constructor(props = {}) {
+		props = {
+			...props,
+			el: document.createElement(`p`)
+		};
 
+		super(props);
+	}
+}
+
+////////\\\\\\\\
+// CONTAINERS \\
+////////\\\\\\\\
+
+export class Container extends Element {
+	static TYPES = [`container`, `row`, `column`];
+
+	/**
+	 * Identifies whether the row or column is in reverse order. Does
+	 * not do anything when the type is set to container.
+	 */
+	#reverse = false;
+
+	constructor(type = Container.TYPES[0], props = {}) {
+	}
 }

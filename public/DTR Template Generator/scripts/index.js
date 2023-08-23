@@ -7,9 +7,12 @@ $(document).ready(() => {
 	});
 
 	$(`#builder`).sortable({
+		cursor: `move`,
+		handle: `.handle`,
 		revert: true,
 		scroll: true,
-		cursor: `move`
+		start: (e, ui) => { ui.item.addClass(`highlight`); },
+		stop: (e, ui) => { ui.item.removeClass(`highlight`); }
 	});
 
 	$(`#builder`).on(`change`, (e) => {

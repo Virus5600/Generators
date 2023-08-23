@@ -16,7 +16,7 @@
     "/resources/js/util/serialize-form-json/serialize-form-json.js": "/resources/js/util/serialize-form-json/serialize-form-json.js",
     "/resources/js/util/swal-flash/swal-flash.js": "/resources/js/util/swal-flash/swal-flash.js",
     "/resources/js/util/swal-flash/swal-flash.mod.js": "/resources/js/util/swal-flash/swal-flash.mod.js",
-    "/resources/js/util/templater/Elements/element.js": "/resources/js/util/templater/Elements/element.js",
+    "/resources/js/util/templater/Elements/Element.js": "/resources/js/util/templater/Elements/Element.js",
     "/resources/js/util/templater/templater.js": "/resources/js/util/templater/templater.js",
     "/resources/js/util/unique-array/unique-array.js": "/resources/js/util/unique-array/unique-array.js",
     "/resources/js/util/unique-array/unique-array.mod.js": "/resources/js/util/unique-array/unique-array.mod.js",
@@ -28,6 +28,5 @@
     "/resources/favicon.png": "/resources/favicon.png",
     "/resources/index.js": "/resources/index.js",
     "/resources/libs.js.LICENSE.txt": "/resources/libs.js.LICENSE.txt",
-    "/resources/Virus5600.png": "/resources/Virus5600.png",
-    "/resources/js/util/templater/Elements/Element.js": "/resources/js/util/templater/Elements/Element.js"
+    "/resources/Virus5600.png": "/resources/Virus5600.png"
 }

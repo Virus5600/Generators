@@ -8,12 +8,32 @@
 }
 
 #builder {
-	--bs-heading-color: var(--bs-body-color);
-
 	min-height: 100vh;
 	background-color: white;
 
+	&, & > * {
+		color: var(--bs-body-color);
+	}
+
 	& > * {
-		
+		transition: outline .25s, box-shadow .25s, background .25s, opacity .25s;
+
+		&[contenteditable=true]:empty:not(:focus):before {
+			content: attr(placeholder);
+			color: grey;
+			font-style: italic;
+		}
+
+		&:focus {
+			outline: solid 1px black;
+			box-shadow: black 0px 0px 10px;
+		}
+
+		&.highlight {
+			outline: solid 1px var(--bs-primary);
+			box-shadow: var(--bs-primary) 0px 0px 10px;
+			background: inherit;
+			opacity: .75;
+		}
 	}
 }

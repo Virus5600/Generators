@@ -1,10 +1,19 @@
 import * as Elements from "./Elements/Element.js";
 
 // Checks for bootstrap functions
-if (typeof window.bootstrap != 'function') {
-	import(`https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js`)
+if (typeof window.bootstrap != 'function' && typeof window.bootstrap != 'object') {
+	import(`https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.esm.min.js`)
 	.then((moduleBS) => {
 		window.bootstrap = moduleBS.bootstrap;
+		
+		document.querySelectorAll(`[data-templater-importmap]`).forEach(v => {
+		    v.remove();
+		});
+	});
+}
+else {
+	document.querySelectorAll(`[data-templater-importmap]`).forEach(v => {
+	    v.remove();
 	});
 }
 
@@ -35,10 +44,21 @@ function init() {
 					const ELEMENT_INSTANCE = new Elements[clazz]();
 					const OBJ = $(ELEMENT_INSTANCE);
 
-					ELEMENT_INSTANCE.text(clazz);
-					ELEMENT_INSTANCE.prop(`contentEditable`, true);
+					ELEMENT_INSTANCE.prop(`contentEditable`, true)
+						.text(clazz);
 
-					// TODO: Create a Popover for the handler and element controls.
+					ELEMENT_INSTANCE.createPopover(
+						new bootstrap.Popover(ELEMENT_INSTANCE.element(), {
+							container: ELEMENT_INSTANCE.element(),
+							content: `TEST`,
+							fallbackPlacements: [`top`, `bottom`],
+							placement: `top`,
+							template: toolbar(ELEMENT_INSTANCE.getTools()),
+							trigger: `focus`
+						})
+					);
+
+					// TODO: Fix popover dropdown not rendering.
 
 					target.append(ELEMENT_INSTANCE.element());
 					target.trigger(`change`);
@@ -49,4 +69,44 @@ function init() {
 			}
 		});
 	});
+}
+
+function toolbar(tools) {
+	return `
+		<div class="popover" role="popover">
+		<div class="popover-arrow border-secondary"></div>
+
+		<div class="btn-group opacity-75">
+			<span class="handle btn box btn-outline-secondary border-0">
+				<i class="fas fa-grip-vertical"></i>
+			</span>
+
+			<button class="btn box btn-outline-secondary border-0">
+				<i class="fas fa-ellipsis-vertical"></i>
+			</button>
+		</div>
+	</div>
+	`;
+
+	return `
+		<div class="popover" role="popover">
+		<div class="popover-arrow border-secondary"></div>
+
+		<div class="btn-group opacity-75">
+			<span class="handle btn box btn-outline-secondary border-0">
+				<i class="fas fa-grip-vertical"></i>
+			</span>
+
+			<div class="vr"></div>
+
+			${typeof tools === `string` ? tools : ``}
+			
+			${typeof tools === `string` ? `<div class="vr"></div>` : ``}
+
+			<button class="btn box btn-outline-secondary border-0">
+				<i class="fas fa-ellipsis-vertical"></i>
+			</button>
+		</div>
+	</div>
+	`;
 }
