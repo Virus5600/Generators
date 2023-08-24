@@ -1,10 +1,15 @@
-.btn {
-	&.box {
-		--btn-tmp-height: 50px !important;
-		
-		height: var(--btn-tmp-height);
-		width: var(--btn-tmp-height);
-	}
+.box {
+	--btn-tmp-height: 50px !important;
+
+	min-height: var(--btn-tmp-height);
+	height: var(--btn-tmp-height);
+	min-width: var(--btn-tmp-height);
+	width: var(--btn-tmp-height);
+}
+
+.box-sm {
+	@extend .box;
+	--btn-tmp-height: 37.5px !important;
 }
 
 #builder {
@@ -25,8 +30,8 @@
 		}
 
 		&:focus {
-			outline: solid 1px black;
-			box-shadow: black 0px 0px 10px;
+			outline: solid 1px var(--bs-secondary);
+			box-shadow: var(--bs-secondary) 0px 0px 10px;
 		}
 
 		&.highlight {
@@ -35,5 +40,13 @@
 			background: inherit;
 			opacity: .75;
 		}
+	}
+}
+
+.handle {
+	cursor: grab !important;
+
+	&:focus, &:active {
+		cursor: grabbing !important;
 	}
 }

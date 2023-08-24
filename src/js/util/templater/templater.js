@@ -52,8 +52,9 @@ function init() {
 							container: ELEMENT_INSTANCE.element(),
 							content: `TEST`,
 							fallbackPlacements: [`top`, `bottom`],
+							html: true,
 							placement: `top`,
-							template: toolbar(ELEMENT_INSTANCE.getTools()),
+							template: toolbar(ELEMENT_INSTANCE.element(), ELEMENT_INSTANCE.getTools()),
 							trigger: `focus`
 						})
 					);
@@ -71,42 +72,36 @@ function init() {
 	});
 }
 
-function toolbar(tools) {
-	return `
-		<div class="popover" role="popover">
+function toolbar(parent, tools) {
+	if (typeof tools === `string`)
+		tools += `<div class="vr"></div>`;
+	else
+		tools = ``;
+
+	let toReturn = `
+	<div class="popover opacity-87.5" role="popover" contenteditable="false">
 		<div class="popover-arrow border-secondary"></div>
 
-		<div class="btn-group opacity-75">
-			<span class="handle btn box btn-outline-secondary border-0">
-				<i class="fas fa-grip-vertical"></i>
-			</span>
-
-			<button class="btn box btn-outline-secondary border-0">
-				<i class="fas fa-ellipsis-vertical"></i>
-			</button>
-		</div>
-	</div>
-	`;
-
-	return `
-		<div class="popover" role="popover">
-		<div class="popover-arrow border-secondary"></div>
-
-		<div class="btn-group opacity-75">
-			<span class="handle btn box btn-outline-secondary border-0">
-				<i class="fas fa-grip-vertical"></i>
+		<div class="hstack gap-2 px-2">
+			<span class="handle border-0 btn">
+				<i class="fas fa-grip-vertical fa-fw m-auto"></i>
 			</span>
 
 			<div class="vr"></div>
 
-			${typeof tools === `string` ? tools : ``}
-			
-			${typeof tools === `string` ? `<div class="vr"></div>` : ``}
+			${tools}
 
-			<button class="btn box btn-outline-secondary border-0">
-				<i class="fas fa-ellipsis-vertical"></i>
-			</button>
+			<div class="dropdown">
+				<button class="btn btn-outline-secondary dropdown-toggle border-0" type="button" title="others" data-bs-toggle="dropdown" aria-expanded="false">
+					<i class="fas fa-ellipsis-vertical m-auto"></i>
+				</button>
+			</div>
 		</div>
 	</div>
 	`;
+
+	console.log(toReturn);
+	console.log(window.toReturn = $(toReturn));
+
+	return toReturn;
 }

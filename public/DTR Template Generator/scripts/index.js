@@ -7,7 +7,7 @@ $(document).ready(() => {
 	});
 
 	$(`#builder`).sortable({
-		cursor: `move`,
+		cursor: `grabbing`,
 		handle: `.handle`,
 		revert: true,
 		scroll: true,

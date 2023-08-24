@@ -378,17 +378,17 @@ export class Header extends Element {
 			let btnType = Header.TOOLS[v].type;
 
 			let btn = `
-				<button class="btn box btn-outline-secondary border-0" title="${v}" contenteditable="false">
-					<i class="fas ${Header.TOOLS[v].icon ?? `fa-gear`}" contenteditable="false"></i>
+				<button class="btn btn-outline-secondary ${btnType == 'dropdown' ? `dropdown-toggle` : `` } border-0" type="button" title="${v}" ${btnType == 'dropdown' ? `data-bs-toggle="dropdown" aria-expanded="false"` : ``} contenteditable="false">
+					<i class="fas ${Header.TOOLS[v].icon ?? `fa-gear`}"></i>
 				</button>
 			`;
 
 			if (btnType == 'button') {
 				tools += btn;
 			}
-			else if (btnType == 'dropdown'){
+			else if (btnType == 'dropdown') {
 				tools += `
-					<div class="dropdown btn box" type="button" data-bs-toggle="dropdown" aria-expanded="false" contenteditable="false">
+					<div class="dropdown" contenteditable="false">
 						${btn}
 
 						<ul class="dropdown-menu" contenteditable="false">`;
