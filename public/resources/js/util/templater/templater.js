@@ -17,6 +17,14 @@ else {
 	});
 }
 
+// Checks for PopperJS
+if (typeof window.Popper != 'function' && typeof window.Popper != 'object') {
+	import(`https://unpkg.com/@popperjs/core@2.11.8/dist/esm/index.js`)
+	.then((modulePop) => {
+		window.Popper = modulePop;
+	});
+}
+
 // Checks for jQuery function
 if (typeof window.$ != 'function' || typeof window.jQuery != 'function') {
 	import(`https://code.jquery.com/jquery-3.6.4.min.js`)
@@ -47,17 +55,44 @@ function init() {
 					ELEMENT_INSTANCE.prop(`contentEditable`, true)
 						.text(clazz);
 
-					ELEMENT_INSTANCE.createPopover(
-						new bootstrap.Popover(ELEMENT_INSTANCE.element(), {
-							container: ELEMENT_INSTANCE.element(),
-							content: `TEST`,
-							fallbackPlacements: [`top`, `bottom`],
-							html: true,
-							placement: `top`,
-							template: toolbar(ELEMENT_INSTANCE.element(), ELEMENT_INSTANCE.getTools()),
-							trigger: `focus`
-						})
-					);
+						// const POPOVER = new bootstrap.Popover(ELEMENT_INSTANCE.element(), {
+						// 	container: ELEMENT_INSTANCE.element(),
+						// 	content: `TEST`,
+						// 	fallbackPlacements: [`top`, `bottom`],
+						// 	html: true,
+						// 	placement: `top`,
+						// 	template: toolbar(ELEMENT_INSTANCE.element(), ELEMENT_INSTANCE.getTools()),
+						// 	trigger: `focus`
+						// });
+
+						const POPOVER =  Popper.createPopper(
+							ELEMENT_INSTANCE.element(),
+							toolbar(ELEMENT_INSTANCE.element(), ELEMENT_INSTANCE.getTools()),
+							{
+								placement: `auto`,
+								modifiers: [
+									{
+										name: `offset`,
+										options: {
+											offset: [0, 10]
+										}
+									},
+									{
+										name: `flip`,
+										options: {
+											fallbackPlacements: [
+												`top`,
+												`bottom`,
+												`left`,
+												`right`
+											]
+										}
+									}
+								]
+							}
+						);
+
+					ELEMENT_INSTANCE.createPopover(POPOVER);
 
 					// TODO: Fix popover dropdown not rendering.
 
@@ -99,9 +134,6 @@ function toolbar(parent, tools) {
 		</div>
 	</div>
 	`;
-
-	console.log(toReturn);
-	console.log(window.toReturn = $(toReturn));
 
 	return toReturn;
 }

@@ -1,3 +1,5 @@
+import Data from '../Data.js';
+
 /**
  * The base class for all HTML elements for the Templater. It contains all common attributes and
  * methods needed to make an element.
@@ -246,6 +248,8 @@ export default class Element {
 
 	constructor(props) {
 		this.#element = props.el;
+
+		Data.set(this.#element, "templator");
 	}
 
 	// PRIVATE FUNCTIONS
@@ -318,7 +322,7 @@ export default class Element {
 	/**
 	 * Assign the Popover instance provided to this element.
 	 * 
-	 * @param {Bootstrap.Popover}	popover	A created popover instance.
+	 * @param {Popper}	popover	A created popover instance.
 	 * 
 	 * @return {Element}	An instance of this class, which allows for function chaining.
 	 */
@@ -333,7 +337,7 @@ export default class Element {
 	/**
 	 * Fetch the Popover instance assigned to this element.
 	 * 
-	 * @return {Bootstrap.Popover}	An instance of Bootstrap's Popover.
+	 * @return {Popper}	An instance of PopperJS.
 	 */
 	getPopover() {
 		return this.#popover;
@@ -342,6 +346,10 @@ export default class Element {
 	// OVERRIDE FUNCTIONS
 	getTools() {
 		throw new Error(`Unimplemented abstract method: getTools()`);
+	}
+
+	static getInstance(el) {
+		return 	Data.get(el, "templator");
 	}
 }
 
@@ -396,7 +404,7 @@ export class Header extends Element {
 				Header.TOOLS[v].values.forEach((t) => {
 					tools += `\n<li class="dropdown-item" contenteditable="false">${t}</li>`;
 				});
-						
+
 				tools += `
 						</ul>
 					</div>
