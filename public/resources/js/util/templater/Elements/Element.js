@@ -1,4 +1,5 @@
 import Data from '../Data.js';
+import { PopoverData } from '../PopoverData.js';
 
 /**
  * The base class for all HTML elements for the Templater. It contains all common attributes and
@@ -242,14 +243,13 @@ export default class Element {
 	 */
 	#element = null;
 	/**
-	 * Contains the Popover instance of the element.
+	 * Contains all data for the popover.
 	 */
 	#popover = null;
 
 	constructor(props) {
 		this.#element = props.el;
 
-		Data.set(this.#element, "templator");
 	}
 
 	// PRIVATE FUNCTIONS
@@ -262,6 +262,30 @@ export default class Element {
 	 */
 	#changeElm(elm, paint = false) {
 		return this;
+	}
+
+	/**
+	 * Toggles the popover to show.
+	 */
+	#showPopover() {
+		if (this.#popover.visible)
+			return;
+
+		this.#popover.show();
+	}
+
+	/**
+	 * Toggles the popover to hide.
+	 */
+	#hidePopover() {
+		if (!this.#popover.visible)
+			return;
+		
+		this.#popover.hide();
+	}
+
+	#togglePopover() {
+		this.#popover.toggle();
 	}
 
 	// PUBLIC FUNCTIONS
@@ -322,15 +346,19 @@ export default class Element {
 	/**
 	 * Assign the Popover instance provided to this element.
 	 * 
-	 * @param {Popper}	popover	A created popover instance.
+	 * @param {Popper}	popover				A created popover instance.
+	 * @param {boolean}	storeAsPopoverData	Determines whether to store the popover as PopoverData or not. Default to `true`.
 	 * 
 	 * @return {Element}	An instance of this class, which allows for function chaining.
 	 */
-	createPopover(popover) {
+	createPopover(popover, storeAsPopoverData = true) {
 		if (popover == undefined || popover == null)
-			throw new Exception("Popover instance not provided.");
+			throw new Error("Popover instance not provided.");
 
-		this.#popover = popover;
+		if (storeAsPopoverData)
+			this.#popover = new PopoverData(popover, Data, "templator", [PopoverData.EVENTS.CLICK]);
+
+		Data.set(this.#element, "templator", this.#popover);
 		return this;
 	}
 

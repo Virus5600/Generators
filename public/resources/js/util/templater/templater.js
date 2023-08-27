@@ -7,13 +7,13 @@ if (typeof window.bootstrap != 'function' && typeof window.bootstrap != 'object'
 		window.bootstrap = moduleBS.bootstrap;
 		
 		document.querySelectorAll(`[data-templater-importmap]`).forEach(v => {
-		    v.remove();
+			v.remove();
 		});
 	});
 }
 else {
 	document.querySelectorAll(`[data-templater-importmap]`).forEach(v => {
-	    v.remove();
+		v.remove();
 	});
 }
 
@@ -40,7 +40,49 @@ else {
 
 // Initializes templater
 function init() {
+	const style = `
+	<style data-templater-style>
+		[data-popper-arrow],
+		[data-popper-arrow]::before {
+			position: absolute;
+			width: 8px;
+			height: 8px;
+		  }
+
+		  [data-popper-arrow] {
+			visibility: hidden;
+		  }
+
+		  [data-popper-arrow]::before {
+			visibility: visible;
+			content: '';
+			transform: rotate(45deg);
+		  }
+
+		  [role=popover][data-popper-placement^='top'] > [data-popper-arrow] {
+			bottom: -4px;
+		  }
+
+		  [role=popover][data-popper-placement^='bottom'] > [data-popper-arrow] {
+			top: -4px;
+		  }
+
+		  [role=popover][data-popper-placement^='left'] > [data-popper-arrow] {
+			right: -4px;
+		  }
+
+		  [role=popover][data-popper-placement^='right'] > [data-popper-arrow] {
+			left: -4px;
+		  }
+	</style>
+	`;
 	$(document).ready(() => {
+		// Check for the styling. If itsn't present, append the style to the head.
+		let styling = document.querySelector(`[data-templater-style]`);
+		if (!styling) {
+			$(`head`).append(style);
+		}
+
 		$(`[data-templater]`).each((k, v) => {
 			const obj = $(v);
 			const EL = obj.data(`templater`);
@@ -55,46 +97,47 @@ function init() {
 					ELEMENT_INSTANCE.prop(`contentEditable`, true)
 						.text(clazz);
 
-						// const POPOVER = new bootstrap.Popover(ELEMENT_INSTANCE.element(), {
-						// 	container: ELEMENT_INSTANCE.element(),
-						// 	content: `TEST`,
-						// 	fallbackPlacements: [`top`, `bottom`],
-						// 	html: true,
-						// 	placement: `top`,
-						// 	template: toolbar(ELEMENT_INSTANCE.element(), ELEMENT_INSTANCE.getTools()),
-						// 	trigger: `focus`
-						// });
+						const POPOVER = new bootstrap.Popover(ELEMENT_INSTANCE.element(), {
+							container: ELEMENT_INSTANCE.element(),
+							content: `TEST`,
+							fallbackPlacements: [`top`, `bottom`],
+							html: true,
+							placement: `top`,
+							template: toolbar(ELEMENT_INSTANCE.element(), ELEMENT_INSTANCE.getTools()),
+							trigger: `focus`
+						});
 
-						const POPOVER =  Popper.createPopper(
-							ELEMENT_INSTANCE.element(),
-							toolbar(ELEMENT_INSTANCE.element(), ELEMENT_INSTANCE.getTools()),
-							{
-								placement: `auto`,
-								modifiers: [
-									{
-										name: `offset`,
-										options: {
-											offset: [0, 10]
-										}
-									},
-									{
-										name: `flip`,
-										options: {
-											fallbackPlacements: [
-												`top`,
-												`bottom`,
-												`left`,
-												`right`
-											]
-										}
-									}
-								]
-							}
-						);
+						// const POPOVER =  Popper.createPopper(
+						// 	ELEMENT_INSTANCE.element(),
+						// 	toolbar(ELEMENT_INSTANCE.element(), ELEMENT_INSTANCE.getTools()),
+						// 	{
+						// 		placement: `auto`,
+						// 		modifiers: [
+						// 			{
+						// 				name: `offset`,
+						// 				options: {
+						// 					offset: [0, 10]
+						// 				}
+						// 			},
+						// 			{
+						// 				name: `flip`,
+						// 				options: {
+						// 					fallbackPlacements: [
+						// 						`top`,
+						// 						`bottom`,
+						// 						`left`,
+						// 						`right`
+						// 					]
+						// 				}
+						// 			}
+						// 		]
+						// 	}
+						// );
 
-					ELEMENT_INSTANCE.createPopover(POPOVER);
+					ELEMENT_INSTANCE.createPopover(POPOVER, false);
 
-					// TODO: Fix popover dropdown not rendering.
+					// TODO: Migrate popover to vanilla Popper component.
+					// NOTE: Current work is revolving around recreating Bootstrap 5s' component functionality.
 
 					target.append(ELEMENT_INSTANCE.element());
 					target.trigger(`change`);
@@ -115,7 +158,7 @@ function toolbar(parent, tools) {
 
 	let toReturn = `
 	<div class="popover opacity-87.5" role="popover" contenteditable="false">
-		<div class="popover-arrow border-secondary"></div>
+		<div class="popover-arrow border-secondary" data-popper-arrow></div>
 
 		<div class="hstack gap-2 px-2">
 			<span class="handle border-0 btn">

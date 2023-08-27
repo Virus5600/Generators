@@ -16,6 +16,7 @@
     "/resources/js/util/serialize-form-json/serialize-form-json.js": "/resources/js/util/serialize-form-json/serialize-form-json.js",
     "/resources/js/util/swal-flash/swal-flash.js": "/resources/js/util/swal-flash/swal-flash.js",
     "/resources/js/util/swal-flash/swal-flash.mod.js": "/resources/js/util/swal-flash/swal-flash.mod.js",
+    "/resources/js/util/templater/Data.js": "/resources/js/util/templater/Data.js",
     "/resources/js/util/templater/Elements/Element.js": "/resources/js/util/templater/Elements/Element.js",
     "/resources/js/util/templater/templater.js": "/resources/js/util/templater/templater.js",
     "/resources/js/util/unique-array/unique-array.js": "/resources/js/util/unique-array/unique-array.js",
