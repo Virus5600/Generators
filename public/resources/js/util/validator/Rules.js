@@ -47,8 +47,8 @@ export class Required extends Rule {
 	 * @param {Any}		value	The value to validate
 	 * @param {String} message	The message to use when the rule fails
 	 */
-	constructor(field, value, message = "The :attr field is required") {
-		super(field, value, undefined, message);
+	constructor(field, value, message = "The :attr field is required", validatorValues = null) {
+		super(field, value, validatorValues ?? undefined, message);
 	}
 
 	validate() {
@@ -61,6 +61,48 @@ export class Required extends Rule {
 			runOtherValidation: true
 		};
 	}
+}
+
+export class RequiredIf extends Required {
+	/**
+	 * Tests whether the `value` provided is present and a valid value only if the other field has the provided value. Skips the validation if the other field is
+	 * blank.
+	 * 
+	 * @param {String}	field				The name of the field being tested
+	 * @param {Any}		value				The value to validate
+ 	 * @param {Array}	validatorValues		An array of values that the validator has. Only retrieves the first three values (other field, other field's value, other
+ 	 * 										field's required value) due to how the rule works
+	 * @param {String}	message				The message to use when the rule fails
+	 */
+	constructor(field, value, validatorValues, message = "The :attr field is required since :attr2 is :val2") {
+		if (typeof validatorValues != 'object' || validatorValues.constructor.name != 'Array')
+			throw new Error(`Improper validator value format:\n\tNeeds array, ${typeof validatorValues} is passed`);
+		else if (validatorValues.length < 2)
+			throw new Error(`Not enough validator value passed:\n\tNeeds 2, only ${validatorValues.length} is passed.`);
+
+		message = message.replaceAll(/(:attr2)/gi, validatorValues[0]);
+		message = message.replaceAll(/(:val2)/gi, validatorValues[1]);
+		message = message.replaceAll(/(:val3)/gi, validatorValues[2]);
+
+		super(field, value, message, validatorValues);
+	}
+
+	validate() {
+		let {field2, val2, val3} = this._validatorValues;
+
+		if (field2 == val3) {
+			return super.validate();
+		}
+		else {
+			this._valid = true;
+
+			return {
+				valid: this._valid,
+				message: this._message,
+				runOtherValidation: false
+			};
+		}
+	};
 }
 
 export class Sometimes extends Rule {
@@ -252,7 +294,7 @@ export class Max extends Rule {
 
 export class Between extends Rule {
 	/**
-	 * Tests whether the value is no more and less than the provided validator value.
+	 * Tests whether the value is no more and less than the provided validator value. If an array is passed as a value, the length of the array provided will be tested.
 	 * 
 	 * @param {String}	field			The name of the field being tested
 	 * @param {Any} 	value			The value to validate
@@ -389,6 +431,13 @@ export class String extends Rule {
 	}
 
 	validate() {
+		if (!this._value) {
+			return {
+				valid: this._valid,
+				message: this._message
+			}
+		}
+
 		let response = this._value.match(/[a-zA-Z0-9\.,\\\/"'\(\)\[\]{}\-\+_=\*\&%\!@#\$\^<>\?\s]+/);
 		response = response ?? [];
 

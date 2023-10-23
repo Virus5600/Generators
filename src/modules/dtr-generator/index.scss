@@ -110,6 +110,7 @@
 	display: none;
 
 	&.print-enabled {
+		padding-top: 1px;
 		display: block !important;
 
 		--dtr-cell-width: calc(3.5rem * .90625);

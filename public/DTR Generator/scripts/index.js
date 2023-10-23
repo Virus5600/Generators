@@ -92,12 +92,17 @@ const DTR = {
 		let form = $(`#form`);
 
 		let validation = {
-			rules: {
-				"period": ["required", "string"],
-				"days": ["nullable", "numeric", "between:1,20"],
-				"saturday": ["nullable", "numeric", "between:0,5"],
-				"verifier": ["required", "string"],
-				"verifier-position": ["required", "string"],
+			rules: () => {
+				return {
+					"period": ["required", "string"],
+					"days": ["nullable", "numeric", "between:1,20"],
+					"saturday": ["nullable", "numeric", "between:0,5"],
+					"verifier": ["required", "string"],
+					"verifier-position": ["required", "string"],
+					"second-verifier-exists": ["nullable", "boolean"],
+					"second-verifier": ["required_if:second-verifier-exists,true", "string"],
+					"second-verifier-position": ["required_if:second-verifier-exists,true", "string"]
+				}
 			},
 			message: {
 				"period": {
@@ -119,12 +124,23 @@ const DTR = {
 				"verifier-position": {
 					"required": `The position of the verifier is required`,
 					"string": `Please provide a valid position`
+				},
+				"second-verifier-exists": {
+					"boolean": "Please refrain from modifying the page"
+				},
+				"second-verifier": {
+					"required_if": "Second verifier is required",
+					"string": `Verifier must be a name of a person`
+				},
+				"second-verifier-position": {
+					"required_if": `The position of the second verifier is required`,
+					"string": `Please provide a valid position`
 				}
 			}
 		};
 
 		// Capture all inputs
-		let fields = $(`[name`).not(`:disabled, [disabled]`);
+		let fields = $(`[name]`).not(`:disabled, [disabled]`);
 		let valids = $(`input:valid`).not(`:disabled, [disabled]`);
 		let invalids = $(`input:invalid`).not(`:disabled, [disabled]`);
 
@@ -134,7 +150,7 @@ const DTR = {
 		// Actual Validation
 		let validator = new Validator(
 			validation.values,
-			validation.rules,
+			validation.rules(),
 			validation.message
 		);
 
@@ -159,32 +175,44 @@ const DTR = {
 			.addClass(`text-danger`);
 
 		// Apply the validators validation
-		$.each(validFields, (k, v) => {
-			$(`[data-validation]`).text(``);
-		});
+		$(`[data-validation]`).each((k, v) => {
+			let obj = $(v);
 
-		$.each(invalidFields, (k, v) => {
-			let validationMsgFields = $(`[data-validation]`);
+			// Valid Fields
+			if (validFields.includes(obj.attr('data-validation'))) {
+				let name = validFields[
+					validFields.indexOf(
+						obj.attr('data-validation')
+					)
+				];
 
-			validationMsgFields.each(function() {
-				let obj = $(this);
+				$(`[name=${name}]`).text(``)
+					.removeClass(`text-danger`);
+			}
+			// Invalid Fields
+			else if (invalidFields.includes(obj.attr('data-validation'))) {
+				let name = invalidFields[
+					invalidFields.indexOf(
+						obj.attr('data-validation')
+					)
+				];
 
-				if (obj.attr(`data-validation`).match(`(${v})`) != null) {
-					obj.closest(`.form-group`)
-						.find(`input, sekect, textarea`)
-						.not(`:disabled, [disabled]`)
-						.removeClass(`is-valid`)
-						.addClass(`is-invalid`);
-				}
-			});
+				let input = $(`[name=${name}]`).not(`:disabled, [disabled]`);
+				let disabledInput = $(`[name=${name}]:disabled, [name=${name}][disabled]`);
+				
+				input?.removeClass(`is-valid`)
+					.addClass(`is-invalid`);
 
-			validationMsgFields.text(function() {
-				let obj = $(this);
-				if (obj.attr(`data-validation`).match(`(${v})`)) {
-					obj.text(validator.first(v))
+				if (input.length > 0)
+					obj.text(validator.first(name))
 						.addClass(`text-danger`);
+
+				if (disabledInput.length) {
+					disabledInput?.removeClass(`is-valid is-invalid`);
+					obj.text(``)
+						.removeClass(`text-danger`);
 				}
-			});
+			}
 		});
 
 		// If the validation failed, prevent code from progressing further, then show a toast warning
@@ -314,7 +342,7 @@ const TUTORIAL = {
 	components: {
 		"#jobOrderArea": {
 			title: `Insert List of Job Orders`,
-			content: `Refer to the note above on what to upload; Upload a <code>.txt</code> file containing the full names of each employee. Each names must be placed in a single line.`
+			content: `Refer to the note above on what to upload; Upload a <code>.txt</code> file containing the full names of each employee. Each names must be placed in a single line. If there's an empty line at the end or anywhere in the file, it will generate an empty entry so double check your file to prevent this kind of instance.`
 		},
 		"#periodArea": {
 			title: `Insert the Date Period`,
@@ -339,6 +367,10 @@ const TUTORIAL = {
 		"#datesArea": {
 			title: `Select the Dates`,
 			content: `Select all the dates that falls within the provided <code>period</code>. These dates will reflect upon the DTR template and show that these are the days that the employees worked.`
+		},
+		"#secondVerifierArea": {
+			title: `Is there a Second Verifier?`,
+			content: `If a second verifier is needed, click the label to enable the text field. Once enabled, provide the second verifier.`
 		},
 		"#dtrSample": {
 			title: `Preview the General Template`,
@@ -391,7 +423,13 @@ const TUTORIAL = {
 	instantiated: false,
 	init() {
 		let body = $(`body`);
-		let backdrop = `<div class="backdrop" id="tutorial-backdrop"><span class="mt-auto ms-auto mb-3 me-3">Click anywhere outside the popup to proceed...</span></div>`;
+		let backdrop = `
+		<div class="backdrop" id="tutorial-backdrop">
+			<div class="mt-auto me-auto mb-3 ms-3">
+				<span class="d-block">Press <code>Esc</code> to exit tutorial...</span>
+				<span class="d-block">Click anywhere outside the popup to proceed...</span>
+			</div>
+		</div>`;
 
 		body.find(`.backdrop`).remove();
 
@@ -414,9 +452,9 @@ const TUTORIAL = {
 
 		const overlay = `<div class="overlay" id="tutorial-overlay"></div>`
 		
-		if (TUTORIAL.previos != null &&
-			TUTORIAL.previous.length > 0) {
-			$(previous).find(`#tutorial-overlay`)
+		if (TUTORIAL.previous != null &&
+			TUTORIAL.previous?.length > 0) {
+			$(TUTORIAL.previous).find(`#tutorial-overlay`)
 				.remove();
 		}
 		let popoverElem = $(key).addClass(`position-relative target`)
@@ -465,6 +503,7 @@ const TUTORIAL = {
 
 		if (TUTORIAL.previousPopover != null) {
 			TUTORIAL.previousPopover.dispose();
+			TUTORIAL.previousPopover = null;
 		}
 
 		if (TUTORIAL.index >= keyLen) {
@@ -475,6 +514,13 @@ const TUTORIAL = {
 		TUTORIAL.iterate(TUTORIAL.index);
 	},
 	end() {
+		if (TUTORIAL.previousPopover != null) {
+			TUTORIAL.previousPopover.dispose();
+			TUTORIAL.previousPopover = null;
+		}
+
+		$(TUTORIAL.previous).removeClass(`target`);
+
 		TUTORIAL.index = null;
 		TUTORIAL.previous = 0;
 		TUTORIAL.previousPopover = null;
@@ -489,6 +535,7 @@ const TUTORIAL = {
 $(document).ready(() => {
 	UniqueArray();
 
+	// Handles the `Enter` key when focused inside the form
 	$(`#form input, #form textarea, #form select`).on(`keydown`, (e) => {
 		let key = e.which || e.keycode;
 		
@@ -496,17 +543,43 @@ $(document).ready(() => {
 			DTR.validate();
 	});
 
+	// Proxy for the file upload input
 	$(`#listUploadBtn`).on('click', (e) => {
 		$(`#jobOrderList`).click();
 	});
 
+	// Displays the content when the the JO List is uploaded
 	$(`#jobOrderList`).on('change', DTR.displayContent);
 
+	// Handles the click event for the dates
 	$(document).on(`click`, `[data-dtr-toggle][data-dtr-displayed=true]`, (e) => {
 		let obj = $(e.currentTarget);
 
 		DTR.reset();
 		$(`#jobOrderList`).change();
+	});
+
+	// Enables and disables the Second Verifier area
+	$(`#secondVerifierCheckbox`).on('click', (e) => {
+		let obj = $(e.currentTarget);
+		let enabled = !obj.prop('checked');
+
+		// Inputs
+		$(`#secondVerifierInput`).prop('disabled', enabled)
+			.prop('required', enabled);
+		$(`#secondVerifierPosInput`).prop('disabled', enabled)
+			.prop('required', enabled);
+
+		if (enabled) {
+			// Labels
+			$(`#secondVerifierIPLabel`).removeClass('required');
+			$(`#secondVerifierPosLabel`).removeClass('required');
+		}
+		else {
+			// Labels
+			$(`#secondVerifierIPLabel`).addClass('required');
+			$(`#secondVerifierPosLabel`).addClass('required');
+		}
 	});
 
 	// Drag clicking checkboxes
@@ -635,5 +708,13 @@ $(document).ready(() => {
 	// TUTORIAL
 	$(`#tutorial`).on(`click`, TUTORIAL.init);
 	$(document).on(`click`, `#tutorial-overlay, #tutorial-backdrop`, TUTORIAL.next);
-	$(document).on(`keydown`, (e) => { if (e.keyCode == 13 || e.which == 13) TUTORIAL.next(); });
+	$(document).on(`keydown`, (e) => {
+		if (!TUTORIAL.instantiated)
+			return;
+
+		let keyCode = e.keyCode || e.which;
+
+		if (keyCode == 13 || keyCode == 32) TUTORIAL.next();
+		else if (keyCode == 27) TUTORIAL.end();
+	});
 });
