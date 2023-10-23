@@ -29,7 +29,7 @@
 
 				<div class="container-fluid">
 					<p>To insert the list of JOs (Job Orders), upload a <code>.txt</code> file containing the full name of each employee per line similar to this:</p>
-					<pre class="border p-2"><code>Doug D. Sims<br>Cristina A. Dougherty<br>Dee J. Coon, Jr.<br>Hugo L. Davidson<br>...</code></pre>
+					<pre class="border p-2"><code>Doug D. Sims<br>Cristina A. Dougherty<br>Dee J. Coon, Jr.<br>Hugo L. Davidson<br><span data-bs-toggle="tooltip" data-bs-content="More names below.">...</span></code></pre>
 
 					<div class="d-flex flex-row">
 						<button type="button" class="btn btn-secondary mx-auto" id="tutorial">Tutorial</button>
@@ -75,7 +75,7 @@
 							</div>
 
 
-							<!-- DEPARTMENT HEAD -->
+							<!-- VERIFIER -->
 							<div class="row my-3">
 								<div class="col-12 col-lg-6 form-group" id="verifierArea">
 									<label for="verifierInput" id="verifierLabel" class="form-label required before">Verifier Name</label>
@@ -264,6 +264,32 @@
 										</td>
 									</tr>
 								</table>
+							</div>
+
+							<!-- SECOND VERIFIER -->
+							<div class="row my-3">
+								<div class="col-12 col-lg-6 form-group" id="secondVerifierArea">
+									<label for="secondVerifierInput" id="secondVerifierIPLabel" class="form-label before">Second Verifier Name</label>
+									
+									<div class="input-group">
+										<div class="h-100">
+											<input type="hidden" name="second-verifier-exists" autocomplete="off" value="false">
+											<input type="checkbox" class="btn-check" id="secondVerifierCheckbox" aria-describedby="secondVerifierCBLabel" name="second-verifier-exists" autocomplete="off" value="true">
+											<label for="secondVerifierCheckbox" id="secondVerifierCBLabel" class="btn btn-outline-secondary rounded-end-0 h-100">Second Verifier</label>
+										</div>
+
+										<input type="text" class="form-control" id="secondVerifierInput" aria-descreibedby="secondVerifierIPLabel" name="second-verifier" disabled>
+									</div>
+
+									<small class="feedback d-block" data-validation="second-verifier-exists"></small>
+									<small class="feedback d-block" data-validation="second-verifier"></small>
+								</div>
+
+								<div class="col-12 col-lg-6 form-group" id="secondVerifierPosArea">
+									<label for="secondverifierPosInput" id="secondVerifierPosLabel" class="form-label before">Second Verifier Position</label>
+									<input type="text" class="form-control" id="secondVerifierPosInput" aria-describedby="secondVerifierPosLabel" name="second-verifier-position" disabled>
+									<small class="feedback" data-validation="second-verifier-position"></small>
+								</div>
 							</div>
 						</form>
 					</div>
