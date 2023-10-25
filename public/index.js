@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, session } = require('electron');
 const remote = require('@electron/remote/main');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');

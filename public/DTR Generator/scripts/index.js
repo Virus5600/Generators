@@ -11,8 +11,10 @@ const dataAttr = [
 	'period',
 	'days',
 	'saturday',
-	'verifier',
-	'verifier-position'
+	'primary-verifier',
+	'primary-verifier-position',
+	'secondary-verifier',
+	'secondary-verifier-position',
 ];
 
 const DTR = {
@@ -28,8 +30,10 @@ const DTR = {
 			let toAppend = `<ul>`;
 
 			$.each(content.split("\n"), (k, v) => {
-				DTR.list.push(v);
-				toAppend += `<li>${v.replaceAll(`\t`, `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`)}</li>`;
+				if (!v.match(/^\s*$/g)) {
+					DTR.list.push(v);
+					toAppend += `<li>${v.replaceAll(`\t`, `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`)}</li>`;
+				}
 			});
 
 			toAppend += `</ul>`;
@@ -38,11 +42,17 @@ const DTR = {
 			DTR.preview();
 		};
 
-		if (e.target.files.length > 0)
+		if (e.target.files.length > 0) {
 			reader.readAsText(e.target.files[0]);
+		}
+		else {
+			DTR.list = [];
+			$(`#listPreview`).html(``);
+		}
 	},
 	preview() {
 		let dates = "";
+		let leadingZero = $(`#removeLeadingZeroes`).prop(`checked`) ? "" : "0";
 
 		for (let i = 1; i <= 31; i++) {
 			let date = $(`#date-${i}`);
@@ -52,7 +62,7 @@ const DTR = {
 					<div class="dtr-cell text-end px-1">${i}</div>
 					
 					<div class="dtr-cell border border-secondary small" data-update>
-						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? "08:00" : ""}" readonly>
+						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? `${leadingZero}8:00` : ""}" readonly>
 					</div>
 					
 					<div class="dtr-cell border border-secondary small" data-update>
@@ -62,11 +72,11 @@ const DTR = {
 					<div class="dtr-cell border border-secondary small fst-italic fw-bold text-danger" data-update>${date.prop(`checked`) ? "BRK" : ""}</div>
 					
 					<div class="dtr-cell border border-secondary small" data-update>
-						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? "01:00" : ""}" readonly>
+						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? `${leadingZero}1:00` : ""}" readonly>
 					</div>
 					
 					<div class="dtr-cell border border-secondary small" data-update>
-						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? "05:00" : ""}" readonly>
+						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? `${leadingZero}5:00` : ""}" readonly>
 					</div>
 					
 					<div class="dtr-cell"></div>
@@ -97,11 +107,11 @@ const DTR = {
 					"period": ["required", "string"],
 					"days": ["nullable", "numeric", "between:1,20"],
 					"saturday": ["nullable", "numeric", "between:0,5"],
-					"verifier": ["required", "string"],
-					"verifier-position": ["required", "string"],
-					"second-verifier-exists": ["nullable", "boolean"],
-					"second-verifier": ["required_if:second-verifier-exists,true", "string"],
-					"second-verifier-position": ["required_if:second-verifier-exists,true", "string"]
+					"primary-verifier": ["required", "string"],
+					"primary-verifier-position": ["required", "string"],
+					"secondary-verifier-exists": ["nullable", "boolean"],
+					"secondary-verifier": ["required_if:secondary-verifier-exists,true", "string"],
+					"secondary-verifier-position": ["required_if:secondary-verifier-exists,true", "string"]
 				}
 			},
 			message: {
@@ -117,22 +127,22 @@ const DTR = {
 					"numeric": `Saturdays depicts the amount of Saturdays they worked`,
 					"between": `Value should be between 0 to 5, depending on how many Saturdays they've worked`
 				},
-				"verifier": {
+				"primary-verifier": {
 					"required": `Verifier is the person-in-charge or an officer-in-charge`,
 					"string": `Verifier must be a name of a person`
 				},
-				"verifier-position": {
+				"primary-verifier-position": {
 					"required": `The position of the verifier is required`,
 					"string": `Please provide a valid position`
 				},
-				"second-verifier-exists": {
+				"secondary-verifier-exists": {
 					"boolean": "Please refrain from modifying the page"
 				},
-				"second-verifier": {
+				"secondary-verifier": {
 					"required_if": "Second verifier is required",
 					"string": `Verifier must be a name of a person`
 				},
-				"second-verifier-position": {
+				"secondary-verifier-position": {
 					"required_if": `The position of the second verifier is required`,
 					"string": `Please provide a valid position`
 				}
@@ -245,28 +255,32 @@ const DTR = {
 				.parent();
 
 			dataAttr.forEach((attr) => {
-				let verifier = attr == `verifier` || attr == `verifier-position`;
-				let obj = DTR.find(`[${prefix}-${attr}] ${verifier ? `` : `input`}`.trim());
+				let verifier = attr == `primary-verifier` || attr == `primary-verifier-position`
+					|| attr == `secondary-verifier` || attr == `secondary-verifier-position`;
 				
-				obj.addClass(`text-black`)
-					.removeAttr(`readonly`)
-					.prop(`readonly`, false);
-
-				if (attr == 'name') {
-					if (verifier)
-						obj.text(name);
-					else
-						obj.val(name).attr(`value`, name);
-				}
-				else {
-					let attrVal = $(`[name=${attr}]`).val();
+				// If the attribute exists, continue the process. Otherwise, just skip to proceed.
+				if (DTR.find(`[${prefix}-${attr}]`).length > 0) {
+					let obj = DTR.find(`[${prefix}-${attr}] ${verifier ? `` : `input`}`.trim());
 					
-					if (verifier)
-						obj.text(attrVal ?? ``);
-					else
-						obj.val(attrVal ?? ``).attr(`value`, attrVal ?? ``);
-				}
+					obj.addClass(`text-black`)
+						.removeAttr(`readonly`)
+						.prop(`readonly`, false);
 
+					if (attr == 'name') {
+						if (verifier)
+							obj.text(name);
+						else
+							obj.val(name).attr(`value`, name);
+					}
+					else {
+						let attrVal = $(`[name=${attr}]`).val();
+						
+						if (verifier)
+							obj.text(attrVal ?? ``);
+						else
+							obj.val(attrVal ?? ``).attr(`value`, attrVal ?? ``);
+					}
+				}
 			});
 
 			DTR.find(`.border-secondary`)
@@ -316,9 +330,16 @@ const DTR = {
 
 		printTarget.html(toAppend);
 
+
 		// ACTUAL PRINTING
 		const elms =  $(`body > *:not(script, style, link)`);
 		elms.addClass(`print-enabled`);
+		
+		// RESIZE ALL THE FIELDS INSIDE `#printContainer` THAT HAS THE CLASS `.dtr-cell` inside `.has-secondary`
+		$(`#printContainer .has-secondary .dtr-cell`).each((k, v) => {
+			console.log(v);
+			textfit(v);
+		});
 
 		window.print();
 
@@ -364,13 +385,13 @@ const TUTORIAL = {
 			title: `Provide the Work Title of the Verifier`,
 			content: `The work title or position of the verifier will be provided here.`
 		},
-		"#datesArea": {
-			title: `Select the Dates`,
-			content: `Select all the dates that falls within the provided <code>period</code>. These dates will reflect upon the DTR template and show that these are the days that the employees worked.`
-		},
 		"#secondVerifierArea": {
 			title: `Is there a Second Verifier?`,
 			content: `If a second verifier is needed, click the label to enable the text field. Once enabled, provide the second verifier.`
+		},
+		"#datesArea": {
+			title: `Select the Dates`,
+			content: `Select all the dates that falls within the provided <code>period</code>. These dates will reflect upon the DTR template and show that these are the days that the employees worked.`
 		},
 		"#dtrSample": {
 			title: `Preview the General Template`,
@@ -537,6 +558,11 @@ $(document).ready(() => {
 
 	// Handles the `Enter` key when focused inside the form
 	$(`#form input, #form textarea, #form select`).on(`keydown`, (e) => {
+		if ($(`#form #jobOrderList`)[0].files.length == 0) {
+			e.preventDefault();
+			return false;
+		}
+
 		let key = e.which || e.keycode;
 		
 		if (key == 13)
@@ -580,6 +606,71 @@ $(document).ready(() => {
 			$(`#secondVerifierIPLabel`).addClass('required');
 			$(`#secondVerifierPosLabel`).addClass('required');
 		}
+
+		let content = {
+			"underline": {
+				true: `
+					<div class="dtr-cell dtr-cell-3 underline"></div>
+					<div class="dtr-cell dtr-cell-1"></div>
+					<div class="dtr-cell dtr-cell-3 underline"></div>`,
+				false: `
+					<div class="dtr-cell"></div>
+					<div class="dtr-cell dtr-cell-5 underline"></div>
+					<div class="dtr-cell"></div>
+				`
+			},
+			"verifier": {
+				true: `
+					<div class="dtr-cell dtr-cell-3 small fw-bold" data-dtr-primary-verifier>[VERIFIER NAME]</div>
+					<div class="dtr-cell dtr-cell-1"></div>
+					<div class="dtr-cell dtr-cell-3 small fw-bold" data-dtr-secondary-verifier>[SECOND VERIFIER NAME]</div>
+				`,
+				false: `
+					<div class="dtr-cell"></div>
+					<div class="dtr-cell dtr-cell-5 small fw-bold" data-dtr-primary-verifier>[VERIFIER NAME]</div>
+					<div class="dtr-cell"></div>
+				`
+			},
+			"verifier-position": {
+				true: `
+					<div class="dtr-cell dtr-cell-3 small fst-italic" data-dtr-primary-verifier-position>[VERIFIER POSITION]</div>
+					<div class="dtr-cell dtr-cell-1"></div>
+					<div class="dtr-cell dtr-cell-3 small fst-italic" data-dtr-secondary-verifier-position>[SECOND VERIFIER POSITION]</div>
+				`,
+				false: `
+					<div class="dtr-cell"></div>
+					<div class="dtr-cell dtr-cell-5 small fst-italic" data-dtr-primary-verifier-position>[VERIFIER POSITION]</div>
+					<div class="dtr-cell"></div>
+				`
+			},
+		};
+
+		// Form
+		$(`#dtrSample .dtr-row[data-dtr-second-verifier-affected]`).each((k, v) => {
+			let el = $(v);
+			let affected = el.attr('data-dtr-second-verifier-affected');
+
+			el.html(content[affected][!enabled]);
+
+			if (enabled)
+				el.removeClass(`has-secondary`);
+			else
+				el.addClass(`has-secondary`);
+		});
+	});
+
+	// Handles the checkbox for leading zeroes
+	$(`#removeLeadingZeroes`).on('click', (e) => {
+		let obj = $(e.currentTarget);
+		let target = $(`#leadingZero`);
+
+		if (obj.prop('checked'))
+			target.hide();
+		else
+			target.show();
+
+		DTR.reset();
+		$(`#jobOrderList`).change();
 	});
 
 	// Drag clicking checkboxes

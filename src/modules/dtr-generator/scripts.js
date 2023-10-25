@@ -12,3 +12,6 @@ window.Swal = require("node_modules/sweetalert2/dist/sweetalert2.all.min.js");
 
 // Fontawesome
 require("../fontawesome.js");
+
+// Textfit
+window.textfit = require("node_modules/textfit/textFit.min.js");
