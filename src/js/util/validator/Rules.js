@@ -70,8 +70,8 @@ export class RequiredIf extends Required {
 	 * 
 	 * @param {String}	field				The name of the field being tested
 	 * @param {Any}		value				The value to validate
- 	 * @param {Array}	validatorValues		An array of values that the validator has. Only retrieves the first three values (other field, other field's value, other
- 	 * 										field's required value) due to how the rule works
+ 	 * @param {Array}	validatorValues		An array of values that the validator has. Only retrieves the first three values (other field, other field's required value,
+ 	 * 										other field's value) due to how the rule works
 	 * @param {String}	message				The message to use when the rule fails
 	 */
 	constructor(field, value, validatorValues, message = "The :attr field is required since :attr2 is :val2") {
@@ -88,9 +88,9 @@ export class RequiredIf extends Required {
 	}
 
 	validate() {
-		let {field2, val2, val3} = this._validatorValues;
+		let [field2, val2, val3] = this._validatorValues;
 
-		if (field2 == val3) {
+		if (val2 == val3) {
 			return super.validate();
 		}
 		else {

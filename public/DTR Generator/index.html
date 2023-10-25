@@ -79,14 +79,40 @@
 							<div class="row my-3">
 								<div class="col-12 col-lg-6 form-group" id="verifierArea">
 									<label for="verifierInput" id="verifierLabel" class="form-label required before">Verifier Name</label>
-									<input type="text" class="form-control" id="verifierInput" aria-describedby="verifierLabel" name="verifier" required>
-									<small class="feedback" data-validation="verifier"></small>
+									<input type="text" class="form-control" id="verifierInput" aria-describedby="verifierLabel" name="primary-verifier" required>
+									<small class="feedback" data-validation="primary-verifier"></small>
 								</div>
 
 								<div class="col-12 col-lg-6 form-group" id="verifierPosArea">
 									<label for="verifierPosInput" id="verifierPosLabel" class="form-label required before">Verifier Position</label>
-									<input type="text" class="form-control" id="verifierPosInput" aria-describedby="verifierPosLabel" name="verifier-position" required>
-									<small class="feedback" data-validation="verifier-position"></small>
+									<input type="text" class="form-control" id="verifierPosInput" aria-describedby="verifierPosLabel" name="primary-verifier-position" required>
+									<small class="feedback" data-validation="primary-verifier-position"></small>
+								</div>
+							</div>
+
+							<!-- SECOND VERIFIER -->
+							<div class="row my-3">
+								<div class="col-12 col-lg-6 form-group" id="secondVerifierArea">
+									<label for="secondVerifierInput" id="secondVerifierIPLabel" class="form-label before">Second Verifier Name</label>
+									
+									<div class="input-group">
+										<div class="h-100">
+											<input type="hidden" name="secondary-verifier-exists" autocomplete="off" value="false">
+											<input type="checkbox" class="btn-check" id="secondVerifierCheckbox" aria-describedby="secondVerifierCBLabel" name="secondary-verifier-exists" autocomplete="off" value="true">
+											<label for="secondVerifierCheckbox" id="secondVerifierCBLabel" class="btn btn-outline-secondary rounded-end-0 h-100">Second Verifier</label>
+										</div>
+
+										<input type="text" class="form-control" id="secondVerifierInput" aria-descreibedby="secondVerifierIPLabel" name="secondary-verifier" disabled>
+									</div>
+
+									<small class="feedback d-block" data-validation="secondary-verifier-exists"></small>
+									<small class="feedback d-block" data-validation="secondary-verifier"></small>
+								</div>
+
+								<div class="col-12 col-lg-6 form-group" id="secondVerifierPosArea">
+									<label for="secondverifierPosInput" id="secondVerifierPosLabel" class="form-label before">Second Verifier Position</label>
+									<input type="text" class="form-control" id="secondVerifierPosInput" aria-describedby="secondVerifierPosLabel" name="secondary-verifier-position" disabled>
+									<small class="feedback" data-validation="secondary-verifier-position"></small>
 								</div>
 							</div>
 
@@ -266,29 +292,18 @@
 								</table>
 							</div>
 
-							<!-- SECOND VERIFIER -->
-							<div class="row my-3">
-								<div class="col-12 col-lg-6 form-group" id="secondVerifierArea">
-									<label for="secondVerifierInput" id="secondVerifierIPLabel" class="form-label before">Second Verifier Name</label>
-									
-									<div class="input-group">
-										<div class="h-100">
-											<input type="hidden" name="second-verifier-exists" autocomplete="off" value="false">
-											<input type="checkbox" class="btn-check" id="secondVerifierCheckbox" aria-describedby="secondVerifierCBLabel" name="second-verifier-exists" autocomplete="off" value="true">
-											<label for="secondVerifierCheckbox" id="secondVerifierCBLabel" class="btn btn-outline-secondary rounded-end-0 h-100">Second Verifier</label>
-										</div>
-
-										<input type="text" class="form-control" id="secondVerifierInput" aria-descreibedby="secondVerifierIPLabel" name="second-verifier" disabled>
-									</div>
-
-									<small class="feedback d-block" data-validation="second-verifier-exists"></small>
-									<small class="feedback d-block" data-validation="second-verifier"></small>
+							<!-- REMOVE LEADING ZEROES -->
+							<div class="d-flex justify-content-between">
+								<div class="form-check">
+									<input type="checkbox" class="form-check-input" id="removeLeadingZeroes" name="removeLeadingZeroes">
+									<label for="removeLeadingZeroes" class="form-checl-label">Remove Leading Zeroes in the time</label>
 								</div>
 
-								<div class="col-12 col-lg-6 form-group" id="secondVerifierPosArea">
-									<label for="secondverifierPosInput" id="secondVerifierPosLabel" class="form-label before">Second Verifier Position</label>
-									<input type="text" class="form-control" id="secondVerifierPosInput" aria-describedby="secondVerifierPosLabel" name="second-verifier-position" disabled>
-									<small class="feedback" data-validation="second-verifier-position"></small>
+								<div>
+									<label for="timeDemo">This is what will appear: </label>
+									<span class="badge rounded-pill border-secondary border">
+										<code id="timeDemo"><span id="leadingZero">0</span>8:00</code>
+									</span>
 								</div>
 							</div>
 						</form>
@@ -389,21 +404,21 @@
 								</div>
 							</div>
 
-							<div class="dtr-row">
+							<div class="dtr-row" data-dtr-second-verifier-affected="underline">
 								<div class="dtr-cell"></div>
 								<div class="dtr-cell dtr-cell-5 underline"></div>
 								<div class="dtr-cell"></div>
 							</div>
 
-							<div class="dtr-row">
+							<div class="dtr-row" data-dtr-second-verifier-affected="verifier">
 								<div class="dtr-cell"></div>
-								<div class="dtr-cell dtr-cell-5 small fw-bold" data-dtr-verifier>[VERIFIER NAME]</div>
+								<div class="dtr-cell dtr-cell-5 small fw-bold">[VERIFIER NAME]</div>
 								<div class="dtr-cell"></div>
 							</div>
 
-							<div class="dtr-row">
+							<div class="dtr-row" data-dtr-second-verifier-affected="verifier-position">
 								<div class="dtr-cell"></div>
-								<div class="dtr-cell dtr-cell-5 small fst-italic" data-dtr-verifier-position>[VERIFIER POSITION]</div>
+								<div class="dtr-cell dtr-cell-5 small fst-italic" data-dtr-primary-verifier-position>[VERIFIER POSITION]</div>
 								<div class="dtr-cell"></div>
 							</div>
 						</div>

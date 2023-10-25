@@ -260,6 +260,10 @@ export default class Validator {
 					validatorValues = rule.split(":")[1].split(/\s*,\s*/);
 					rule = rule.split(":")[0];
 					message = messages[rule];
+
+					if (rule === "required_if") {
+						validatorValues.push(this.#valueList[validatorValues[0]]);
+					}
 				}
 
 				// Split the rule using the underscore (_) and resets the rule variable
