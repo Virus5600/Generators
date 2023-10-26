@@ -387,7 +387,7 @@ const TUTORIAL = {
 		},
 		"#secondVerifierArea": {
 			title: `Is there a Second Verifier?`,
-			content: `If a second verifier is needed, click the label to enable the text field. Once enabled, provide the second verifier.`
+			content: `If a second verifier is needed, click the label to enable the text field. Once enabled, similar to the first one, provide the second verifier.`
 		},
 		"#datesArea": {
 			title: `Select the Dates`,
@@ -729,6 +729,7 @@ $(document).ready(() => {
 		DRAGCHECK.disable();
 	});
 
+	// RESET HANDLER
 	$(`#reset`).on(`click`, (e) => {
 		confirmLeave(window.location, undefined, `This will reset all fields.`);
 	});
