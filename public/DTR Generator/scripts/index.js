@@ -1,6 +1,7 @@
 // Utility
 import UniqueArray from "../../resources/js/util/unique-array/unique-array.mod.js";
 import SwalFlash from "../../resources/js/util/swal-flash/swal-flash.mod.js";
+import Dragcheck from "../../resources/js/util/dragcheck/dragcheck.js";
 
 // Validator
 import Validator from "../../resources/js/util/validator/Validator.js";
@@ -296,7 +297,6 @@ const DTR = {
 				.addClass(`text-black`);
 			
 			toAppend += DTR.html();
-			// TODO: Implement Inputs for the generated preview.
 		});
 		
 		target.html(toAppend)
@@ -553,7 +553,7 @@ const TUTORIAL = {
 	}
 }
 
-$(document).ready(() => {
+$(() => {
 	UniqueArray();
 
 	// Handles the `Enter` key when focused inside the form
@@ -579,10 +579,15 @@ $(document).ready(() => {
 
 	// Handles the click event for the dates
 	$(document).on(`click`, `[data-dtr-toggle][data-dtr-displayed=true]`, (e) => {
+		console.log(obj);
 		let obj = $(e.currentTarget);
+		let keyCode = e.which || e.keyCode;
+
+		if (keyCode == Dragcheck.KEYCODES.RIGHT) {	
+		}
 
 		DTR.reset();
-		$(`#jobOrderList`).change();
+		$(`#jobOrderList`).trigger('change');
 	});
 
 	// Enables and disables the Second Verifier area
@@ -674,59 +679,44 @@ $(document).ready(() => {
 	});
 
 	// Drag clicking checkboxes
-	const DRAGCHECK = {
-		enabled: false,
-		state: false,
-		group: null,
-		enable(obj) {
-			try {
-				DRAGCHECK.enabled = true;
-				DRAGCHECK.state = !obj.is(`:checked`);
-				DRAGCHECK.group = `[name=\"${obj.attr(`name`)}\"]`;
-			} catch (e) {
-				console.error(e);
-				return false;
-			}
-			return true;
-		},
-		disable(callback) {
-			try {
-				DRAGCHECK.enabled = false;
-				DRAGCHECK.state = false;
-				DRAGCHECK.group = null;
-
-				if (typeof callback != 'undefined')
-					callback();
-			} catch (e) {
-				console.error(e);
-				return false;
-			}
-			return true;
-		}
-	};
-
-	$(document).on(`mousedown`, `[data-dragcheck]`, (e) => {
-		let obj = $(e.currentTarget);
-		let target = obj.find(obj.attr(`data-dragcheck`));
-
-		DRAGCHECK.enable(target ?? obj);
-	}).on(`mouseover mouseleave`, `[data-dragcheck]`, (e) => {
-		if (DRAGCHECK.enabled) {
-			let obj = $(e.currentTarget);
-			let state = DRAGCHECK.state ? `:not(:checked)` : `:checked`;
-			
-			let target = obj.attr(`data-dragcheck`);
-			target = target ? obj.find(target) : obj;
-
-			if (target.is(state) && target.is(DRAGCHECK.group)) {
-				target.trigger(`click`);
-				DTR.reset();
+	const LEFT_DRAGCHECK = new Dragcheck({
+		group: `[data-dragcheck]`,
+		states: (obj) => { return !obj.checked; },
+		keyCode: Dragcheck.KEYCODES.LEFT,
+		callbacks: {
+			hover: (target) => {
+				if (LEFT_DRAGCHECK.enabled) {
+					let state = LEFT_DRAGCHECK.currentState ? `:not(:checked)` : `checked`;
+					
+					let dragcheck = target.dataset.dragcheck;
+					target = target.querySelectorAll(dragcheck);
+					
+					target.forEach((v) => {
+						// TODO: Fix drag handler (currently working on enabling and disabling the date checkbox)
+						if (v.matches(state)) {
+							v.dispatchEvent(new MouseEvent("click", {
+								view: window,
+								bubbles: true,
+								cancelable: true
+							}));
+						}
+						else {
+						}
+					});
+				}
 			}
 		}
 	});
 
-	$(document).on(`mouseup`, (e) => {
-		DRAGCHECK.disable();
+	const RIGHT_DRAGCHECK = new Dragcheck({
+		group: `[data-dragcheck]`,
+		states: (obj) => { return !obj.checked; },
+		keyCode: Dragcheck.KEYCODES.RIGHT,
+		callbacks: {
+			hover: (target) => {
+			}
+		}
+	
 	});
 
 	// RESET HANDLER

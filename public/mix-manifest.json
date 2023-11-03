@@ -10,6 +10,7 @@
     "/resources/js/frameless.js": "/resources/js/frameless.js",
     "/resources/js/util/confirm-leave.js": "/resources/js/util/confirm-leave.js",
     "/resources/js/util/copy-to-clipboard.js": "/resources/js/util/copy-to-clipboard.js",
+    "/resources/js/util/dragcheck/dragcheck.js": "/resources/js/util/dragcheck/dragcheck.js",
     "/resources/js/util/serialize-form-json/serialize-form-json.js": "/resources/js/util/serialize-form-json/serialize-form-json.js",
     "/resources/js/util/swal-flash/swal-flash.js": "/resources/js/util/swal-flash/swal-flash.js",
     "/resources/js/util/swal-flash/swal-flash.mod.js": "/resources/js/util/swal-flash/swal-flash.mod.js",
