@@ -681,26 +681,34 @@ $(() => {
 	// Drag clicking checkboxes
 	const LEFT_DRAGCHECK = new Dragcheck({
 		group: `[data-dragcheck]`,
-		states: (obj) => { return !obj.checked; },
+		states: (obj) => {
+			try {
+				let dragcheck = obj.closest(`[data-dragcheck]`);
+				let target = dragcheck.querySelector(dragcheck.dataset.dragcheck);
+	
+				return !target.checked;
+			}
+			catch (e) {
+				console.warn(e);
+				return false;
+			}
+		},
 		keyCode: Dragcheck.KEYCODES.LEFT,
 		callbacks: {
 			hover: (target) => {
 				if (LEFT_DRAGCHECK.enabled) {
-					let state = LEFT_DRAGCHECK.currentState ? `:not(:checked)` : `checked`;
+					let state = LEFT_DRAGCHECK.currentState ? `:not(:checked)` : `:checked`;
 					
 					let dragcheck = target.dataset.dragcheck;
 					target = target.querySelectorAll(dragcheck);
 					
 					target.forEach((v) => {
-						// TODO: Fix drag handler (currently working on enabling and disabling the date checkbox)
 						if (v.matches(state)) {
 							v.dispatchEvent(new MouseEvent("click", {
 								view: window,
 								bubbles: true,
 								cancelable: true
 							}));
-						}
-						else {
 						}
 					});
 				}
@@ -710,10 +718,45 @@ $(() => {
 
 	const RIGHT_DRAGCHECK = new Dragcheck({
 		group: `[data-dragcheck]`,
-		states: (obj) => { return !obj.checked; },
+		states: (obj) => {
+			let dragcheck = obj.closest(`[data-dragcheck]`);
+			let target = dragcheck.querySelector(dragcheck.dataset.dragcheck);
+
+			return !target.checked;
+		},
 		keyCode: Dragcheck.KEYCODES.RIGHT,
 		callbacks: {
 			hover: (target) => {
+				// TODO: Implement left and right dragcheck morphing
+				if (RIGHT_DRAGCHECK.enabled) {
+					let state = RIGHT_DRAGCHECK.currentState ? `:not(:checked)` : `:checked`;
+					
+					let dragcheck = target.dataset.dragcheck;
+					target = target.querySelectorAll(dragcheck);
+					
+					target.forEach((v) => {
+						if (v.matches(state)) {
+							v.name = `holiday[]`;
+
+							if (state == `:not(:checked)`) {
+								v.closest(`[data-dragcheck]`)
+									?.querySelector(`label`)
+									.classList.add(`btn-outline-warning`);
+							}
+							else {
+								v.closest(`[data-dragcheck]`)
+									?.querySelector(`label`)
+									.classList.remove(`btn-outline-warning`);
+							}
+
+							v.dispatchEvent(new MouseEvent("click", {
+								view: window,
+								bubbles: true,
+								cancelable: true
+							}));
+						}
+					});
+				}
 			}
 		}
 	
