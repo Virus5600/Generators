@@ -151,22 +151,20 @@ export default class Dragcheck {
 			let keyCode = e.which || e.keyCode;
 			if (keyCode !== this.#keyCode) return;
 			
-			this.#clickedElement = e.target;
+			this.#clickedElement = e.target.closest(this.#group);
 			this.enable();
 		});
 
 		document.addEventListener("mousemove", (e) => {
 			let keyCode = e.which || e.keyCode;
 			if (this.#enabled && this.#keyCode === keyCode) {
-				let target = e.target;
-				let list = Array.from(document.querySelectorAll(this.#group));
+				let target = e.target.closest(this.#group);
 
-				if (list.find(el => el === target)) {
+				if (target) {
 					this.#callbacks.hover(target);
 				}
 			}
 		});
-
 		document.addEventListener("mouseup", (e) => {
 			this.#clickedElement = undefined;
 			this.disable();
@@ -213,8 +211,6 @@ export default class Dragcheck {
 	 * of this variable is removed, which is `undefined`.
 	 */
 	get currentState() {
-		if (this.#states instanceof Function)
-			return this.#states(this.#clickedElement);
 		return this.#currentState;
 	}
 
@@ -247,7 +243,7 @@ export default class Dragcheck {
 		else state = 0;
 
 		if (this.#states instanceof Function) this.#currentState = this.#states(this.#clickedElement);
-		else this.#currentState = this.#states[state];
+		else this.#currentState = this.#states[state ?? this.#defaultState];
 
 		this.#callbacks.enabled();
 	}
