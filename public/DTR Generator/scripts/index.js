@@ -391,7 +391,7 @@ const TUTORIAL = {
 		},
 		"#datesArea": {
 			title: `Select the Dates`,
-			content: `Select all the dates that falls within the provided <code>period</code>. These dates will reflect upon the DTR template and show that these are the days that the employees worked.`
+			content: `Select all the dates that falls within the provided <code>period</code>. These dates will reflect upon the DTR template and show that these are the days that the employees worked.<br><br>Do note that <code>left click</code>s assigns them as regular dates and <code>right click</code>s assigns them as a holiday.`
 		},
 		"#dtrSample": {
 			title: `Preview the General Template`,
@@ -682,16 +682,10 @@ $(() => {
 	const LEFT_DRAGCHECK = new Dragcheck({
 		group: `[data-dragcheck]`,
 		states: (obj) => {
-			try {
-				let dragcheck = obj.closest(`[data-dragcheck]`);
-				let target = dragcheck.querySelector(dragcheck.dataset.dragcheck);
-	
-				return !target.checked;
-			}
-			catch (e) {
-				console.warn(e);
-				return false;
-			}
+			let dragcheck = obj.closest(`[data-dragcheck]`);
+			let target = dragcheck.querySelector(dragcheck.dataset.dragcheck);
+
+			return !target.checked;
 		},
 		keyCode: Dragcheck.KEYCODES.LEFT,
 		callbacks: {
@@ -704,6 +698,10 @@ $(() => {
 					
 					target.forEach((v) => {
 						if (v.matches(state)) {
+							v.closest(`[data-dragcheck]`)
+								?.querySelector(`label`)
+								.classList.remove(`btn-outline-warning`);
+
 							v.dispatchEvent(new MouseEvent("click", {
 								view: window,
 								bubbles: true,
@@ -727,7 +725,6 @@ $(() => {
 		keyCode: Dragcheck.KEYCODES.RIGHT,
 		callbacks: {
 			hover: (target) => {
-				// TODO: Implement left and right dragcheck morphing
 				if (RIGHT_DRAGCHECK.enabled) {
 					let state = RIGHT_DRAGCHECK.currentState ? `:not(:checked)` : `:checked`;
 					
@@ -760,6 +757,28 @@ $(() => {
 			}
 		}
 	
+	});
+
+	// DATE CLICK HANDLER
+	$(`[data-dragcheck]`).on(`contextmenu`, (e) => {
+		e.preventDefault();
+		let target = $(e.currentTarget).find(`input`);
+		let label = $(e.currentTarget).find(`label`);
+		
+		if (target.prop(`checked`)) {
+			target.prop(`name`, `dates[]`)
+				.attr(`name`, `dates[]`);
+			
+			label.removeClass(`btn-outline-warning`);
+		}
+		else {
+			target.prop(`name`, `holiday[]`)
+				.attr(`name`, `holiday[]`);
+			
+			label.addClass(`btn-outline-warning`);
+		}
+
+		target.trigger(`click`);
 	});
 
 	// RESET HANDLER

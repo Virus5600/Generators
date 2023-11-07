@@ -242,7 +242,14 @@ export default class Dragcheck {
 		if (!isNaN(parseInt(state))) state = (parseFloat(state) % 1) >= .5 ? Math.ceil(state) : Math.floor(state);
 		else state = 0;
 
-		if (this.#states instanceof Function) this.#currentState = this.#states(this.#clickedElement);
+		if (this.#states instanceof Function) {
+			try {
+				this.#currentState = this.#states(this.#clickedElement);
+			} catch (e) {
+				console.warn(e);
+				this.#currentState = false;
+			}
+		}
 		else this.#currentState = this.#states[state ?? this.#defaultState];
 
 		this.#callbacks.enabled();
@@ -264,7 +271,7 @@ export default class Dragcheck {
 	/**
 	 * Sets a new value for the variable.
 	 * 
-	 * @param {Array}	states	An array containing the new states available for the elements.
+	 * @param {Array|Function}	states	An array containing the new states available for the elements, or a callback function.
 	 * 
 	 * @return The current Dragcheck instance. This allows method chaining.
 	 */
