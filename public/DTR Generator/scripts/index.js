@@ -767,18 +767,31 @@ $(() => {
 		
 		if (target.prop(`checked`)) {
 			target.prop(`name`, `dates[]`)
-				.attr(`name`, `dates[]`);
+				.attr(`name`, `dates[]`)
+				.removeClass(`holiday`);
 			
 			label.removeClass(`btn-outline-warning`);
 		}
 		else {
 			target.prop(`name`, `holiday[]`)
-				.attr(`name`, `holiday[]`);
+				.attr(`name`, `holiday[]`)
+				.addClass(`holiday`);
 			
 			label.addClass(`btn-outline-warning`);
 		}
 
 		target.trigger(`click`);
+	}).on(`click`, (e) => {
+		let target = $(e.currentTarget).find(`input`);
+		let label = $(e.currentTarget).find(`label`);
+
+		if (!target.prop(`checked`) && target.hasClass(`holiday`)) {
+			target.prop(`name`, `dates[]`)
+				.attr(`name`, `dates[]`)
+				.removeClass(`holiday`);
+			
+			label.removeClass(`btn-outline-warning`);
+		}
 	});
 
 	// RESET HANDLER
