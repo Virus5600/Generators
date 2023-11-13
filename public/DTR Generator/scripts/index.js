@@ -255,6 +255,7 @@ const DTR = {
 				.removeProp(`id`)
 				.parent();
 
+			// TODO: Implement holidays
 			dataAttr.forEach((attr) => {
 				let verifier = attr == `primary-verifier` || attr == `primary-verifier-position`
 					|| attr == `secondary-verifier` || attr == `secondary-verifier-position`;
@@ -579,8 +580,6 @@ $(() => {
 
 	// Handles the click event for the dates
 	$(document).on(`click`, `[data-dtr-toggle][data-dtr-displayed=true]`, (e) => {
-		console.log(obj);
-		let obj = $(e.currentTarget);
 		let keyCode = e.which || e.keyCode;
 
 		if (keyCode == Dragcheck.KEYCODES.RIGHT) {	
