@@ -37,7 +37,7 @@
 				</div>
 
 				<hr>
-				
+
 				<div class="row">
 					<!-- FORM -->
 					<div class="col-12 col-lg-6 my-3">
@@ -65,7 +65,7 @@
 									<input type="number" class="form-control" id="daysInput" aria-describedby="daysLabel" min="1" max="20" name="days">
 									<small class="feedback" data-validation="days"></small>
 								</div>
-								
+
 								<!-- SATURDAYS -->
 								<div class="col-12 col-lg-6 form-group" id="saturdayArea">
 									<label for="saturdayInput" id="saturdayLabel" class="form-label">Saturdays</label>
@@ -94,7 +94,7 @@
 							<div class="row my-3" id="secondVerifierArea">
 								<div class="col-12 col-lg-6 form-group">
 									<label for="secondVerifierInput" id="secondVerifierIPLabel" class="form-label before">Second Verifier Name</label>
-									
+
 									<div class="input-group">
 										<div class="h-100">
 											<input type="hidden" name="secondary-verifier-exists" autocomplete="off" value="false">
@@ -157,7 +157,7 @@
 											<label for="date-7" class="btn btn-outline-secondary w-100">7</label>
 										</td>
 									</tr>
-									
+
 									<!-- Days 8 to 14 -->
 									<tr>
 										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
@@ -195,7 +195,7 @@
 											<label for="date-14" class="btn btn-outline-secondary w-100">14</label>
 										</td>
 									</tr>
-									
+
 									<!-- Days 15 to 21 -->
 									<tr>
 										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
@@ -346,7 +346,7 @@
 								<div class="dtr-cell underline" data-dtr-saturday>
 									<input type="text" class="border-0 bg-transparent w-100 text-center" value="[???]" readonly>
 								</div>
-								
+
 								<div class="dtr-cell"></div>
 							</div>
 
@@ -412,7 +412,7 @@
 
 							<div class="dtr-row" data-dtr-second-verifier-affected="verifier">
 								<div class="dtr-cell"></div>
-								<div class="dtr-cell dtr-cell-5 small fw-bold">[VERIFIER NAME]</div>
+								<div class="dtr-cell dtr-cell-5 small fw-bold" data-dtr-primary-verifier>[VERIFIER NAME]</div>
 								<div class="dtr-cell"></div>
 							</div>
 
@@ -466,7 +466,7 @@
 		<script type="text/javascript" src="./../resources/js/frameless.js" defer></script>
 		<script type="text/javascript" src="./../resources/js/util/confirm-leave.js" defer></script>
 		<script type="text/javascript" src="./../resources/js/util/serialize-form-json/serialize-form-json.js"></script>
-		
+
 		<script type="module" src="./scripts/index.js"></script>
 	</body>
 </html>

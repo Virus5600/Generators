@@ -86,6 +86,23 @@
 				}
 			}
 
+			&.holiday {
+				font-style: italic;
+				background-color: #ffff00;
+				color: black;
+			}
+
+			@media print {
+				&.holiday {
+					-webkit-print-color-adjust: exact;
+					print-color-adjust: exact;
+
+					font-style: italic !important;
+					background-color: #ffff00 !important;
+					color: black !important;
+				};
+			}
+
 			vertical-align: middle;
 			text-align: center;
 
@@ -99,11 +116,11 @@
 
 			&.underline {
 				position: relative;
-				
+
 				&:after {
 					content: "";
 					position: absolute;
-					
+
 					left: .5rem;
 					bottom: 0;
 

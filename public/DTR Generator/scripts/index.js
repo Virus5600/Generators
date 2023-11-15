@@ -59,9 +59,16 @@ const DTR = {
 			let date = $(`#date-${i}`);
 
 			dates += `
-				<div class="dtr-row" data-date="${date.attr("id")}">
-					<div class="dtr-cell text-end px-1">${i}</div>
-
+			<div class="dtr-row" data-date="${date.attr("id")}">
+				<div class="dtr-cell text-end px-1">${i}</div>
+			`;
+			if (date.attr('name').match(/holiday\[\]/)) {
+				dates += `
+					<div class="dtr-cell dtr-cell-5 border border-secondary small holiday">HOLIDAY</div>
+				`;
+			}
+			else {
+				dates += `
 					<div class="dtr-cell border border-secondary small" data-update>
 						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? `${leadingZero}8:00` : ""}" readonly>
 					</div>
@@ -80,8 +87,11 @@ const DTR = {
 						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? `${leadingZero}5:00` : ""}" readonly>
 					</div>
 
-					<div class="dtr-cell"></div>
-				</div>
+					`;
+			}
+			dates += `
+				<div class="dtr-cell"></div>
+			</div>
 			`;
 		}
 
@@ -255,7 +265,6 @@ const DTR = {
 				.removeProp(`id`)
 				.parent();
 
-			// TODO: Implement holidays
 			dataAttr.forEach((attr) => {
 				let verifier = attr == `primary-verifier` || attr == `primary-verifier-position`
 					|| attr == `secondary-verifier` || attr == `secondary-verifier-position`;
@@ -305,6 +314,31 @@ const DTR = {
 
 		if ($(`#print`).prop(`disabled`))
 			$(`#print`).prop(`disabled`, false);
+
+		// RESIZE ALL THE FIELDS INSIDE `#printContainer` THAT HAS THE CLASS `.dtr-cell` inside `.has-secondary`
+		$(`.has-secondary .dtr-cell`).each((k, v) => {
+			textFit(v);
+		});
+
+		let sizes = {
+			verifier: {
+				primary: $(`#generatedDTR .has-secondary .dtr-cell[data-dtr-primary-verifier] > span`).css('font-size'),
+				secondary: $(`#generatedDTR .has-secondary .dtr-cell[data-dtr-secondary-verifier] > span`).css('font-size')
+			},
+			position: {
+				primary: $(`#generatedDTR .has-secondary .dtr-cell[data-dtr-primary-verifier-position] > span`).css('font-size'),
+				secondary: $(`#generatedDTR .has-secondary .dtr-cell[data-dtr-secondary-verifier-position] > span`).css('font-size')
+			}
+		}
+		let max = {
+			name: sizes.verifier.primary < sizes.verifier.secondary ? sizes.verifier.primary : sizes.verifier.secondary,
+			pos: sizes.position.primary < sizes.position.secondary ? sizes.position.primary : sizes.position.secondary
+		};
+
+		$(`#generatedDTR .has-secondary .dtr-cell[data-dtr-primary-verifier] > span, #generatedDTR .has-secondary .dtr-cell[data-dtr-secondary-verifier] > span`).css('font-size', max.name);
+		$(`#generatedDTR .has-secondary .dtr-cell[data-dtr-primary-verifier-position] > span, #generatedDTR .has-secondary .dtr-cell[data-dtr-secondary-verifier-position] > span`).css('font-size', max.pos);
+
+		console.table(max);
 	},
 	print() {
 		// DATA PARSING
@@ -338,8 +372,7 @@ const DTR = {
 
 		// RESIZE ALL THE FIELDS INSIDE `#printContainer` THAT HAS THE CLASS `.dtr-cell` inside `.has-secondary`
 		$(`#printContainer .has-secondary .dtr-cell`).each((k, v) => {
-			console.log(v);
-			textfit(v);
+			textFit(v)
 		});
 
 		window.print();
@@ -582,9 +615,6 @@ $(() => {
 	$(document).on(`click`, `[data-dtr-toggle][data-dtr-displayed=true]`, (e) => {
 		let keyCode = e.which || e.keyCode;
 
-		if (keyCode == Dragcheck.KEYCODES.RIGHT) {
-		}
-
 		DTR.reset();
 		$(`#jobOrderList`).trigger('change');
 	});
@@ -674,7 +704,7 @@ $(() => {
 			target.show();
 
 		DTR.reset();
-		$(`#jobOrderList`).change();
+		$(`#jobOrderList`).trigger('change');
 	});
 
 	// Drag clicking checkboxes
@@ -732,16 +762,17 @@ $(() => {
 
 					target.forEach((v) => {
 						if (v.matches(state)) {
-							v.name = `holiday[]`;
 
 							if (state == `:not(:checked)`) {
+								v.name = `holiday[]`;
 								v.classList.add(`holiday`);
 
 								v.closest(`[data-dragcheck]`)
-									?.querySelector(`label`)
-									.classList.add(`btn-outline-warning`);
+								?.querySelector(`label`)
+								.classList.add(`btn-outline-warning`);
 							}
 							else {
+								v.name = `dates[]`;
 								v.classList.remove(`holiday`);
 								v.closest(`[data-dragcheck]`)
 									?.querySelector(`label`)
