@@ -61,25 +61,25 @@ const DTR = {
 			dates += `
 				<div class="dtr-row" data-date="${date.attr("id")}">
 					<div class="dtr-cell text-end px-1">${i}</div>
-					
+
 					<div class="dtr-cell border border-secondary small" data-update>
 						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? `${leadingZero}8:00` : ""}" readonly>
 					</div>
-					
+
 					<div class="dtr-cell border border-secondary small" data-update>
 						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? "12:00" : ""}" readonly>
 					</div>
-					
+
 					<div class="dtr-cell border border-secondary small fst-italic fw-bold text-danger" data-update>${date.prop(`checked`) ? "BRK" : ""}</div>
-					
+
 					<div class="dtr-cell border border-secondary small" data-update>
 						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? `${leadingZero}1:00` : ""}" readonly>
 					</div>
-					
+
 					<div class="dtr-cell border border-secondary small" data-update>
 						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? `${leadingZero}5:00` : ""}" readonly>
 					</div>
-					
+
 					<div class="dtr-cell"></div>
 				</div>
 			`;
@@ -170,7 +170,7 @@ const DTR = {
 
 		// Update their class
 		fields.removeClass(`is-valid is-invalid`);
-		
+
 		valids.addClass(`is-valid`)
 			.removeClass(`is-invalid`);
 
@@ -210,7 +210,7 @@ const DTR = {
 
 				let input = $(`[name=${name}]`).not(`:disabled, [disabled]`);
 				let disabledInput = $(`[name=${name}]:disabled, [name=${name}][disabled]`);
-				
+
 				input?.removeClass(`is-valid`)
 					.addClass(`is-invalid`);
 
@@ -259,11 +259,11 @@ const DTR = {
 			dataAttr.forEach((attr) => {
 				let verifier = attr == `primary-verifier` || attr == `primary-verifier-position`
 					|| attr == `secondary-verifier` || attr == `secondary-verifier-position`;
-				
+
 				// If the attribute exists, continue the process. Otherwise, just skip to proceed.
 				if (DTR.find(`[${prefix}-${attr}]`).length > 0) {
 					let obj = DTR.find(`[${prefix}-${attr}] ${verifier ? `` : `input`}`.trim());
-					
+
 					obj.addClass(`text-black`)
 						.removeAttr(`readonly`)
 						.prop(`readonly`, false);
@@ -276,7 +276,7 @@ const DTR = {
 					}
 					else {
 						let attrVal = $(`[name=${attr}]`).val();
-						
+
 						if (verifier)
 							obj.text(attrVal ?? ``);
 						else
@@ -296,10 +296,10 @@ const DTR = {
 				.removeAttr(`readonly`)
 				.prop(`readonly`, false)
 				.addClass(`text-black`);
-			
+
 			toAppend += DTR.html();
 		});
-		
+
 		target.html(toAppend)
 			.addClass(`py-3`);
 
@@ -335,7 +335,7 @@ const DTR = {
 		// ACTUAL PRINTING
 		const elms =  $(`body > *:not(script, style, link)`);
 		elms.addClass(`print-enabled`);
-		
+
 		// RESIZE ALL THE FIELDS INSIDE `#printContainer` THAT HAS THE CLASS `.dtr-cell` inside `.has-secondary`
 		$(`#printContainer .has-secondary .dtr-cell`).each((k, v) => {
 			console.log(v);
@@ -473,7 +473,7 @@ const TUTORIAL = {
 		}
 
 		const overlay = `<div class="overlay" id="tutorial-overlay"></div>`
-		
+
 		if (TUTORIAL.previous != null &&
 			TUTORIAL.previous?.length > 0) {
 			$(TUTORIAL.previous).find(`#tutorial-overlay`)
@@ -565,7 +565,7 @@ $(() => {
 		}
 
 		let key = e.which || e.keycode;
-		
+
 		if (key == 13)
 			DTR.validate();
 	});
@@ -582,7 +582,7 @@ $(() => {
 	$(document).on(`click`, `[data-dtr-toggle][data-dtr-displayed=true]`, (e) => {
 		let keyCode = e.which || e.keyCode;
 
-		if (keyCode == Dragcheck.KEYCODES.RIGHT) {	
+		if (keyCode == Dragcheck.KEYCODES.RIGHT) {
 		}
 
 		DTR.reset();
@@ -691,10 +691,10 @@ $(() => {
 			hover: (target) => {
 				if (LEFT_DRAGCHECK.enabled) {
 					let state = LEFT_DRAGCHECK.currentState ? `:not(:checked)` : `:checked`;
-					
+
 					let dragcheck = target.dataset.dragcheck;
 					target = target.querySelectorAll(dragcheck);
-					
+
 					target.forEach((v) => {
 						if (v.matches(state)) {
 							v.closest(`[data-dragcheck]`)
@@ -726,20 +726,23 @@ $(() => {
 			hover: (target) => {
 				if (RIGHT_DRAGCHECK.enabled) {
 					let state = RIGHT_DRAGCHECK.currentState ? `:not(:checked)` : `:checked`;
-					
+
 					let dragcheck = target.dataset.dragcheck;
 					target = target.querySelectorAll(dragcheck);
-					
+
 					target.forEach((v) => {
 						if (v.matches(state)) {
 							v.name = `holiday[]`;
 
 							if (state == `:not(:checked)`) {
+								v.classList.add(`holiday`);
+
 								v.closest(`[data-dragcheck]`)
 									?.querySelector(`label`)
 									.classList.add(`btn-outline-warning`);
 							}
 							else {
+								v.classList.remove(`holiday`);
 								v.closest(`[data-dragcheck]`)
 									?.querySelector(`label`)
 									.classList.remove(`btn-outline-warning`);
@@ -755,27 +758,28 @@ $(() => {
 				}
 			}
 		}
-	
 	});
 
 	// DATE CLICK HANDLER
 	$(`[data-dragcheck]`).on(`contextmenu`, (e) => {
+		if (RIGHT_DRAGCHECK.enabled) return 0;
+
 		e.preventDefault();
 		let target = $(e.currentTarget).find(`input`);
 		let label = $(e.currentTarget).find(`label`);
-		
+
 		if (target.prop(`checked`)) {
 			target.prop(`name`, `dates[]`)
 				.attr(`name`, `dates[]`)
 				.removeClass(`holiday`);
-			
+
 			label.removeClass(`btn-outline-warning`);
 		}
 		else {
 			target.prop(`name`, `holiday[]`)
 				.attr(`name`, `holiday[]`)
 				.addClass(`holiday`);
-			
+
 			label.addClass(`btn-outline-warning`);
 		}
 
@@ -788,7 +792,7 @@ $(() => {
 			target.prop(`name`, `dates[]`)
 				.attr(`name`, `dates[]`)
 				.removeClass(`holiday`);
-			
+
 			label.removeClass(`btn-outline-warning`);
 		}
 	});
@@ -817,7 +821,7 @@ $(() => {
 	// PRINT BTN
 	$(`#print:not([disabled])`).on(`mouseenter focus`, (e) => {
 		let obj = $($(e.currentTarget).find(`*:first`));
-		
+
 		obj.addClass(`fa-bounce`)
 			.css(`--fa-animation-duration`, `1.5s`)
 			.css(`--fa-animation-iteration-count`, 1)
@@ -836,7 +840,7 @@ $(() => {
 			.css(`--fa-bounce-land-scale-x`, ``)
 			.css(`--fa-bounce-land-scale-y`, ``);
 	});
-	
+
 	// RESET BTN
 	$(`#reset:not([disabled])`).on(`mouseenter focus`, (e) => {
 		$($(e.currentTarget).find(`*:first`))

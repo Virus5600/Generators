@@ -3,16 +3,16 @@
  * a group of elements which can be checked by dragging the mouse cursor over them. This,
  * however, is only limited to the mouse buttons. This means that the user can only use
  * the mouse buttons to check the elements.
- * 
+ *
  * Recommended keycodes are only limited to the following:
  * - {@link Dragcheck.KEYCODES.LEFT}
  * - {@link Dragcheck.KEYCODES.MIDDLE}
  * - {@link Dragcheck.KEYCODES.RIGHT}
  * - {@link Dragcheck.KEYCODES.BACK}
  * - {@link Dragcheck.KEYCODES.FORWARD}
- * 
+ *
  * These buttons are listed in {@link Dragcheck.KEYCODES}.
- * 
+ *
  * @example
  * // Creates a new Dragcheck instance
  * let dragcheck = new Dragcheck({
@@ -73,6 +73,28 @@ export default class Dragcheck {
 	 */
 	#callbacks;
 
+	/**
+	 * Defines the delay in milliseconds before enabling or disabling the `Dragcheck` instance.
+	 */
+	#delay;
+
+	/**
+	 * Holds the current enable's `setTimeout` instance for this `Dragcheck` instance. This is done to allow the instance
+	 * to cancel the enable when the mouse button is released before the delay is finished.
+	 */
+	#enableFn;
+
+	/**
+	 * Defines whether this Dragcheck is enabled or not. This is used to determine whether the mouse is dragged which
+	 * defines the beginning of the `hover` callback or not.
+	 */
+	#dragCheckEnabled = false;
+
+	/**
+	 * Defines whether the ***local*** debug mode is on or not. Defaults to `false`.
+	 */
+	debug = false;
+
 	// PUBLIC VARIABLES
 	/**
 	 * Contains all the ***recommended*** key codes for the mouse buttons. You can still use
@@ -114,15 +136,21 @@ export default class Dragcheck {
 	};
 
 	/**
+	 * Defines whether the ***global*** debug mode is on or not. Defaults to `false`.
+	 */
+	static debug = false;
+
+	/**
 	 * Creates an instance of `Dragcheck` using the options provided. Provided
 	 * parameter should be an object containing the following properties:
-	 * 
+	 *
 	 * @param {String}			group		A string which will define the target elements. This should be a valid css selector.
 	 * @param {Array|Callback}	states		(optional) An array containing the new states available for the elements. A callback can also be used to return a state dynamically. If the callback is used, a parameter will be passed, which is the clicked element.
 	 * @param {Number}			defaultState (optional) An integer value which will define the current state of the element group. Defaults to `0` which is `false` in the default `states`.
 	 * @param {Number}			keyCode		(optional) An integer which will define which mouse button will trigger. See {@link Dragcheck#KEYCODES} for the available key codes.
 	 * @param {Object}			callbacks	(optional) An object containing the callback functions of `enabled`, `hover` and `disabled`. The `hover` callback function takes in a single parameter which is the element that is being hovered.
-	 * 
+	 * @param {Object}			delay		(optional) An object containing the delay in milliseconds before enabling or disabling the `Dragcheck` instance. The `enable` and `disable` properties are the ones used. The `enable` property is defaulted to `0` while the `disable` property is defaulted to `100`.
+	 *
 	 * @see Dragcheck#KEYCODES
 	 */
 	constructor({
@@ -131,33 +159,53 @@ export default class Dragcheck {
 		defaultState = 0,
 		keyCode = 1,
 		callbacks = {
-			enabled: () => {},
-			hover: () => {},
-			disabled: () => {}
+			enabled: () => {
+				if (this.debug || Dragcheck.debug) {
+					console.warn("Dragcheck: No enabled callback function specified.");
+				}
+			},
+			hover: () => {
+				if (this.debug || Dragcheck.debug) {
+					console.warn("Dragcheck: No hover callback function specified");
+				}
+			},
+			disabled: () => {
+				if (this.debug || Dragcheck.debug) {
+					console.warn("Dragcheck: No disabled callback function specified");
+				}
+			}
+		},
+		delay = {
+			enable: 0,
+			disable: 100
 		}
 	} = {}) {
 		if (!group) throw new Error("Dragcheck: No target group specified.");
 
 		if (!Object.keys(callbacks).includes("enabled")) callbacks.enabled = () => {};
 		if (!Object.keys(callbacks).includes("disabled")) callbacks.disabled = () => {};
-		
+
 		this.#group = group;
 		this.#states = states;
 		this.#defaultState = defaultState;
 		this.#keyCode = keyCode;
 		this.#callbacks = callbacks;
+		this.#delay = delay;
 
 		document.addEventListener("mousedown", (e) => {
 			let keyCode = e.which || e.keyCode;
 			if (keyCode !== this.#keyCode) return;
-			
+
 			this.#clickedElement = e.target.closest(this.#group);
-			this.enable();
+			this.#enableFn = this.enable({
+				delay: this.#delay.enable
+			});
 		});
 
 		document.addEventListener("mousemove", (e) => {
 			let keyCode = e.which || e.keyCode;
 			if (this.#enabled && this.#keyCode === keyCode) {
+				this.#dragCheckEnabled = true;
 				let target = e.target.closest(this.#group);
 
 				if (target) {
@@ -166,36 +214,44 @@ export default class Dragcheck {
 			}
 		});
 		document.addEventListener("mouseup", (e) => {
-			this.#clickedElement = undefined;
-			this.disable();
+			let keyCode = e.which || e.keyCode;
+			if (this.#enabled && this.#keyCode === keyCode) {
+				clearTimeout(this.#enableFn);
+				this.#enableFn = null;
+
+				this.disable(this.#delay.disable);
+			}
 		});
 	}
 
 	////////////////////
 	// PUBLIC METHODS //
 	////////////////////
-	
+
 	/////////////
 	// GETTERS //
 	/////////////
 
 	/**
-	 * Fetches and return the variable's value. The variable
-	 * defines whether this `Dragcheck` instance is on or not.
+	 * Identifies whether this Dragcheck instance is enabled or not.
+	 * The actual variable being called is different from the getter's name
+	 * and thus, whether this Dragcheck is enabled or not. This is used to
+	 * determine whether the mouse is dragged which defines the beginning of
+	 * the `hover` callback or not.
 	 * Defaults as false.
-	 * 
+	 *
 	 * @return A boolean value; `true` if it is enabled or
 	 * `false` otherwise.
 	 */
 	get enabled() {
-		return this.#enabled;
+		return this.#dragCheckEnabled;
 	}
 
 	/**
 	 * Fetches and return the variable's value. The variable
 	 * defines what states are available. Defaults to the
 	 * boolean values.
-	 * 
+	 *
 	 * @return An array containing all the available states for the
 	 * element group.
 	 */
@@ -218,7 +274,7 @@ export default class Dragcheck {
 	 * Fetches and return the variable's value. The variable
 	 * defines the callbacks for both when the dragcheck is
 	 * enabled and disabled.
-	 * 
+	 *
 	 * @return An object containing the callback functions of `enabled`
 	 * and `disabled`.
 	 */
@@ -233,46 +289,62 @@ export default class Dragcheck {
 	/**
 	 * Sets this `Dragcheck` instance to the `enabled` state. This will also
 	 * call the `enabled` callback function.
-	 * 
+	 *
+	 * @param {Number} delay
 	 * @param {Number} state (optional) An integer value which will define the current state of the element group.
+	 *
+	 * @return The `setTimeout` instance for this `Dragcheck` instance.
 	 */
-	enable(state) {
-		this.#enabled = true;
+	enable({delay = 0, state} = {}) {
+		return setTimeout(() => {
+			this.#enabled = true;
 
-		if (!isNaN(parseInt(state))) state = (parseFloat(state) % 1) >= .5 ? Math.ceil(state) : Math.floor(state);
-		else state = 0;
+			if (!isNaN(parseInt(state))) state = (parseFloat(state) % 1) >= .5 ? Math.ceil(state) : Math.floor(state);
+			else state = 0;
 
-		if (this.#states instanceof Function) {
-			try {
-				this.#currentState = this.#states(this.#clickedElement);
-			} catch (e) {
-				console.warn(e);
-				this.#currentState = false;
+			if (this.#states instanceof Function) {
+				try {
+					this.#currentState = this.#states(this.#clickedElement);
+				} catch (e) {
+					if (this.debug || Dragcheck.debug) {
+						console.warn(e);
+					}
+
+					this.#currentState = false;
+				}
 			}
-		}
-		else this.#currentState = this.#states[state ?? this.#defaultState];
+			else this.#currentState = this.#states[state ?? this.#defaultState];
 
-		this.#callbacks.enabled();
+			this.#callbacks.enabled();
+		}, delay);
 	}
 
 	/**
 	 * Sets this `Dragcheck` instance to the `disabled` state. This will also
 	 * call the `disabled` callback function.
+	 *
+	 * @param {Number} delay (optional) The delay in milliseconds before disabling the `Dragcheck` instance.
+	 *
+	 * @return The `setTimeout` instance for this `Dragcheck` instance.
 	 */
-	disable() {
-		this.#enabled = false;
+	disable(delay = 0) {
+		return setTimeout(() => {
+			this.#clickedElement = undefined;
+			this.#dragCheckEnabled = false;
+			this.#enabled = false;
 
-		if (this.#states instanceof Function) this.#currentState = undefined;
-		else this.#currentState = this.#states[this.#defaultState];
+			if (this.#states instanceof Function) this.#currentState = undefined;
+			else this.#currentState = this.#states[this.#defaultState];
 
-		this.#callbacks.disabled();
+			this.#callbacks.disabled();
+		}, delay);
 	}
 
 	/**
 	 * Sets a new value for the variable.
-	 * 
+	 *
 	 * @param {Array|Function}	states	An array containing the new states available for the elements, or a callback function.
-	 * 
+	 *
 	 * @return The current Dragcheck instance. This allows method chaining.
 	 */
 	set states(states) {
