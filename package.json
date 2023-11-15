@@ -35,7 +35,7 @@
 		"dev": "electron .",
 		"build": "electron-builder --publish never",
 		"build-portable": "electron-builder portable",
-		"deploy": "electron-builder --publish always",
+		"publish": "electron-builder -w --publish=onTagOrDraft && node ./scripts/rename_portable.js && electron-builder --windows portable --publish=onTagOrDraft",
 		"prod": "npm run production",
 		"production": "mix --production"
 	},
@@ -66,28 +66,21 @@
 	},
 	"files": [
 		"public",
-		"resources",
 		"src",
 		"webpack.mix.js"
 	],
 	"build": {
 		"appId": "com.virus5600.generators",
 		"productName": "Generators",
+		"artifactName": "${productName}_${version}.${ext}",
 		"copyright": "Copyright (c) 2023 ${author}",
 		"generateUpdatesFilesForAllChannels": true,
 		"directories": {
 			"output": "dist"
 		},
 		"extraResources": [
-			"assets/resources"
+			"src/resources"
 		],
-		"win": {
-			"target": [
-				"msi",
-				"nsis"
-			],
-			"icon": "src/resources/favicon.png"
-		},
 		"nsis": {
 			"oneClick": false,
 			"perMachine": false,
