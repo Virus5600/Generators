@@ -1,7 +1,7 @@
+const { ipcRenderer } = require('electron');
 const remote = require('@electron/remote');
 const { first } = require('lodash');
 const win = remote.getCurrentWindow();
-const winContent = remote.getCurrentWebContents();
 let initialized = false;
 
 document.readyState === 'complete' ? init() : initialized ? null : window.addEventListener('load', init);
@@ -16,24 +16,24 @@ function init() {
 	const closeButton = document.querySelector('button#close-btn');
 
 	let isMaximized = win.isMaximized();
-	
+
 	closeButton.addEventListener('click', () => win.close());
 	minimizeButton.addEventListener('click', () => win.minimize());
 	maximizeButton.addEventListener('click', () => {
 		isMaximized = !isMaximized;
 		toggleMaximizeButton(isMaximized);
 	});
-	
+
 	win.on('unmaximize', () => {
 		isMaximized = false;
 		toggleMaximizeButton(isMaximized);
 	});
-	
+
 	win.on('maximize', () => {
 		isMaximized = true;
 		toggleMaximizeButton(isMaximized);
 	});
-	
+
 	window.onbeforeunload = (e) => {
 		win.removeAllListeners();
 		// Add an emitter remover
@@ -51,6 +51,9 @@ function init() {
 			win.unmaximize();
 		}
 	}
+
+	// Auto Updater - Detects whether there's an update or not
+	updateCheck();
 }
 
 function prependTitleBar() {
@@ -68,11 +71,11 @@ function prependTitleBar() {
 			<button id="min-btn">
 				<i class="fas fa-window-minimize"></i>
 			</button>
-				
+
 			<button id="max-btn">
 				<i class="fas fa-window-${win.isMaximized() ? "restore" : "maximize"}"></i>
 			</button>
-			
+
 			<button id="close-btn">
 				<i class="fa fa-x"></i>
 			</button>
@@ -97,9 +100,9 @@ function prependTitleBar() {
 	const body = document.querySelector(`body`);
 	body.insertAdjacentHTML('afterbegin', goBack);
 	body.insertAdjacentHTML('afterbegin', titleBar);
-	
+
 	// Favicon Update
-	let updateFavSuccess = updateFavicon(favicon) ? null : updateFavicon(document.querySelector(`link[rel=icon]`).href);
+	let updateFavSuccess = updateFavicon(favicon) ? true : updateFavicon(document.querySelector(`link[rel=icon]`).href);
 	if (!updateFavSuccess)
 		console.warn("Failed to set favicon")
 }
@@ -111,21 +114,15 @@ function updateFavicon(favicon) {
 	try {
 		// First Attempt
 		try {
-			winContent.setIcon(__dirname + favicon);
-			console.log("winContent 1st ran");
 			win.setIcon(__dirname + favicon);
-			console.log("win 1st ran");
 		} catch (e) {
 			firstSuccess = false;
 			console.warn("First attempt to set icon failed\nUsing: " + favicon, e);
 		}
-		
+
 		// Second Attempt
 		if (!firstSuccess) {
-			winContent.setIcon(favicon);
-			console.log("winContent 2nd ran");
 			win.setIcon(favicon);
-			console.log("win 2nd ran");
 		}
 	} catch (ex) {
 		secondSuccess = false;
@@ -133,4 +130,37 @@ function updateFavicon(favicon) {
 	}
 
 	return (firstSuccess || secondSuccess);
+}
+
+function updateCheck() {
+	ipcRenderer.on('update_available', (e) => {
+		console.log('update-available', e);
+		ipcRenderer.removeAllListeners('update_available');
+		Swal.fire({
+			title: 'Update Available',
+			text: 'A new update is available. Do you want to update now?',
+			iconColor: `#3fc3ee`,
+			iconHtml: `<span class="fa-stack fa-1x"><i class="fas fa-circle fa-stack-2x swal2-info"></i><i class="fas fa-download fa-stack-1x text-white"></i></span>`,
+			showConfirmButton: true,
+			confirmButtonText: 'Update',
+		}).then((result) => {
+			if (result.isConfirmed)
+				Swal.close();
+		});
+	});
+
+	ipcRenderer.on('update_downloaded', () => {
+		ipcRenderer.removeAllListeners('update_downloaded');
+		Swal.fire({
+			title: 'Update Downloaded',
+			text: 'Restart the application to apply the updates.',
+			iconColor: `#3fc3ee`,
+			iconHtml: `<span class="fa-stack fa-1x"><i class="fas fa-circle fa-stack-2x swal2-info"></i><i class="fas fa-check-to-slot fa-stack-1x text-white"></i></span>`,
+			showConfirmButton: true,
+			confirmButtonText: 'Restart',
+		}).then((result) => {
+			if (result.isConfirmed)
+				ipcRenderer.send('restart_app');
+		});
+	});
 }
