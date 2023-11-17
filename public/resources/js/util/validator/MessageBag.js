@@ -3,7 +3,7 @@ export default class MessageBag {
 
 	/**
 	 * Constructs an instance of `MessageBag`.
-	 * 
+	 *
 	 * <b>Example A.1:</b>
 	 * ```javascript
 	 * messages = {
@@ -12,9 +12,9 @@ export default class MessageBag {
 	 * 	}
 	 * }
 	 * ```
-	 * 
+	 *
 	 * @param {Object}	messages	An instance of JSON object, which holds a field-key-value instance. An example of this is the Example A.1
-	 * 
+	 *
 	 */
 	constructor(messages = Object.create(null)) {
 		this.#message = messages;
@@ -23,10 +23,10 @@ export default class MessageBag {
 	/**
 	 * Adds a new message to the message bag. If an exact key already exists, it will replace the older value with the new
 	 * value provided.
-	 * 
+	 *
 	 * @param {String}	key		The key identifier for the message
 	 * @param {String}	message	The message that will be placed in the message bag
-	 * 
+	 *
 	 * @return {MessageBag}		The current instance of `MessageBag`
 	 */
 	add(key, message) {
@@ -46,7 +46,7 @@ export default class MessageBag {
 	 * Merge a new array of messages into the message bag.
 	 *
 	 * @param {Object|MessageBag}	messages	A JSON object or an instance of `MessageBag`
-	 * 
+	 *
 	 * @return {MessageBag}	The current instance of `MessageBag`
 	 */
 	merge(messages) {
@@ -88,6 +88,12 @@ export default class MessageBag {
 	 * @return {String}		The first message contained within the said field. Returns an `undefined` when the field does not exists
 	 */
 	first(field) {
+		if (typeof field == 'undefined') {
+			field = Object.keys(this.#message);
+			let key = Object.keys(this.#message[field]);
+			return this.#message[field][key[0]];
+		}
+
 		let key = Object.keys(this.#message[field]);
 		return this.#message[field][key[0]];
 	}
