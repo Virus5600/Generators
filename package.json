@@ -1,6 +1,6 @@
 {
 	"name": "generators",
-	"version": "1.2.0-beta",
+	"version": "1.0.0",
 	"description": "A series of mini-applications that all create a library of generator application",
 	"main": "public/index.js",
 	"license": "UNLICENSED",
