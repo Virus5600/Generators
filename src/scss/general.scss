@@ -1,0 +1,18 @@
+// Normalize.css
+@import "./libs/normalize";
+
+// Bootstrap 5
+@import "./libs/bootstrap";
+
+// Font Awesome 5
+@import "./libs/fontawesome";
+
+// Sweet Alert 2
+@import "./libs/swal";
+
+// Common Classes
+@import "./components/common";
+@import "./util/custom-scrollbar";
+
+// Frameless
+@import "./frameless";

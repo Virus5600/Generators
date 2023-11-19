@@ -1,0 +1,47 @@
+.required-after,
+.required-end {
+	&:after {
+		margin-left: .25rem;
+		content: "*";
+		color: red;
+	}
+}
+
+.required,
+.required-before,
+.required-start {
+	&:before {
+		margin-right: .25rem;
+		content: "*";
+		color: red;
+	}
+}
+
+.remove-button-style {
+	color: inherit;
+	border: none;
+	background: none;
+	padding: 0;
+	margin: 0;
+
+	-webkit-appearance: initial;
+	appearance: initial;
+}
+
+textarea {
+	$dir: (
+		hr: horizontal,
+		vr: vertical,
+		b: both
+	);
+
+	@each $dk, $dv in $dir {
+		&.resizable-#{$dk} {
+			resize: $dv
+		}
+	}
+
+	&.not-resizable {
+		resize: none !important;
+	}
+}

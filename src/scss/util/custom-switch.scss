@@ -1,0 +1,20 @@
+$sizes: (
+	xs: scale(75%),
+	sm: scale(100%),
+	md: scale(125%),
+	lg: scale(150%),
+	xl: scale(175%),
+);
+
+/* SWITCH SIZE START */
+.custom-switch {
+	@each $size, $value in $sizes {
+		&.custom-switch-#{$size} {
+			&::after,
+			&::before {
+				transform: $value;
+			}
+		}
+	}
+}
+/* SWITCH SIZE END */

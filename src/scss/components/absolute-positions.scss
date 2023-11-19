@@ -1,0 +1,131 @@
+@use "sass:map";
+
+@import "./breakpoints";
+
+$pos: (
+	"outer": 0%,
+	"inner": 25%,
+	"middle": 50%,
+);
+
+$vertical-pos: (
+	"top": "top",
+	"middle": "top",
+	"bottom": "bottom"
+);
+
+$horizontal-pos: (
+	"left": "left",
+	"middle": "left",
+	"right": "right"
+);
+
+$modifiers: (
+	"middle": -1,
+	"top": 1,
+	"right": 1,
+	"bottom": -1,
+	"left": -1,
+);
+
+.position-absolute,
+.position-xs-absolute,
+.position-sm-absolute,
+.position-md-absolute,
+.position-lg-absolute,
+.position-xl-absolute,
+.position-xxl-absolute {
+
+	// Iterate through the breakpoints
+	@each $bk, $bv in $sizes {
+
+		// Specialized classes
+		@if $bk == "xs" {
+			&.posabs-center {
+				left: 50%;
+				top:50%;
+				transform: translateX(-50%) translateY(-50%);
+			}
+		}
+
+		@media (min-width: $bv) {
+			&.posabs-#{$bk}-center {
+				left: 50%;
+				top:50%;
+				transform: translateX(-50%) translateY(-50%);
+			}
+		}
+
+		// Iterate through the position map
+		@each $pk, $pv in $pos {
+
+			// Iterate through the vertical map
+			@each $vk, $vv in $vertical-pos {
+				$modV: map-get($modifiers, "#{$vk}");
+
+				@if $pk == "middle" and $vk == "middle" {
+					@if $bk == "xs" {
+						&.posabs-vertical-middle {
+							#{$vv}: #{$pv};
+							transform: translateY(calc(#{$modV} * #{$pv}));
+						}
+					}
+
+					@media (min-width: $bv) {
+						&.posabs-#{$bk}-vertical-middle {
+							#{$vv}: #{$pv};
+							transform: translateY(calc(#{$modV} * #{$pv}));
+						}
+					}
+				}
+				@else {
+					@if $bk == "xs" {
+						&.posabs-#{$pk}#{$vk} {
+							#{$vv}: #{$pv};
+						}
+					}
+
+					@media (min-width: $bv) {
+						&.posabs-#{$bk}-#{$pk}#{$vk} {
+							#{$vv}: #{$pv};
+						}
+					}
+				}
+			}
+
+			// Iterate through the horizontal map
+			@each $hk, $hv in $horizontal-pos {
+				$modH: map-get($modifiers, "#{$hk}");
+
+				@if $pk == "middle" and $hk == "middle" {
+					@if $bk == "xs" {
+						&.posabs-horizontal-middle {
+							#{$hv}: #{$pv};
+							transform: translateX(calc(#{$modH} * #{$pv}));
+						}
+					}
+
+					@media (min-width: $bv) {
+						&.posabs-#{$bk}-horizontal-middle {
+							#{$hv}: #{$pv};
+							transform: translateY(calc(#{$modH} * #{$pv}));
+						}
+					}
+				}
+				@else {
+					@if $bk == "xs" {
+						&.posabs-#{$pk}#{$hk} {
+							#{$hv}: #{$pv};
+						}
+					}
+
+					@media (min-width: $bv) {
+						&.posabs-#{$bk}-#{$pk}#{$hk} {
+							#{$hv}: #{$pv};
+						}
+					}
+				}
+			}
+		}
+	}
+}

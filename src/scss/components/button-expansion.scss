@@ -1,0 +1,30 @@
+$types: (
+	good: #3085d6,
+	bad: #d33,
+);
+
+$font-color: (
+	good: #fff,
+	bad: #fff,
+);
+
+@each $type, $color in $types {
+	.btn-#{$type} {
+		background-color: $color !important;
+		color: map-get($font-color, $type) !important;
+
+		transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+		&:hover {
+			background-color: darken($color, 10%) !important;
+		}
+
+		&:active {
+			background-color: darken($color, 20%) !important;
+		}
+
+		.swal2-container &:focus {
+			box-shadow: 0 0 0 0.2rem rgba($color, 0.25) !important;
+		}
+	}
+}
