@@ -1,6 +1,8 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, session } = require('electron');
 const remote = require('@electron/remote');
 const semver = require('semver');
+import Validator from './util/validator/Validator.js';
+
 const win = remote.getCurrentWindow();
 let initialized = false;
 
@@ -88,12 +90,6 @@ function init() {
 			showLoaderOnConfirm: true,
 			showLoaderOnDeny: true,
 			preConfirm: async() => {
-				let importV = async() => {
-					return await import("./util/validator/Validator.js");
-				};
-
-				let Validator = (await importV()).default;
-
 				let ap = document.querySelector(`input[name="allowPrerelease"]`) ?? null;
 				let ad = document.querySelector(`input[name="autoDownload"]`) ?? null;
 				let cfu = document.querySelector(`input[name="checkForUpdates"]`) ?? null;
@@ -152,14 +148,14 @@ function init() {
 					showDenyButton: false,
 					timer: 2500,
 					timerProgressBar: true,
-					allowOutsideClick: false,
-					allowEscapeKey: false,
+					allowOutsideClick: true,
+					allowEscapeKey: true,
 					allowEnterKey: false,
+				}).then((response) => {
+					if (response.isDismissed) {
+						optionsButton.click();
+					}
 				});
-
-				setTimeout(() => {
-					optionsButton.click();
-				}, 2625);
 			}
 		});
 	});
@@ -285,6 +281,9 @@ function updateFavicon(favicon) {
 function initConfigs() {
 	let config = getConfigs(true);
 
+	if (sessionStorage.getItem('update-later') === null)
+		sessionStorage.setItem('update-later', false);
+
 	if (config.allowPrerelease === null)
 		localStorage.setItem('allowPrerelease', false);
 	if (config.autoDownload === null)
@@ -349,8 +348,15 @@ function updateCheck() {
 
 	// Update Available
 	ipcRenderer.on('update-available', (e, [data, isManual]) => {
+		if (sessionStorage.getItem('update-later') === 'true' && !isManual) {
+			sessionStorage.removeItem('skipSkippedVersion');
+			console.log('Remind later...');
+			return;
+		}
+
+		let skipSkippedVer = sessionStorage.getItem('skipSkippedVer');
 		let skipVersion = localStorage.getItem('skipVersion');
-		if (semver.gte(skipVersion, data.version) && !isManual) {
+		if (!skipSkippedVer || (semver.gte(skipVersion, data.version) && !isManual)) {
 			console.log('Skipping update...', {
 				skip: skipVersion,
 				update: data.version
@@ -400,30 +406,47 @@ function updateCheck() {
 					timerProgressBar: true,
 				});
 			}
+			else {
+				sessionStorage.setItem('update-later', true);
+				Swal.fire({
+					title: `You will be reminded again later.`,
+					icon: 'info',
+					timer: 2500,
+					timerProgressBar: true,
+					toast: true,
+					position: 'top-end',
+					showCloseButton: true,
+				});
+			}
+
+			sessionStorage.removeItem('skipSkippedVer');
 		});
 	});
 
 	// Update Not Available
-	ipcRenderer.on('update-not-available', (e) => {
+	ipcRenderer.on('update-not-available', (e, isManual) => {
 		console.log('No updates yet...');
 
-		Swal.fire({
-			icon: 'success',
-			title: 'No Updates Available',
-			text: 'You are currently using the latest version of the application.',
-		});
+		if (isManual) {
+			Swal.fire({
+				icon: 'success',
+				title: 'No Updates Available',
+				text: 'You are currently using the latest version of the application.',
+			});
+		}
 	});
 
 	// Downloading Update
 	ipcRenderer.on('download-progress', (e, data) => {
 		console.log('Downloading update...', data);
 
-		let i = Math.ceil(data.percent);
-		Swal.update({
-			html: `<div class="progress" role="progressbar" aria-label="Download Progress" aria-valuenow="${i}" aria-valuemin="0" aria-valuemax="100">
-				<div class="progress-bar progress-bar-striped progress-bar-animated" style="width: ${i}%;">${i}%</div>
-			</div>`
-		});
+		if (Swal.getPopup() != null) {
+			Swal.update({
+				html: `<div class="progress" role="progressbar" aria-label="Download Progress" aria-valuenow="${data.percent}" aria-valuemin="0" aria-valuemax="100">
+					<div class="progress-bar progress-bar-striped progress-bar-animated" style="width: ${data.percent}%;">${data.percent}%</div>
+				</div>`
+			});
+		}
 	});
 
 	// Update Downloaded
@@ -453,8 +476,19 @@ function updateCheck() {
 function initEventListeners() {
 	document.addEventListener('click', (e) => {
 		if (e.target.closest(`#check-for-updates`)) {
-			console.log(`Checking for updates...`, getConfigs());
-			ipcRenderer.send('check-for-updates', getConfigs(), true);
+			Swal.fire({
+				title: `Include skipped versions?`,
+				showDenyButton: true,
+				confirmButtonText: `Yes`,
+				denyButtonText: `No`,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					sessionStorage.setItem('skipSkippedVer', true);
+				}
+
+				console.log(`Checking for updates...`, getConfigs());
+				ipcRenderer.send('check-for-updates', getConfigs(), true);
+			});
 		}
 	});
 }

@@ -1,0 +1,17 @@
+$utilities: map-merge(
+	$utilities,
+	(
+		"transition": (
+			property: transition,
+			class: transition,
+			responsive: true,
+			values: (
+				"1": .125s,
+				"2": .25s,
+				"3": .5s,
+				"4": 1s,
+				"5": 2s
+			)
+		)
+	)
+);

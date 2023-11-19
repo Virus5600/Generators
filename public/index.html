@@ -1,40 +1,59 @@
 <!DOCTYPE html>
 <html lang="en-US">
-	<head>
-		<!-- Bootstrap 5.3 | Sweetalert 2 -->
-		<link rel="stylesheet" href="resources/libs.css">
-		<script type="text/javascript" src="resources/libs.js"></script>
+	<head title="Generators">
+		<!-- Meta -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="Content-Language" content="en-US" />
+
+		<!-- Libraries -->
+		<link rel="stylesheet" href="resources/css/general.css">
+
+		<!-- Base Design -->
+		<link rel="stylesheet" href="resources/modules/the-hub/index.css">
 
 		<!-- Favicon -->
-		<link rel="icon" href="resources/favicon.png" data-alt="./resources/favicon.png">
+		<link rel="icon" href="resources/modules/the-hub/assets/favicon.png" data-alt="./resources/modules/the-hub/assets/favicon.png">
 
 		<!-- Title -->
 		<title>Generators</title>
 	</head>
 
-	<body class="min-vh-100 d-flex flex-column" data-bs-theme="dark">
+	<body class="min-vh-100 d-flex flex-column custom-scrollbar apply-to-all" data-bs-theme="dark">
 
-		<div class="container-fluid my-3">
-			<app-category data-category="Generator" data-add-class="my-3">
-				<sub-application
-					data-title="String Generator"
-					data-desc="Generates random strings"
-					data-img="String Generator/assets/favicon.png"
-					data-link="String Generator/index.html"
-					/>
+		<main>
+			<div class="container-fluid my-3 d-flex flex-column flex-grow-1 h-100">
+				<app-category data-category="Generator" data-add-class="my-3">
+					<sub-application
+						data-title="String Generator"
+						data-desc="Generates random strings"
+						data-img="resources/modules/string-gen/assets/favicon.png"
+						data-link="String Generator/index.html"
+						/>
 
-				<sub-application
-					data-title="Daily Time Record (DTR) Generator"
-					data-desc="Helps generate a DTR easily"
-					data-img="DTR Generator/assets/favicon.png"
-					data-link="DTR Generator/index.html"
-					/>
-			</app-category>
-		</div>
+					<sub-application
+						data-title="Daily Time Record (DTR) Generator"
+						data-desc="Helps generate a DTR easily"
+						data-img="resources/modules/dtr-gen/assets/favicon.png"
+						data-link="DTR Generator/index.html"
+						/>
+				</app-category>
+			</div>
+		</main>
 
-		<!-- Libraries -->
-		<script type="text/javascript" src="./resources/libs.js"></script>
-		<script type="text/javascript" src="./resources/js/frameless.js" defer></script>
-		<script type="text/javascript" src="./resources/index.js"></script>
+		<footer class="navbar navbar-expand bg-body-tertiary mt-auto ">
+			<div class="container-fluid">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a href="About/index.html" class="nav-link">About</a></li>
+				</ul>
+			</div>
+		</footer>
+
+		<!-- Base Script -->
+		<script type="text/javascript" src="resources/js/general.js"></script>
+		<script type="module" src="resources/js/frameless.js"></script>
+
+		<!-- Custom Scripts -->
+		<script type="text/javascript" src="resources/modules/the-hub/index.js" defer></script>
 	</body>
 </html>

@@ -1,0 +1,205 @@
+// GENERAL ANIMATION CLASSES
+.delay-animation {
+	opacity: 0;
+	animation-delay: var(--anim-delay, 0);
+}
+
+$animations: (
+	"slide": (
+		FromLeft: (
+			from: (
+				opacity: 0,
+				transform: translateX(-6.25%)
+			),
+			to: (
+				opacity: 1,
+				transform: translateX(0%)
+			)
+		),
+		ToLeft: (
+			from: (
+				opacity: 1,
+				transform: translateX(0%)
+				),
+			to: (
+				opacity: 0,
+				transform: translateX(-6.25%)
+			)
+		),
+		FromRight: (
+			from: (
+				opacity: 0,
+				transform: translateX(6.25%)
+			),
+			to: (
+				opacity: 1,
+				transform: translateX(0%)
+			)
+		),
+		ToRight: (
+			from: (
+				opacity: 1,
+				transform: translateX(0%)
+			),
+			to: (
+				opacity: 0,
+				transform: translateX(6.25%)
+			)
+		),
+		FromUp: (
+			from: (
+				opacity: 0,
+				transform: translateY(6.25%)
+			),
+			to: (
+				opacity: 1,
+				transform: translateY(0%)
+			)
+		),
+		ToUp: (
+			from: (
+				opacity: 1,
+				transform: translateY(0%)
+			),
+			to: (
+				opacity: 0,
+				transform: translateY(6.25%)
+			)
+		),
+		FromDown: (
+			from: (
+				opacity: 0,
+				transform: translateY(-6.25%)
+			),
+			to: (
+				opacity: 1,
+				transform: translateY(0%)
+			)
+		),
+		ToDown: (
+			from: (
+				opacity: 1,
+				transform: translateY(0%)
+			),
+			to: (
+				opacity: 0,
+				transform: translateY(-6.25%)
+			)
+		),
+		FromForward: (
+			from: (
+				opacity: 0,
+				transform: scale(1.0625)
+			),
+			to: (
+				opacity: 1,
+				transform: scale(1)
+			)
+		),
+		ToForward: (
+			from: (
+				opacity: 1,
+				transform: scale(1)
+			),
+			to: (
+				opacity: 0,
+				transform: scale(1.0625)
+			)
+		),
+		FromBackward: (
+			from: (
+				opacity: 0,
+				transform: scale(.9375)
+			),
+			to: (
+				opacity: 1,
+				transform: scale(1)
+			)
+		),
+		ToBackward: (
+			from: (
+				opacity: 1,
+				transform: scale(1)
+			),
+			to: (
+				opacity: 0,
+				transform: scale(.9375)
+			)
+		),
+		classDetails: (
+			animation-duration: .5s,
+			animation-easing: ease
+		)
+	),
+	/**
+		NEXT ANIM GOES ABOVE THIS (See comment directly below for format). DO NOT REMOVE THIS COMMENT.
+		Animation Format:
+
+		// Group is the main animation name. (i.e. slide)
+		Group: (
+			// Subgroups defFromes what other animations are in the group. (i.e. FromLeft, ToLeft, FromRight, ToRight, etc.)
+			SubGroup: (
+				// From and To defFrome the CSS attributes that change durFromg the animation.
+				from: (
+					// CSS Attribute: Value
+					attr1: val1,
+					attr2: val2
+				),
+				to: (
+					attr1: val1,
+					attr2: val2
+				)
+			),
+			// Class Details identify what goes in the animation class.
+			classDetails: (
+				// CSS Attribute: Value
+				attr1: val1,
+				attr2: val2
+			)
+		)
+	*/
+);
+
+
+@mixin createAnim($animation, $attributes) {
+	@each $anim, $attr in $attributes {
+		@if ($attr != "classDetails") {
+			/** #{$animation}#{$anim} **/
+			@keyframes #{$animation}#{$anim} {
+				from {
+					@each $css, $val in map-get($attr, "from") {
+						#{$css}: #{$val};
+					}
+				}
+
+				to {
+					@each $css, $val in map-get($attr, "to") {
+						#{$css}: #{$val};
+					}
+				}
+			}
+
+			$details: map-get($attr, "classDetails");
+			$duration: .5s !default;
+			$easing: ease !default;
+
+			@if ($details != null) {
+				$duration: map-get($details, "animation-duration");
+				$easing: map-get($details, "animation-easing");
+			}
+
+			.#{$animation}#{$anim} {
+				--anim-delay: 0s;
+
+				animation-name: #{$animation}#{$anim};
+				animation-duration: $duration;
+				animation-timing-function: $easing;
+			}
+		}
+	}
+}
+
+// ANIMATION & KEYFRAME CLASSES
+@each $anim, $attr in $animations {
+	@include createAnim($anim, $attr);
+}

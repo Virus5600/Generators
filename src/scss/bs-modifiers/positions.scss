@@ -1,0 +1,9 @@
+$utilities: map-merge(
+	$utilities,
+	(
+		"position": map-merge(
+			map-get($utilities, "position"),
+			(responsive: true)
+		)
+	)
+);
