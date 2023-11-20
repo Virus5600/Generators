@@ -283,6 +283,8 @@ function initConfigs() {
 
 	if (sessionStorage.getItem('update-later') === null)
 		sessionStorage.setItem('update-later', false);
+	if (sessionStorage.getItem('skipSkippedVer') === null)
+		sessionStorage.setItem('skipSkippedVer', false)
 
 	if (config.allowPrerelease === null)
 		localStorage.setItem('allowPrerelease', false);
@@ -361,6 +363,12 @@ function updateCheck() {
 				skip: skipVersion,
 				update: data.version
 			});
+
+			Swal.fire({
+				icon: 'success',
+				title: 'No Updates Available',
+				text: 'You are currently using the latest version of the application.',
+			});
 			return;
 		}
 
@@ -372,7 +380,7 @@ function updateCheck() {
 		<p>A new update is available. Do you want to update now?</p>
 
 		<h4 class="text-start">Patch Notes</h4>
-		<div class="text-bg-secondary rounded">${data.releaseNotes}</div>
+		<div class="text-bg-secondary rounded text-start p-3">${data.releaseNotes}</div>
 		`;
 
 		Swal.fire({
@@ -380,6 +388,7 @@ function updateCheck() {
 			html: content,
 			iconColor: `#3fc3ee`,
 			iconHtml: `<span class="fa-stack fa-1x"><i class="fas fa-circle fa-stack-2x swal2-info"></i><i class="fas fa-download fa-stack-1x text-white"></i></span>`,
+			grow: `row`,
 			showConfirmButton: true,
 			showDenyButton: true,
 			showCancelButton: true,
