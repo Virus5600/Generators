@@ -140,12 +140,15 @@
 }
 
 #printContainer {
+	size: A4 portrait;
 	padding: 0;
 	display: none;
 
 	&.print-enabled {
-		padding-top: 1px;
-		display: block !important;
+		display: flex !important;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
 
 		--dtr-cell-width: calc(3.5rem * .90625);
 		--dtr-cell-height: calc(1.5rem * .8125);
@@ -161,6 +164,7 @@
 		& > .row {
 			& > * {
 				display: flex;
+				padding: 24.675mm 0;
 			}
 
 			& > *:nth-child(odd) {
@@ -170,10 +174,6 @@
 			& > *:nth-child(even) {
 				justify-content: left;
 				break-after: page;
-			}
-
-			& > * {
-				padding: 0;
 			}
 		}
 	}

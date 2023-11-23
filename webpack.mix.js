@@ -16,6 +16,9 @@ mix.webpackConfig({
 				path.resolve(__dirname),
 			],
 		},
+		externals: {
+			canvg: 'canvg',
+		},
 		devtool: 'inline-source-map'
 	})
 	/////////\\\\\\\\\\
