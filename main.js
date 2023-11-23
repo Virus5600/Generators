@@ -49,7 +49,7 @@ app.whenReady().then(() => {
 			callback({
 				responseHeaders: {
 					...details.responseHeaders,
-					'Content-Security-Policy': [`default-src 'self' 'unsafe-inline'`],
+					'Content-Security-Policy': [`default-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self';`],
 				}
 			});
 		});

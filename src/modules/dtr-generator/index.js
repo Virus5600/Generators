@@ -2,6 +2,11 @@
 import UniqueArray from "../../js/util/unique-array/unique-array.mod.js";
 import SwalFlash from "../../js/util/swal-flash/swal-flash.mod.js";
 import Dragcheck from "../../js/util/dragcheck/dragcheck.mod.js";
+import jsPDF from "jspdf";
+
+// HTML2PDF Libs
+import html2canvas from "html2canvas";
+import dompurify from "dompurify";
 
 // Validator
 import Validator from "../../js/util/validator/Validator.js";
@@ -343,8 +348,8 @@ const DTR = {
 	},
 	print() {
 		// DATA PARSING
-		const printTarget = $(`#printContainer > .row`);
-		let toAppend = ``;
+		const printTarget = $(`#printContainer`);
+		let toAppend = `<div class="row">`;
 
 		$(`#generatedDTR`).children().each((k, v) => {
 			let data = $(v);
@@ -361,10 +366,15 @@ const DTR = {
 					grandParent.find(`[data-update]`).html(``);
 			});
 
+			// Inserts a row every 2 elements
+			if (k%2 == 0) {
+				toAppend += `</div><div class="row">`;
+			}
+
 			toAppend += `<div class="col-6">${data[0].outerHTML}</div>`;
 		});
 
-		printTarget.html(toAppend);
+		printTarget.html(toAppend + `</div>`);
 
 
 		// ACTUAL PRINTING
@@ -376,11 +386,24 @@ const DTR = {
 			textFit(v)
 		});
 
-		window.print();
-
-		setTimeout(() => {
-			elms.removeClass(`print-enabled`);
-		}, 1000);
+		// Prepares the PDF to be saved
+		let doc = new jsPDF({
+			orientation: `portrait`,
+			unit: `px`,
+			userUnit: 16,
+			format: `a4`,
+			hotfixes: [
+				`px_scaling`
+			],
+		});
+		// Saves the PDF
+		doc.html(document.querySelector(`#printContainer`), {
+			callback: async (d) => {
+				d.saveGraphicsState();
+				await d.save(`(${document.querySelector(`[name=period]`).value}) DTR.pdf`, { returnPromise: true });
+				elms.removeClass(`print-enabled`);
+			}
+		});
 	},
 	generateTutorial(target, end = false) {
 		if (end) {
