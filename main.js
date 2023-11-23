@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, session } = require('electron');
+const { app, BrowserWindow, ipcMain, session, Menu } = require('electron');
 const remote = require('@electron/remote/main');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
@@ -39,6 +39,8 @@ const createWindow = () => {
 	remote.enable(win.webContents);
 	win.loadFile('public/index.html');
 };
+
+// Menu.setApplicationMenu(null);
 
 app.whenReady().then(() => {
 	// Sets the CSP

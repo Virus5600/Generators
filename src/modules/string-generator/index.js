@@ -84,6 +84,14 @@ $(function() {
 		target.attr('max', newMax);
 	}).trigger('change');
 
+	// FORM SUBMIT
+	$(`#string_form`).on('submit', (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		validate($(e.currentTarget));
+	});
+
 	// FORM RESETTER
 	$(`#resetForm`).on('click', (e) => {
 		$(`string-card.show`).removeClass(`show`);
