@@ -27,6 +27,11 @@ const dataAttr = [
 ];
 
 const DTR = {
+	// DTR Options
+	options: {
+		leadingTimeZero: true,
+		duplicateDTR: false,
+	},
 	list: [],
 	displayContent(e) {
 		DTR.reset();
@@ -61,7 +66,7 @@ const DTR = {
 	},
 	preview() {
 		let dates = "";
-		let leadingZero = $(`#removeLeadingZeroes`).prop(`checked`) ? "" : "0";
+		let leadingZero = this.options.leadingTimeZero ? "0" : "";
 
 		for (let i = 1; i <= 31; i++) {
 			let date = $(`#date-${i}`);
@@ -366,19 +371,24 @@ const DTR = {
 					grandParent.find(`[data-update]`).html(``);
 			});
 
-			// Inserts a row every 2 elements
-			if (k%2 == 0) {
+			if (DTR.options.duplicateDTR) {
+				for (let i = 0; i < 2; i ++) {
+					toAppend += `<div class="col-6">${data[0].outerHTML}</div>`;
+				}
 				toAppend += `</div><div class="row">`;
 			}
-
-			toAppend += `<div class="col-6">${data[0].outerHTML}</div>`;
+			else {
+				// Inserts a row every 2 elements
+				if (k%2 == 0) toAppend += `</div><div class="row">`;
+				toAppend += `<div class="col-6">${data[0].outerHTML}</div>`;
+			}
 		});
 
 		printTarget.html(toAppend + `</div>`);
 
 
 		// ACTUAL PRINTING
-		const elms =  $(`body > *:not(script, style, link)`);
+		const elms = $(`body > *:not(script, style, link)`);
 		elms.addClass(`print-enabled`);
 
 		// RESIZE ALL THE FIELDS INSIDE `#printContainer` THAT HAS THE CLASS `.dtr-cell` inside `.has-secondary`
@@ -435,7 +445,7 @@ const TUTORIAL = {
 		},
 		"#verifierArea": {
 			title: `Provide Verifier`,
-			content: `This is usually the head of the department, but on some occassions that they are not available, an OIC or PIC will be provided.`
+			content: `This is usually the head of the department, but on some occasions that they are not available, an OIC or PIC will be provided.`
 		},
 		"#verifierPosArea": {
 			title: `Provide the Work Title of the Verifier`,
@@ -451,7 +461,7 @@ const TUTORIAL = {
 		},
 		"#dtrSample": {
 			title: `Preview the General Template`,
-			content: `Everytime the selected <code>dates</code> changes, this DTR template will update and reflect what a generated one will look like.`
+			content: `Every time the selected <code>dates</code> changes, this DTR template will update and reflect what a generated one will look like.`
 		},
 		"#dtrGenFooter": {
 			title: `Generator Controls`,
@@ -719,14 +729,82 @@ $(() => {
 	$(`#removeLeadingZeroes`).on('click', (e) => {
 		let obj = $(e.currentTarget);
 		let target = $(`#leadingZero`);
+		let fd = [...new FormData(obj.closest(`form`)[0])];
+		let rv = fd.findLast((k) => {
+			if (k[0].match(/removeLeadingZeroes/gi))
+				return k;
+		});
 
-		if (obj.prop('checked'))
+		let validator = new Validator({
+			removeLeadingZeroes: rv[1]
+		}, {
+			removeLeadingZeroes: [`required`, `boolean`]
+		}, {
+			removeLeadingZeroes: {
+				required: `Please refrain from modifying the page`,
+				boolean: `Please refrain from modifying the page`
+			}
+		});
+
+		let val = validator.validate();
+
+		if (validator.fails()) {
+			SwalFlash.error(validator.first());
+			return 0;
+		}
+
+		val = val.removeLeadingZeroes === 'true';
+		if (val)
 			target.hide();
 		else
 			target.show();
 
+		DTR.options.leadingTimeZero = !val;
+
 		DTR.reset();
 		$(`#jobOrderList`).trigger('change');
+	});
+
+	// Handles the checkbox for duplicated DTRs
+	$(`#dupeDTR`).on('click', (e) => {
+		let obj = $(e.currentTarget);
+		let target = $(`#dtrAmt`);
+		let fd = [...new FormData(obj.closest(`form`)[0])];
+		let rv = fd.findLast((k) => {
+			if (k[0].match(/dupeDTR/gi))
+				return k;
+		});
+
+		let validator = new Validator({
+			dupeDTR: rv[1]
+		}, {
+			dupeDTR: [`required`, `boolean`]
+		}, {
+			dupeDTR: {
+				required: `Please refrain from modifying the page`,
+				boolean: `Please refrain from modifying the page`
+			}
+		});
+
+		let val = validator.validate();
+
+		if (validator.fails()) {
+			SwalFlash.error(validator.first());
+			return 0;
+		}
+
+		if (validator.fails()) {
+			SwalFlash.error(validator.first());
+			return 0;
+		}
+
+		val = val.dupeDTR === 'true';
+		if (val)
+			target.text(`Two (2)`);
+		else
+			target.text(`One (1)`);
+
+		DTR.options.duplicateDTR = val;
 	});
 
 	// Drag clicking checkboxes
