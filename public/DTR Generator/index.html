@@ -105,7 +105,7 @@
 											<label for="secondVerifierCheckbox" id="secondVerifierCBLabel" class="btn btn-outline-secondary rounded-end-0 h-100">Second Verifier</label>
 										</div>
 
-										<input type="text" class="form-control" id="secondVerifierInput" aria-descreibedby="secondVerifierIPLabel" name="secondary-verifier" disabled>
+										<input type="text" class="form-control" id="secondVerifierInput" aria-describedby="secondVerifierIPLabel" title="Secondary Verifier" name="secondary-verifier" disabled>
 									</div>
 
 									<small class="feedback d-block" data-validation="secondary-verifier-exists"></small>
@@ -114,7 +114,7 @@
 
 								<div class="col-12 col-lg-6 form-group" id="secondVerifierPosArea">
 									<label for="secondverifierPosInput" id="secondVerifierPosLabel" class="form-label before">Second Verifier Position</label>
-									<input type="text" class="form-control" id="secondVerifierPosInput" aria-describedby="secondVerifierPosLabel" name="secondary-verifier-position" disabled>
+									<input type="text" class="form-control" id="secondVerifierPosInput" aria-describedby="secondVerifierPosLabel" title="Secondary Verifier Position" name="secondary-verifier-position" disabled>
 									<small class="feedback" data-validation="secondary-verifier-position"></small>
 								</div>
 							</div>
@@ -295,18 +295,41 @@
 								</table>
 							</div>
 
-							<!-- REMOVE LEADING ZEROES -->
-							<div class="d-flex justify-content-between">
-								<div class="form-check">
-									<input type="checkbox" class="form-check-input" id="removeLeadingZeroes" name="removeLeadingZeroes">
-									<label for="removeLeadingZeroes" class="form-checl-label">Remove Leading Zeroes in the time</label>
+							<div class="card">
+								<!-- REMOVE LEADING ZEROES -->
+								<div class="card-body border-bottom">
+									<div class="d-flex justify-content-between">
+										<div class="form-check">
+											<input type="hidden" name="removeLeadingZeroes" value="false">
+											<input type="checkbox" class="form-check-input" id="removeLeadingZeroes" name="removeLeadingZeroes" value="true">
+											<label for="removeLeadingZeroes" class="form-check-label">Remove Leading Zeroes in the time</label>
+										</div>
+
+										<div>
+											<label for="timeDemo">This is what will appear: </label>
+											<span class="badge rounded-pill border-secondary border">
+												<code id="timeDemo"><span id="leadingZero">0</span>8:00</code>
+											</span>
+										</div>
+									</div>
 								</div>
 
-								<div>
-									<label for="timeDemo">This is what will appear: </label>
-									<span class="badge rounded-pill border-secondary border">
-										<code id="timeDemo"><span id="leadingZero">0</span>8:00</code>
-									</span>
+								<!-- MAKE DUPLICATE DTR -->
+								<div class="card-body">
+									<div class="d-flex justify-content-between">
+										<div class="form-check">
+											<input type="hidden" name="dupeDTR" value="false">
+											<input type="checkbox" class="form-check-input" id="dupeDTR" name="dupeDTR" value="true">
+											<label for="dupeDTR" class="form-check-label">Duplicate DTR</label>
+										</div>
+
+										<div>
+											<label for="dtrAmt">Amount of DTR per person: </label>
+											<span class="badge rounded-pill border-secondary border">
+												<code id="dtrAmt">One (1)</code>
+											</span>
+										</div>
+									</div>
 								</div>
 							</div>
 						</form>
@@ -323,7 +346,7 @@
 							<div class="dtr-row">
 								<div class="dtr-cell"></div>
 								<div class="dtr-cell dtr-cell-5 underline" data-dtr-name>
-									<input type="text" class="border-0 bg-transparent w-100 text-center" value="[EMPLOYEE NAME]" readonly>
+									<input type="text" class="border-0 bg-transparent w-100 text-center" aria-label="Employee Name" value="[EMPLOYEE NAME]" readonly>
 								</div>
 								<div class="dtr-cell"></div>
 							</div>
@@ -332,7 +355,7 @@
 							<div class="dtr-row">
 								<div class="dtr-cell dtr-cell-3">For the period of:</div>
 								<div class="dtr-cell dtr-cell-3 underline" data-dtr-period>
-									<input type="text" class="border-0 bg-transparent w-100 text-center" value="[PERIOD]" readonly>
+									<input type="text" class="border-0 bg-transparent w-100 text-center" aria-label="Period" value="[PERIOD]" readonly>
 								</div>
 								<div class="dtr-cell"></div>
 							</div>
@@ -341,13 +364,13 @@
 								<!-- REGULAR DAYS -->
 								<div class="dtr-cell dtr-cell-2">Regular Days:</div>
 								<div class="dtr-cell underline" data-dtr-days>
-									<input type="text" class="border-0 bg-transparent w-100 text-center" value="[DAYS]" readonly>
+									<input type="text" class="border-0 bg-transparent w-100 text-center" aria-label="Days" value="[DAYS]" readonly>
 								</div>
 
 								<!-- SATURDAYS -->
 								<div class="dtr-cell dtr-cell-2">Saturdays:</div>
 								<div class="dtr-cell underline" data-dtr-saturday>
-									<input type="text" class="border-0 bg-transparent w-100 text-center" value="[???]" readonly>
+									<input type="text" class="border-0 bg-transparent w-100 text-center" aria-label="Saturdays" value="[SATS]" readonly>
 								</div>
 
 								<div class="dtr-cell"></div>
