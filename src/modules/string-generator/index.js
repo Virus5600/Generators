@@ -8,9 +8,9 @@ import Validator from "../../js/util/validator/Validator.js";
 var validation = {
 	rules: {
 		"use_range": ["sometimes", "boolean"],
-		"range_min": ["sometimes", "numeric", "min:0", "max:$range_max"],
+		"range_min": ["sometimes", "numeric", "min:1", "max:$range_max"],
 		"range_max": ["sometimes", "numeric", "min:$range_min", "max:255"],
-		"length": ["sometimes", "numeric", "between:0,255"],
+		"length": ["sometimes", "numeric", "between:1,255"],
 		"chars": ["required", "array", "min:1"],
 		"chars.*": ["sometimes", "in:alpha,numeric,spec"]
 	},
@@ -20,12 +20,13 @@ var validation = {
 		},
 		"range_min": {
 			"numeric": `Minimum range should be a number`,
-			"min": `Minimum value should be :min`,
-			"max": `Maximum value should be :max`,
+			"min": `Minimum value should be at least :min`,
+			"max": `Maximum value should be at max, :max`,
 		},
 		"range_max": {
-			"min": `Maximum value should be :min`,
-			"max": `Maximum value should be :max`,
+			"numeric": `Maximum range should be a number`,
+			"min": `Maximum value should be at least :min`,
+			"max": `Maximum value should be at max, :max`,
 		},
 		"length": {
 			"length.numeric": `Length should be a number`,
@@ -66,9 +67,9 @@ $(function() {
 	$(`#range_min`).on('change', (e) => {
 		let obj = $(e.currentTarget);
 		let target = $(`#range_max`);
-		let newMin = obj.val();
+		let newMin = obj.val() ?? 0;
 
-		newMin = newMin.match(/^-?\d+$/g).length > 0 ? parseInt(newMin) : parseInt(target.attr('min'));
+		newMin = (newMin.match(/^-?\d+$/g)?.length ?? 0) > 0 ? parseInt(newMin) : parseInt(target.attr('min'));
 
 		target.attr('min', newMin);
 	}).trigger('change');
@@ -77,9 +78,9 @@ $(function() {
 	$(`#range_max`).on('change', (e) => {
 		let obj = $(e.currentTarget);
 		let target = $(`#range_min`);
-		let newMax = obj.val();
+		let newMax = obj.val() ?? 0;
 
-		newMax = newMax.match(/^-?\d+$/g).length > 0 ? parseInt(newMax) : parseInt(target.attr('max'));
+		newMax = (newMax.match(/^-?\d+$/g)?.length ?? 0) > 0 ? parseInt(newMax) : parseInt(target.attr('max'));
 
 		target.attr('max', newMax);
 	}).trigger('change');
@@ -94,13 +95,24 @@ $(function() {
 
 	// FORM RESETTER
 	$(`#resetForm`).on('click', (e) => {
-		$(`string-card.show`).removeClass(`show`);
-		$(`[name]`).removeClass(`is-valid is-invalid`);
-		$(`form`)[0].reset();
+		$(`#restorePassView`).trigger('click')
+			.remove();
+		let useRange = $(`#useRange`);
 
-		$(`#generated_string`).text("")
-			.closest(`string-card`)
-			.removeClass(`show`);
+		if (useRange.prop(`checked`)) {
+			useRange.prop(`checked`, false).trigger(`change`);
+		}
+
+		$(`[name]`).removeClass(`is-valid is-invalid`)
+			.closest(`form`)
+			.each((k, v) => v.reset());
+
+		let gstr = $(`#generated_string`);
+		for (let i = 0; i < gstr.text().length; i++) {
+			setTimeout(() => {
+				gstr.text(gstr.text().slice(0, -1));
+			}, 10 * i);
+		}
 
 		SwalFlash.success("Form Reset");
 	});
@@ -151,22 +163,23 @@ window.validate = function(form) {
 
 	// Update some rule values
 	let variableRule = ['range_min', 'range_max'];
+	let modVRules = JSON.parse(JSON.stringify(validation.rules));
 	for (let r of variableRule) {
-		validation.rules[r].find((v, k) => {
+		modVRules[r].find((v, k) => {
 			if (v.match(/\$\w+/g)) {
 				let targetKey = v.match(/(\$)(\w+)/)[2];
 
 				if (!Object.keys(validation.values).includes(targetKey))
 					return;
 
-				validation.rules[r][k] = v.replace(/(\$)(\w+)/, validation.values[targetKey]);
+				modVRules[r][k] = v.replace(/(\$)(\w+)/, validation.values[targetKey]);
 			}
 		});
 	}
 
 	let validator = new Validator(
 		validation.values,
-		validation.rules,
+		modVRules,
 		validation.message
 	);
 
@@ -230,14 +243,35 @@ window.validate = function(form) {
 
 		regex += typeof values.use_range == 'undefined' ? `{${values.length}}` : `{${values.range_min},${values.range_max}}`;
 
-		$(`#generated_string`)
-			.text(new RandExp(regex).gen())
-			.closest(`.string-card`)
-			.addClass(`show`)
-			.find(`.minimize, .maximize`)
-			.addClass(`minimize`).removeClass(`maximize`)
-			.closest(`.window`)
-			.addClass(`maximized`).removeClass(`minimized`);
+		let gstr = $(`#generated_string`);
+		let newStr = new RandExp(regex).gen();
+		let oldStr = gstr.text();
+		let oldInterval = 25.5 * 10 / oldStr.length;
+		let newInterval =  25.5 * 10 / newStr.length;
+
+		for (let i = 0; i < oldStr.length; i++) {
+			setTimeout(() => {
+				gstr.text(gstr.text().slice(0, -1));
+			}, oldInterval * i);
+		}
+
+		setTimeout(() => {
+			for (let i = 0; i < newStr.length; i++) {
+				setTimeout(() => {
+					gstr.text(gstr.text() + newStr[i]);
+
+					if (i == newStr.length - 1) {
+						gstr.closest(`.string-card`)
+							.addClass(`show`)
+							.find(`.minimize, .maximize`)
+							.addClass(`minimize`).removeClass(`maximize`)
+							.closest(`.window`)
+							.addClass(`maximized`).removeClass(`minimized`);
+					}
+				}, newInterval * i);
+			}
+		}, oldInterval * oldStr.length);
+
 
 		let restoreAppendTarget = $(`#stringGenFooter`);
 		let restore = restoreAppendTarget.find(`#restorePassView`);
