@@ -61,6 +61,12 @@ window.addEventListener('flash_error', (e) => {
 			content: `text-white`,
 			popup: `px-3`
 		},
+		showClass: {
+			popup: `animate__animated animate__bounceIn animate__faster`
+		},
+		hideClass: {
+			popup: `animate__animated animate__fadeOutUp animate__faster`
+		},
 	}
 
 	Swal.fire(__setSwalFlashOptions(options, flash, 'error'));
@@ -80,6 +86,12 @@ window.addEventListener('flash_info', (e) => {
 			content: `text-white`,
 			popup: `px-3`
 		},
+		showClass: {
+			popup: `animate__animated animate__bounceIn animate__faster`
+		},
+		hideClass: {
+			popup: `animate__animated animate__fadeOutUp animate__faster`
+		},
 	}
 
 	Swal.fire(__setSwalFlashOptions(options, flash, 'info'));
@@ -98,6 +110,12 @@ window.addEventListener('flash_success', (e) => {
 			title: `text-white`,
 			content: `text-white`,
 			popup: `px-3`
+		},
+		showClass: {
+			popup: `animate__animated animate__bounceIn animate__faster`
+		},
+		hideClass: {
+			popup: `animate__animated animate__fadeOutUp animate__faster`
 		},
 	}
 
