@@ -1,6 +1,7 @@
 {
     "/resources/js/general.js": "/resources/js/general.js",
     "/resources/modules/the-hub/index.js": "/resources/modules/the-hub/index.js",
+    "/resources/modules/about/index.js": "/resources/modules/about/index.js",
     "/resources/modules/string-gen/index.js": "/resources/modules/string-gen/index.js",
     "/resources/modules/dtr-gen/index.js": "/resources/modules/dtr-gen/index.js",
     "/resources/css/util/custom-scrollbar.css": "/resources/css/util/custom-scrollbar.css",
@@ -31,6 +32,8 @@
     "/resources/js/util/validator/Validator.umd.js": "/resources/js/util/validator/Validator.umd.js",
     "/resources/modules/the-hub/assets/favicon.png": "/resources/modules/the-hub/assets/favicon.png",
     "/resources/modules/the-hub/assets/Virus5600.png": "/resources/modules/the-hub/assets/Virus5600.png",
+    "/resources/modules/about/assets/dtrg-screencap.webp": "/resources/modules/about/assets/dtrg-screencap.webp",
+    "/resources/modules/about/assets/virus5600.webp": "/resources/modules/about/assets/virus5600.webp",
     "/resources/modules/string-gen/assets/favicon.png": "/resources/modules/string-gen/assets/favicon.png",
     "/resources/modules/dtr-gen/Sample Generated DTR.js": "/resources/modules/dtr-gen/Sample Generated DTR.js",
     "/resources/modules/dtr-gen/assets/favicon.png": "/resources/modules/dtr-gen/assets/favicon.png",

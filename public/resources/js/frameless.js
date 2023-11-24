@@ -1,4 +1,4 @@
-const { ipcRenderer, session } = require('electron');
+const { ipcRenderer, shell } = require('electron');
 const remote = require('@electron/remote');
 const semver = require('semver');
 import Validator from './util/validator/Validator.js';
@@ -501,3 +501,20 @@ function initEventListeners() {
 		}
 	});
 }
+
+function openExternal(e) {
+	let url = e.detail.url;
+	Swal.fire({
+		title: `You are opening an external link`,
+		text: `Are you sure you want to proceed?`,
+		icon: `warning`,
+		showDenyButton: true,
+		confirmButtonText: `Yes`,
+		denyButtonText: `No`,
+	}).then((result) => {
+		if (result.isConfirmed) {
+			shell.openExternal(url);
+		}
+	});
+}
+window.addEventListener('open-external', openExternal);
