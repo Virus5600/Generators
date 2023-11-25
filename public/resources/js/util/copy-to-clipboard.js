@@ -1,7 +1,7 @@
 if (!window.Swal)
-	window.Swal = require("node_modules/sweetalert2/dist/sweetalert2.all.min.js");
+	window.Swal = require("node_modules/sweetalert2/dist/sweetalert2.min.js");
 
-$(document).ready(() => {
+$(() => {
 	$(document).on('click', `[data-copy-target], [data-copy-text], [data-copy]`, (e) => {
 		let element = e.currentTarget;
 
@@ -20,10 +20,10 @@ $(document).ready(() => {
 		else
 			textToCopy = $(element).val();
 
-		temp.val(textToCopy).select();
+		temp.val(textToCopy).trigger('select');
 		document.execCommand("copy");
 		temp.remove();
-		
+
 		Swal.fire({
 			title: `Text copied`,
 			position: `top-right`,
@@ -33,11 +33,9 @@ $(document).ready(() => {
 			background: `#28a745`,
 			customClass: {
 				title: `text-white`,
-				popup: `px-0 animated fadeInLeft`
+				popup: `px-0`
 			},
 			width: 150,
-			showClass: { popup: 'animate__animated animate__flipInX animate__bounce animate__faster' },
-			hideClass: { popup: 'animate__animated animate__fadeOutRight animate__faster' }
 		});
 	});
 });

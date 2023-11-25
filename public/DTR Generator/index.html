@@ -1,25 +1,28 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<!-- Bootstrap 5.3 | Sweetalert 2 -->
-		<link rel="stylesheet" href="styles/libs.css">
-		<!-- General Styles -->
-		<link rel="stylesheet" href="../resources/css/general.css">
-
-		<!-- Custom Styling -->
-		<link rel="stylesheet" href="styles/index.css">
-
-		<!-- Favicon -->
-		<link rel="icon" href="assets/favicon.png" data-alt="./assets/favicon.png">
+<html lang="en-US">
+	<head title="DTR Generator">
+		<!-- Meta -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="Content-Language" content="en-US" />
 
 		<!-- "Go Back" target -->
-		<meta name="go-back" content="../index.html" title="Generator">
+		<meta name="go-back" content="../index.html" title="Generators">
+
+		<!-- Libraries -->
+		<link rel="stylesheet" href="../resources/css/general.css">
+
+		<!-- Base Design -->
+		<link rel="stylesheet" href="../resources/modules/dtr-gen/index.css">
+
+		<!-- Favicon -->
+		<link rel="icon" href="../resources/modules/dtr-gen/assets/favicon.png" data-alt="./../resources/modules/dtr-gen/assets/favicon.png">
 
 		<!-- Title -->
 		<title>DTR Generator</title>
 	</head>
 
-	<body class="min-vh-100 d-flex flex-column custom-scrollbar py-5" data-bs-theme="dark">
+	<body class="min-vh-100 d-flex flex-column custom-scrollbar apply-to-all py-5" data-bs-theme="dark">
 		<div class="m-auto card col-10 px-0" id="body">
 			<!-- HEADER -->
 			<h4 class="card-header">Daily Time Record (DTR) Generator</h4>
@@ -29,7 +32,7 @@
 
 				<div class="container-fluid">
 					<p>To insert the list of JOs (Job Orders), upload a <code>.txt</code> file containing the full name of each employee per line similar to this:</p>
-					<pre class="border p-2"><code>Doug D. Sims<br>Cristina A. Dougherty<br>Dee J. Coon, Jr.<br>Hugo L. Davidson<br>...</code></pre>
+					<pre class="border p-2"><code>Doug D. Sims<br>Cristina A. Dougherty<br>Dee J. Coon, Jr.<br>Hugo L. Davidson<br><span data-bs-toggle="tooltip" data-bs-content="More names below.">...</span></code></pre>
 
 					<div class="d-flex flex-row">
 						<button type="button" class="btn btn-secondary mx-auto" id="tutorial">Tutorial</button>
@@ -37,7 +40,7 @@
 				</div>
 
 				<hr>
-				
+
 				<div class="row">
 					<!-- FORM -->
 					<div class="col-12 col-lg-6 my-3">
@@ -65,7 +68,7 @@
 									<input type="number" class="form-control" id="daysInput" aria-describedby="daysLabel" min="1" max="20" name="days">
 									<small class="feedback" data-validation="days"></small>
 								</div>
-								
+
 								<!-- SATURDAYS -->
 								<div class="col-12 col-lg-6 form-group" id="saturdayArea">
 									<label for="saturdayInput" id="saturdayLabel" class="form-label">Saturdays</label>
@@ -75,18 +78,44 @@
 							</div>
 
 
-							<!-- DEPARTMENT HEAD -->
+							<!-- VERIFIER -->
 							<div class="row my-3">
 								<div class="col-12 col-lg-6 form-group" id="verifierArea">
 									<label for="verifierInput" id="verifierLabel" class="form-label required before">Verifier Name</label>
-									<input type="text" class="form-control" id="verifierInput" aria-describedby="verifierLabel" name="verifier" required>
-									<small class="feedback" data-validation="verifier"></small>
+									<input type="text" class="form-control" id="verifierInput" aria-describedby="verifierLabel" name="primary-verifier" required>
+									<small class="feedback" data-validation="primary-verifier"></small>
 								</div>
 
 								<div class="col-12 col-lg-6 form-group" id="verifierPosArea">
 									<label for="verifierPosInput" id="verifierPosLabel" class="form-label required before">Verifier Position</label>
-									<input type="text" class="form-control" id="verifierPosInput" aria-describedby="verifierPosLabel" name="verifier-position" required>
-									<small class="feedback" data-validation="verifier-position"></small>
+									<input type="text" class="form-control" id="verifierPosInput" aria-describedby="verifierPosLabel" name="primary-verifier-position" required>
+									<small class="feedback" data-validation="primary-verifier-position"></small>
+								</div>
+							</div>
+
+							<!-- SECOND VERIFIER -->
+							<div class="row my-3" id="secondVerifierArea">
+								<div class="col-12 col-lg-6 form-group">
+									<label for="secondVerifierInput" id="secondVerifierIPLabel" class="form-label before">Second Verifier Name</label>
+
+									<div class="input-group">
+										<div class="h-100">
+											<input type="hidden" name="secondary-verifier-exists" autocomplete="off" value="false">
+											<input type="checkbox" class="btn-check" id="secondVerifierCheckbox" aria-describedby="secondVerifierCBLabel" name="secondary-verifier-exists" autocomplete="off" value="true">
+											<label for="secondVerifierCheckbox" id="secondVerifierCBLabel" class="btn btn-outline-secondary rounded-end-0 h-100">Second Verifier</label>
+										</div>
+
+										<input type="text" class="form-control" id="secondVerifierInput" aria-describedby="secondVerifierIPLabel" title="Secondary Verifier" name="secondary-verifier" disabled>
+									</div>
+
+									<small class="feedback d-block" data-validation="secondary-verifier-exists"></small>
+									<small class="feedback d-block" data-validation="secondary-verifier"></small>
+								</div>
+
+								<div class="col-12 col-lg-6 form-group" id="secondVerifierPosArea">
+									<label for="secondverifierPosInput" id="secondVerifierPosLabel" class="form-label before">Second Verifier Position</label>
+									<input type="text" class="form-control" id="secondVerifierPosInput" aria-describedby="secondVerifierPosLabel" title="Secondary Verifier Position" name="secondary-verifier-position" disabled>
+									<small class="feedback" data-validation="secondary-verifier-position"></small>
 								</div>
 							</div>
 
@@ -96,113 +125,113 @@
 								<table class="w-100">
 									<!-- Days 1 to 7 -->
 									<tr>
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-1" value="1" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-1" class="btn btn-outline-secondary w-100">1</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-2" value="2" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-2" class="btn btn-outline-secondary w-100">2</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-3" value="3" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-3" class="btn btn-outline-secondary w-100">3</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-4" value="4" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-4" class="btn btn-outline-secondary w-100">4</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-5" value="5" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-5" class="btn btn-outline-secondary w-100">5</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-6" value="6" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-6" class="btn btn-outline-secondary w-100">6</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-7" value="7" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-7" class="btn btn-outline-secondary w-100">7</label>
 										</td>
 									</tr>
-									
+
 									<!-- Days 8 to 14 -->
 									<tr>
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-8" value="8" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-8" class="btn btn-outline-secondary w-100">8</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-9" value="9" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-9" class="btn btn-outline-secondary w-100">9</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-10" value="10" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-10" class="btn btn-outline-secondary w-100">10</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-11" value="11" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-11" class="btn btn-outline-secondary w-100">11</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-12" value="12" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-12" class="btn btn-outline-secondary w-100">12</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-13" value="13" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-13" class="btn btn-outline-secondary w-100">13</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-14" value="14" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-14" class="btn btn-outline-secondary w-100">14</label>
 										</td>
 									</tr>
-									
+
 									<!-- Days 15 to 21 -->
 									<tr>
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-15" value="15" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-15" class="btn btn-outline-secondary w-100">15</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-16" value="16" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-16" class="btn btn-outline-secondary w-100">16</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-17" value="17" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-17" class="btn btn-outline-secondary w-100">17</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-18" value="18" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-18" class="btn btn-outline-secondary w-100">18</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-19" value="19" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-19" class="btn btn-outline-secondary w-100">19</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-20" value="20" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-20" class="btn btn-outline-secondary w-100">20</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-21" value="21" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-21" class="btn btn-outline-secondary w-100">21</label>
 										</td>
@@ -210,37 +239,37 @@
 
 									<!-- Days 22 to 28 -->
 									<tr>
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-22" value="22" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-22" class="btn btn-outline-secondary w-100">22</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-23" value="23" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-23" class="btn btn-outline-secondary w-100">23</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-24" value="24" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-24" class="btn btn-outline-secondary w-100">24</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-25" value="25" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-25" class="btn btn-outline-secondary w-100">25</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-26" value="26" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-26" class="btn btn-outline-secondary w-100">26</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-27" value="27" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-27" class="btn btn-outline-secondary w-100">27</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-28" value="28" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-28" class="btn btn-outline-secondary w-100">28</label>
 										</td>
@@ -248,22 +277,60 @@
 
 									<!-- Days 29 to 31 -->
 									<tr>
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-29" value="29" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-29" class="btn btn-outline-secondary w-100">29</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-30" value="30" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-30" class="btn btn-outline-secondary w-100">30</label>
 										</td>
 
-										<td data-dragcheck="input[name='dates[]']">
+										<td data-dragcheck="input[name='dates[]'], input[name='holiday[]']">
 											<input type="checkbox" class="btn-check" id="date-31" value="31" name="dates[]" data-dtr-toggle data-dtr-displayed="false">
 											<label for="date-31" class="btn btn-outline-secondary w-100">31</label>
 										</td>
 									</tr>
 								</table>
+							</div>
+
+							<div class="card">
+								<!-- REMOVE LEADING ZEROES -->
+								<div class="card-body border-bottom">
+									<div class="d-flex justify-content-between">
+										<div class="form-check">
+											<input type="hidden" name="removeLeadingZeroes" value="false">
+											<input type="checkbox" class="form-check-input" id="removeLeadingZeroes" name="removeLeadingZeroes" value="true">
+											<label for="removeLeadingZeroes" class="form-check-label">Remove Leading Zeroes in the time</label>
+										</div>
+
+										<div>
+											<label for="timeDemo">This is what will appear: </label>
+											<span class="badge rounded-pill border-secondary border">
+												<code id="timeDemo"><span id="leadingZero">0</span>8:00</code>
+											</span>
+										</div>
+									</div>
+								</div>
+
+								<!-- MAKE DUPLICATE DTR -->
+								<div class="card-body">
+									<div class="d-flex justify-content-between">
+										<div class="form-check">
+											<input type="hidden" name="dupeDTR" value="false">
+											<input type="checkbox" class="form-check-input" id="dupeDTR" name="dupeDTR" value="true">
+											<label for="dupeDTR" class="form-check-label">Duplicate DTR</label>
+										</div>
+
+										<div>
+											<label for="dtrAmt">Amount of DTR per person: </label>
+											<span class="badge rounded-pill border-secondary border">
+												<code id="dtrAmt">One (1)</code>
+											</span>
+										</div>
+									</div>
+								</div>
 							</div>
 						</form>
 					</div>
@@ -279,7 +346,7 @@
 							<div class="dtr-row">
 								<div class="dtr-cell"></div>
 								<div class="dtr-cell dtr-cell-5 underline" data-dtr-name>
-									<input type="text" class="border-0 bg-transparent w-100 text-center" value="[EMPLOYEE NAME]" readonly>
+									<input type="text" class="border-0 bg-transparent w-100 text-center" aria-label="Employee Name" value="[EMPLOYEE NAME]" readonly>
 								</div>
 								<div class="dtr-cell"></div>
 							</div>
@@ -288,7 +355,7 @@
 							<div class="dtr-row">
 								<div class="dtr-cell dtr-cell-3">For the period of:</div>
 								<div class="dtr-cell dtr-cell-3 underline" data-dtr-period>
-									<input type="text" class="border-0 bg-transparent w-100 text-center" value="[PERIOD]" readonly>
+									<input type="text" class="border-0 bg-transparent w-100 text-center" aria-label="Period" value="[PERIOD]" readonly>
 								</div>
 								<div class="dtr-cell"></div>
 							</div>
@@ -297,15 +364,15 @@
 								<!-- REGULAR DAYS -->
 								<div class="dtr-cell dtr-cell-2">Regular Days:</div>
 								<div class="dtr-cell underline" data-dtr-days>
-									<input type="text" class="border-0 bg-transparent w-100 text-center" value="[DAYS]" readonly>
+									<input type="text" class="border-0 bg-transparent w-100 text-center" aria-label="Days" value="[DAYS]" readonly>
 								</div>
 
 								<!-- SATURDAYS -->
 								<div class="dtr-cell dtr-cell-2">Saturdays:</div>
 								<div class="dtr-cell underline" data-dtr-saturday>
-									<input type="text" class="border-0 bg-transparent w-100 text-center" value="[???]" readonly>
+									<input type="text" class="border-0 bg-transparent w-100 text-center" aria-label="Saturdays" value="[SATS]" readonly>
 								</div>
-								
+
 								<div class="dtr-cell"></div>
 							</div>
 
@@ -363,21 +430,21 @@
 								</div>
 							</div>
 
-							<div class="dtr-row">
+							<div class="dtr-row" data-dtr-second-verifier-affected="underline">
 								<div class="dtr-cell"></div>
 								<div class="dtr-cell dtr-cell-5 underline"></div>
 								<div class="dtr-cell"></div>
 							</div>
 
-							<div class="dtr-row">
+							<div class="dtr-row" data-dtr-second-verifier-affected="verifier">
 								<div class="dtr-cell"></div>
-								<div class="dtr-cell dtr-cell-5 small fw-bold" data-dtr-verifier>[VERIFIER NAME]</div>
+								<div class="dtr-cell dtr-cell-5 small fw-bold" data-dtr-primary-verifier>[VERIFIER NAME]</div>
 								<div class="dtr-cell"></div>
 							</div>
 
-							<div class="dtr-row">
+							<div class="dtr-row" data-dtr-second-verifier-affected="verifier-position">
 								<div class="dtr-cell"></div>
-								<div class="dtr-cell dtr-cell-5 small fst-italic" data-dtr-verifier-position>[VERIFIER POSITION]</div>
+								<div class="dtr-cell dtr-cell-5 small fst-italic" data-dtr-primary-verifier-position>[VERIFIER POSITION]</div>
 								<div class="dtr-cell"></div>
 							</div>
 						</div>
@@ -414,18 +481,15 @@
 
 		<!-- FOR PRINTING -->
 		<div id="printContainer" class="bg-white text-dark" data-bs-theme="light">
-			<div class="row">
-			</div>
 		</div>
 
-		<!-- Libraries -->
-		<script type="text/javascript" src="./scripts/libs.js"></script>
+		<!-- Base Script -->
+		<script type="text/javascript" src="../resources/js/general.js"></script>
+		<script type="module" src="../resources/js/frameless.js"></script>
 
 		<!-- Custom Scripts -->
-		<script type="text/javascript" src="./../resources/js/frameless.js" defer></script>
-		<script type="text/javascript" src="./../resources/js/util/confirm-leave.js" defer></script>
-		<script type="text/javascript" src="./../resources/js/util/serialize-form-json/serialize-form-json.js"></script>
-		
-		<script type="module" src="./scripts/index.js"></script>
+		<script type="module" src="../resources/js/util/confirm-leave.js" defer></script>
+		<script type="module" src="../resources/js/util/serialize-form-json.js" defer></script>
+		<script type="module" src="../resources/modules/dtr-gen/index.js" defer></script>
 	</body>
 </html>

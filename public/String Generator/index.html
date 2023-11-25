@@ -1,25 +1,32 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<!-- Bootstrap 5.3 | Sweetalert 2 -->
-		<link rel="stylesheet" href="styles/libs.css">
-		<script type="text/javascript" src="scripts/libs.js"></script>
-		
-		<!-- Custom Styling -->
-		<link rel="stylesheet" href="styles/index.css">
-
-		<!-- Favicon -->
-		<link rel="icon" href="assets/favicon.png" data-alt="./assets/favicon.png">
+<html lang="en-US">
+	<head title="String Generator">
+		<!-- Meta -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="Content-Language" content="en-US" />
 
 		<!-- "Go Back" target -->
-		<meta name="go-back" content="../index.html" title="Generator">
+		<meta name="go-back" content="../index.html" title="Generators">
+
+		<!-- Libraries -->
+		<link rel="stylesheet" href="../resources/css/general.css">
+
+		<!-- Base Design -->
+		<link rel="stylesheet" href="../resources/modules/string-gen/index.css">
+
+		<!-- Custom Styles -->
+		<link rel="stylesheet" href="../resources/css/util/custom-switch.css">
+
+		<!-- Favicon -->
+		<link rel="icon" href="../resources/modules/string-gen/assets/favicon.png" data-alt="./../resources/modules/string-gen/assets/favicon.png">
 
 		<!-- Title -->
 		<title>String Generator</title>
 	</head>
 
-	<body class="min-vh-100 d-flex flex-column custom-scrollbar" data-bs-theme="dark">
-		<form action="javascript:validate($(`#string_form`));" id="string_form" class="m-auto card col-10 col-md-6 col-lg-3 px-0 needs-validation" novalidate>
+	<body class="min-vh-100 d-flex flex-column custom-scrollbar apply-to-all" data-bs-theme="dark">
+		<form id="string_form" class="m-auto card col-10 col-md-6 col-lg-3 px-0 needs-validation" novalidate>
 			<!-- HEADER -->
 			<h4 class="card-header">String Generator</h4>
 
@@ -40,20 +47,20 @@
 					<div class="row mb-2" id="length_range">
 						<div class="col-12 col-md-6">
 							<label for="range_min" class="form-label">Min Range</label>
-							<input type="number" id="range_min" name="range_min" class="form-control" min="0" max="8" value="5" disabled required>
+							<input type="number" id="range_min" name="range_min" class="form-control" min="1" max="8" value="5" disabled required>
 						</div>
-						
+
 						<div class="col-12 col-md-6">
 							<label for="range_max" class="form-label">Max Range</label>
 							<input type="number" id="range_max" name="range_max" class="form-control" min="5" max="255" value="8" disabled required>
 						</div>
 					</div>
-					
+
 					<!-- FIXED -->
 					<div class="row my-2" id="length_fixed">
 						<div class="col">
 							<label for="length" class="form-label">String Length</label>
-							<input type="number" id="length" name="length" class="form-control" min="0" max="255" value="8" required>
+							<input type="number" id="length" name="length" class="form-control" min="1" max="255" value="8" required>
 						</div>
 					</div>
 
@@ -67,7 +74,7 @@
 				<!-- ACCEPTED VALUES -->
 				<div class="form-group">
 					<label for="chars" class="form-label">Characters Accepted</label>
-					
+
 					<div class="row">
 						<div class="col">
 							<div class="custom-control custom-switch custom-switch-md mx-auto my-2">
@@ -96,14 +103,14 @@
 						<div class="my-auto card string-card">
 							<h5 class="card-header d-flex flex-row justify-content-between window-header">
 								<span>Generated String</span>
-								
+
 								<span class="maximize ml-auto mr-0" title="Minimize"></span>
 							</h5>
-		
+
 							<div class="card-body">
 								<div class="form-control text-muted h-auto" id="generated_string"></div>
 							</div>
-		
+
 							<div class="card-footer d-flex flex-row align-middle justify-content-center">
 								<button class="btn btn-primary" type="button" data-copy-target="#generated_string">Copy</button>
 							</div>
@@ -119,18 +126,19 @@
 						Generate
 					</button>
 
-					<button class="btn btn-secondary" id="reset" type="button">
+					<button class="btn btn-secondary" id="resetForm" type="button">
 						Reset
 					</button>
 				</div>
 			</div>
 		</form>
 
-		<!-- Libraries -->
-		<script type="text/javascript" src="./scripts/libs.js"></script>
+		<!-- Base Script -->
+		<script type="text/javascript" src="../resources/js/general.js"></script>
+		<script type="module" src="../resources/js/frameless.js"></script>
 
 		<!-- Custom Scripts -->
-		<script type="text/javascript" src="./../resources/js/frameless.js" defer></script>
-		<script type="module" src="./scripts/index.js"></script>
+		<script type="module" src="../resources/js/util/serialize-form-json.js" defer></script>
+		<script type="module" src="../resources/modules/string-gen/index.js" defer></script>
 	</body>
 </html>

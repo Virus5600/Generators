@@ -137,6 +137,20 @@ export default class Validator {
 				runOtherValidation = this.#validateField(field, this.#valueList[field], ["required"], messages);
 				rules.splice(rules.indexOf("required"), 1);
 			}
+			// Verify if a "required_if" rule exists. If it does, then just run the validation for that rule only.
+			else if (rules.toString().match("required_if")) {
+				let ruleIndex = 0;
+				rules.forEach((v, k) => {
+					if (v.match(/required_if/g)) {
+						ruleIndex = k;
+						return;
+					}
+				});
+
+				let rule = rules.splice(ruleIndex, 1);
+
+				runOtherValidation = this.#validateField(field, this.#valueList[field], rule, messages);
+			}
 			// Verify if a "sometimes" rule exists. If it does, then just run the validation for that rule only.
 			else if (rules.includes('sometimes')) {
 				runOtherValidation = this.#validateField(field, this.#valueList[field], ["sometimes"], messages);
@@ -246,6 +260,10 @@ export default class Validator {
 					validatorValues = rule.split(":")[1].split(/\s*,\s*/);
 					rule = rule.split(":")[0];
 					message = messages[rule];
+
+					if (rule === "required_if") {
+						validatorValues.push(this.#valueList[validatorValues[0]]);
+					}
 				}
 
 				// Split the rule using the underscore (_) and resets the rule variable
@@ -256,6 +274,7 @@ export default class Validator {
 				for (let r of splicedRule)
 					rule += r.charAt(0).toUpperCase() + r.slice(1);
 			}
+			let ruleName = rule;
 
 			// Uses try-catch to prevent the script from stopping when an unknown rule is encountered.
 			try {
@@ -340,9 +359,8 @@ export default class Validator {
 				validationResult.push(rule.valid);
 			} catch (e) {
 				// Sends out a warning if rule does not exists.
-				console.warn(`No such rule exists:\n`, rule, `\nField: ${field}\n\n`, e);
+				console.warn(`No such rule exists: ${ruleName}\n`, `Field: ${field}\n\n`, e);
 			};
-			
 		}
 
 		this.#fieldNames.push(field);

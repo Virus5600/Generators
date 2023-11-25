@@ -1,9 +1,184 @@
-// Fontawesome
-@use "../fontawesome.scss";
+@import "./../../scss/bs-modifiers/base";
+@import "bootstrap/scss/popover";
 
-// Bootstrap
-@use "../mixins/colors";
-@use "bootstrap";
+:root {
+	--dtr-cell-width: 3.5rem;
+	--dtr-cell-height: 1.5rem;
+}
 
-@use "../../css/frameless";
-@use "../../css/custom-scrollbar";
+.fit-content {
+	height: fit-content;
+}
+
+.highlight {
+	.backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+
+		width: 100% !important;
+		height: 100% !important;
+
+		z-index: 9998;
+
+		background-color: rgb(0, 0, 0, .5);
+		cursor: pointer;
+
+		display: flex;
+	}
+
+	.target {
+		position: relative;
+		z-index: 9999;
+		border: 2.5px red dashed;
+	}
+
+	.overlay {
+		@extend .backdrop;
+		z-index: 10000;
+		background-color: transparent;
+	}
+
+	.popover {
+		z-index: 10000;
+	}
+
+	#title-bar {
+		z-index: 10001;
+	}
+}
+
+.dtr {
+	max-width: calc(var(--dtr-cell-width) * 7);
+	min-width: calc(var(--dtr-cell-width) * 7);
+	width: calc(var(--dtr-cell-width) * 7);
+
+	max-height: calc(var(--dtr-cell-height) * 48);
+	min-height: calc(var(--dtr-cell-height) * 48);
+	height: calc(var(--dtr-cell-height) * 48);
+
+	display: flex;
+	flex-direction: column;
+
+	padding: .25rem 0;
+
+	.dtr-row {
+		max-width: calc(var(--dtr-cell-width) * 7);
+		min-width: calc(var(--dtr-cell-width) * 7);
+		width: calc(var(--dtr-cell-width) * 7);
+
+		max-height: var(--dtr-cell-height);
+		min-height: var(--dtr-cell-height);
+		height: var(--dtr-cell-height);
+
+		display: flex;
+		flex-direction: row;
+
+		padding: 0.25rem 0;
+
+		.dtr-cell {
+			max-width: var(--dtr-cell-width);
+			min-width: var(--dtr-cell-width);
+			width: var(--dtr-cell-width);
+
+			@for $i from 1 through 7 {
+				&.dtr-cell-#{$i} {
+					max-width: calc(var(--dtr-cell-width) * $i);
+					min-width: calc(var(--dtr-cell-width) * $i);
+					width: calc(var(--dtr-cell-width) * $i);
+				}
+			}
+
+			&.holiday {
+				font-style: italic;
+				background-color: #ffff00;
+				color: black;
+			}
+
+			@media print {
+				&.holiday {
+					-webkit-print-color-adjust: exact;
+					print-color-adjust: exact;
+
+					font-style: italic !important;
+					background-color: #ffff00 !important;
+					color: black !important;
+				};
+			}
+
+			vertical-align: middle;
+			text-align: center;
+
+			max-height: var(--dtr-cell-height);
+			min-height: var(--dtr-cell-height);
+			height: var(--dtr-cell-height);
+
+			&.date {
+				text-align: right;
+			}
+
+			&.underline {
+				position: relative;
+
+				&:after {
+					content: "";
+					position: absolute;
+
+					left: .5rem;
+					bottom: 0;
+
+					width: calc(100% - 1rem);
+					border-bottom: 2px solid #343a40;
+				}
+			}
+		}
+
+		&.has-secondary, &.has-secondary > * {
+			font-size: small !important;
+		}
+	}
+}
+
+#printContainer {
+	size: A4 portrait;
+	padding: 0;
+	display: none;
+
+	&.print-enabled {
+		display: flex !important;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		--dtr-cell-width: calc(3.5rem * .90625);
+		--dtr-cell-height: calc(1.5rem * .8125);
+
+		& * {
+			font-size: .8125rem;
+		}
+
+		& .underline {
+			border-color: var(--bs-black);
+		}
+
+		& > .row {
+			& > * {
+				display: flex;
+				padding: 24.675mm 0;
+			}
+
+			& > *:nth-child(odd) {
+				justify-content: right;
+			}
+
+			& > *:nth-child(even) {
+				justify-content: left;
+				break-after: page;
+			}
+		}
+	}
+}
+
+.print-enabled {
+	display: none !important;
+}

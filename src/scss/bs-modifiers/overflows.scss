@@ -1,0 +1,29 @@
+$utilities: map-merge(
+	$utilities,
+	(
+		"overflow": map-merge(
+			map-get($utilities, "overflow"),
+			(responsive: true)
+		)
+	)
+);
+
+$utilities: map-merge(
+	$utilities,
+	(
+		"overflow-x": map-merge(
+			map-get($utilities, "overflow-x"),
+			(responsive: true)
+		)
+	)
+);
+
+$utilities: map-merge(
+	$utilities,
+	(
+		"overflow-y": map-merge(
+			map-get($utilities, "overflow-y"),
+			(responsive: true)
+		)
+	)
+);

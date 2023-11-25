@@ -1,0 +1,33 @@
+$all-fs: map-merge($font-sizes, (
+	sm: 0.875rem,
+	xs: 0.75rem,
+	2xs: 0.625rem,
+	3xs: 0.5rem
+));
+
+$utilities: map-merge(
+	$utilities,
+	(
+		"font-size": map-merge(
+			map-get($utilities, "font-size"),
+			(
+				values: map-merge(
+					map-get(map-get($utilities, "font-size"), "values"),
+					(
+						$all-fs
+					),
+				),
+			),
+		),
+	)
+);
+
+$utilities: map-merge(
+	$utilities,
+	(
+		"font-size": map-merge(
+			map-get($utilities, "font-size"),
+			(responsive: true)
+		)
+	)
+);

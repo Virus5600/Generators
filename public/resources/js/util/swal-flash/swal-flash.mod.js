@@ -61,8 +61,14 @@ window.addEventListener('flash_error', (e) => {
 			content: `text-white`,
 			popup: `px-3`
 		},
+		showClass: {
+			popup: `animate__animated animate__bounceIn animate__faster`
+		},
+		hideClass: {
+			popup: `animate__animated animate__fadeOutUp animate__faster`
+		},
 	}
-	
+
 	Swal.fire(__setSwalFlashOptions(options, flash, 'error'));
 });
 
@@ -79,6 +85,12 @@ window.addEventListener('flash_info', (e) => {
 			title: `text-white`,
 			content: `text-white`,
 			popup: `px-3`
+		},
+		showClass: {
+			popup: `animate__animated animate__bounceIn animate__faster`
+		},
+		hideClass: {
+			popup: `animate__animated animate__fadeOutUp animate__faster`
 		},
 	}
 
@@ -99,9 +111,20 @@ window.addEventListener('flash_success', (e) => {
 			content: `text-white`,
 			popup: `px-3`
 		},
+		showClass: {
+			popup: `animate__animated animate__bounceIn animate__faster`
+		},
+		hideClass: {
+			popup: `animate__animated animate__fadeOutUp animate__faster`
+		},
 	}
 
-	Swal.fire(__setSwalFlashOptions(options, flash, 'success'));
+	if (Swal) {
+		Swal.fire(__setSwalFlashOptions(options, flash, 'success'));
+	}
+	else {
+		throw Error('Sweetalert2 not instantiated. Please include the said library (https://sweetalert2.github.io/). Currently testing for `Swal` keyword.');
+	}
 });
 
 const __setSwalFlashOptions = (options, flash, type) => {
@@ -118,7 +141,7 @@ const __setSwalFlashOptions = (options, flash, type) => {
 
 	if (flash.is_toast != undefined)
 		options["toast"] = flash.is_toast;
-	
+
 	if (flash.has_timer != undefined)
 		if (flash.has_timer)
 			options['timer'] = flash.duration != undefined ? flash.duration : 10000;
