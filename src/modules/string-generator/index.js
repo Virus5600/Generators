@@ -108,11 +108,7 @@ $(function() {
 			.each((k, v) => v.reset());
 
 		let gstr = $(`#generated_string`);
-		for (let i = 0; i < gstr.text().length; i++) {
-			setTimeout(() => {
-				gstr.text(gstr.text().slice(0, -1));
-			}, 10 * i);
-		}
+		animateText(gstr, '');
 
 		SwalFlash.success("Form Reset");
 	});
@@ -152,7 +148,15 @@ $(function() {
 	});
 });
 
-window.validate = function(form) {
+/**
+ * Validates a single form and returns whether they passed the validation or not. Since this
+ * is only used in a very specific instance, the rules and messages are all from a single
+ * source.
+ *
+ * @param {HTMLFormElement|JQuery} form A single form element that will be validated. It could be an `HTMLFormElement` object or a `JQuery` HTML object.
+ * @returns boolean Returns `true` if the form passes validation; `false` otherwise.
+ */
+const validate = function(form) {
 	// Capture all inputs
 	let fields = $(`[name]`).not(`:disabled, [disabled]`);
 	let valids = $(`input:valid`).not(`:disabled, [disabled]`);
@@ -245,33 +249,15 @@ window.validate = function(form) {
 
 		let gstr = $(`#generated_string`);
 		let newStr = new RandExp(regex).gen();
-		let oldStr = gstr.text();
-		let oldInterval = 25.5 * 10 / oldStr.length;
-		let newInterval =  25.5 * 10 / newStr.length;
 
-		for (let i = 0; i < oldStr.length; i++) {
-			setTimeout(() => {
-				gstr.text(gstr.text().slice(0, -1));
-			}, oldInterval * i);
-		}
+		animateText(gstr, newStr);
 
-		setTimeout(() => {
-			for (let i = 0; i < newStr.length; i++) {
-				setTimeout(() => {
-					gstr.text(gstr.text() + newStr[i]);
-
-					if (i == newStr.length - 1) {
-						gstr.closest(`.string-card`)
-							.addClass(`show`)
-							.find(`.minimize, .maximize`)
-							.addClass(`minimize`).removeClass(`maximize`)
-							.closest(`.window`)
-							.addClass(`maximized`).removeClass(`minimized`);
-					}
-				}, newInterval * i);
-			}
-		}, oldInterval * oldStr.length);
-
+		gstr.closest(`.string-card`)
+			.addClass(`show`)
+			.find(`.minimize, .maximize`)
+			.addClass(`minimize`).removeClass(`maximize`)
+			.closest(`.window`)
+			.addClass(`maximized`).removeClass(`minimized`);
 
 		let restoreAppendTarget = $(`#stringGenFooter`);
 		let restore = restoreAppendTarget.find(`#restorePassView`);
@@ -297,4 +283,78 @@ window.validate = function(form) {
 				);
 		}
 	}
+
+	return validator.fails();
+}
+
+/**
+ * Animates the texts as if they're being cleared and typed in using a keyboard. This animation is
+ * pure JavaScript and thus, really has no support for CSS preferences. However, due to considerations
+ * they are applied and can also be skipped via a click inside the container.
+ *
+ * @param {HTMLElement|JQuery} container An element where the text animation will be applied to.
+ * @param {string} newStr The new string that will be "typed" in place.
+ * @param {number} baseInterval **(Optional)** The approximate interval between changes. It is counted in milliseconds. Default is 25.5 milliseconds.
+ */
+const animateText = (container, newStr, baseInterval = 25.5) => {
+	let isVanilla = typeof container.textContent === "undefined" ? false : true;
+
+	// Use the plain old text replace instead of animating if the users prefers reduced motions.
+	if (window.matchMedia(`(prefers-reduced-motion: reduce)`).matches) {
+		if (isVanilla)	container.textContent = newStr;
+		else			container.text(newStr);
+
+		return;
+	}
+
+	// newStr fallbacks
+	newStr = typeof newStr === 'string' ? newStr : '';
+
+	// Base variables
+	let oldStr = container.textContent ?? container.text();
+	let oldInterval = baseInterval * 10 / oldStr.length;
+	let newInterval = baseInterval * 10 / newStr.length;
+
+	// Control variables
+	let timers = [];
+
+	let skipTextAnimation = () => {
+		let timer;
+		while(timer = timers.pop()) {
+			clearTimeout(timer);
+		}
+
+		if (isVanilla)	container.textContent = newStr;
+		else			container.text(newStr);
+	}
+
+	if (isVanilla)	container.addEventListener(`click`, skipTextAnimation);
+	else			container.on(`click`, skipTextAnimation);
+
+	for (let i = 0; i < oldStr.length; i++) {
+		timers.push(
+			setTimeout(() => {
+				if (isVanilla)	container.textContent = container.textContent.slice(0, -1);
+				else			container.text(container.text().slice(0, -1));
+			}, oldInterval * i)
+		);
+	}
+
+	timers.push(
+		setTimeout(() => {
+			for (let i = 0; i < newStr.length; i++) {
+				timers.push(
+					setTimeout(() => {
+						if (isVanilla)	container.textContent = container.textContent + newStr[i];
+						else			container.text(container.text() + newStr[i]);
+					}, newInterval * i)
+				);
+
+				if (i >= newStr.length - 1) {
+					if (isVanilla)	container.removeEventListener(`click`, skipTextAnimation);
+					else			container.off(`click`, skipTextAnimation);
+				}
+			}
+		}, oldInterval * oldStr.length)
+	);
 }
