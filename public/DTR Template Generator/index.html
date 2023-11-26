@@ -1,25 +1,28 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<!-- Bootstrap 5.3 | Sweetalert 2 -->
-		<link rel="stylesheet" href="styles/libs.css">
-		<!-- General Styles -->
-		<link rel="stylesheet" href="../resources/css/general.css">
-
-		<!-- Custom Styling -->
-		<link rel="stylesheet" href="styles/index.css">
-
-		<!-- Favicon -->
-		<link rel="icon" href="assets/favicon.png" data-alt="./assets/favicon.png">
+<html lang="en-US">
+	<head title="DTR Template Generator">
+		<!-- Meta -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="Content-Language" content="en-US" />
 
 		<!-- "Go Back" target -->
-		<meta name="go-back" content="../index.html" title="Generator">
+		<meta name="go-back" content="../index.html" title="Generators">
+
+		<!-- Libraries -->
+		<link rel="stylesheet" href="../resources/css/general.css">
+
+		<!-- Base Design -->
+		<link rel="stylesheet" href="../resources/modules/dtr-tmp-gen/index.css">
+
+		<!-- Favicon -->
+		<link rel="icon" href="../resources/modules/dtr-tmp-gen/assets/favicon.png" data-alt="./../resources/modules/dtr-tmp-gen/assets/favicon.png">
 
 		<!-- Title -->
 		<title>DTR Template Generator</title>
 	</head>
 
-	<body class="min-vh-100 d-flex flex-column custom-scrollbar py-5" data-bs-theme="dark">
+	<body class="min-vh-100 d-flex flex-column custom-scrollbar apply-to-all py-5" data-bs-theme="dark">
 		<div class="m-auto card col-10 px-0" id="body">
 			<!-- HEADER -->
 			<h4 class="card-header">DTR Template Generator</h4>
@@ -38,7 +41,7 @@
 								<button class="btn btn-outline-secondary box" title="Heading" data-bs-tooltip data-templater="header" data-templater-target="#builder">
 									<i class="fas fa-heading"></i>
 								</button>
-								
+
 								<!-- Paragraph -->
 								<button class="btn btn-outline-secondary box" title="Paragraph" data-bs-tooltip data-templater="paragraph" data-templater-target="#builder">
 									<i class="fas fa-paragraph"></i>
@@ -104,13 +107,13 @@
 			</div>
 		</div>
 
-		<!-- Libraries -->
-		<script type="text/javascript" src="./scripts/libs.js"></script>
+		<!-- Base Script -->
+		<script type="text/javascript" src="../resources/js/general.js"></script>
+		<script type="module" src="../resources/js/frameless.js"></script>
 
 		<!-- Custom Scripts -->
-		<script type="text/javascript" src="./../resources/js/frameless.js" defer></script>
 		<script type="text/javascript" src="./../resources/js/util/confirm-leave.js" defer></script>
-		<script type="text/javascript" src="./../resources/js/util/serialize-form-json/serialize-form-json.js"></script>
+		<script type="module" src="../resources/js/util/serialize-form-json.js" defer></script>
 		<script type="importmap" data-templater-importmap>
 		{
 		  "imports": {
@@ -120,8 +123,10 @@
 		}
 		</script>
 		<script type="module" src="./../resources/js/util/templater/templater.js"></script>
-		
+
 		<script type="module" src="./scripts/index.js"></script>
+
+		<!-- TODO: Fix imports and scripts -->
 	</body>
 </html>
 
@@ -149,7 +154,7 @@
 				<li class="dropdown-item" contenteditable="false">h6</li>
 			</ul>
 		</div>
-		
+
 		<div class="vr"></div>
 
 		<div class="dropdown">
