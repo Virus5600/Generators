@@ -555,11 +555,11 @@ const TUTORIAL = {
 			.attr(`data-bs-content`, obj.content ?? key)
 			.append(overlay);
 
-			popoverElem[0].scrollIntoView({
-				behavior: `auto`,
-				block: `center`,
-				inline: `center`
-			});
+		popoverElem[0].scrollIntoView({
+			behavior: `auto`,
+			block: `center`,
+			inline: `center`
+		});
 
 		let popover = new bootstrap.Popover(popoverElem[0]);
 		popover.show();

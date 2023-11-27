@@ -34,6 +34,7 @@ mix.webpackConfig({
 	.sass('src/scss/util/custom-scrollbar.scss', '/resources/css/util')
 	.sass('src/scss/util/custom-switch.scss', '/resources/css/util')
 	.sass('src/scss/util/text-counter.scss', '/resources/css/util')
+	.sass('src/scss/util/tutorial.js/tutorial.scss', '/resources/css/util/tutorial.js/tutorial.css')
 
 	// Widgets Styles
 	.sass('src/scss/widgets/card-widget.scss', '/resources/css/widgets')

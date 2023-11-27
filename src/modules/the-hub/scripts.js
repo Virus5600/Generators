@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import Tutorial from '../../js/util/tutorial.js/Tutorial.js';
 
 $(() => {
 	$(`app-category`).each((k, v) => {
