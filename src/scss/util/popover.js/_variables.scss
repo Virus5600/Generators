@@ -1,0 +1,90 @@
+/**
+ * Popover
+ * --------------------------------------------------
+ * Popover variables - contains variables for the popover's
+ * styling values. This mode is used to allow easier modification
+ * of the popover's styling.
+ */
+
+ $var: () !default;
+
+ $var: map-merge((
+	/* Popover Styling */
+	"popover": (
+		position:				absolute,
+		display:				block,
+		z-index:				10000,
+		max-width:				276px,
+		font-size:				0.875rem,
+		font-style:				normal,
+		font-weight:			400,
+		line-height:			1.5,
+		letter-spacing:			normal,
+		text-align:				left,
+		text-decoration:		none,
+		text-transform:			none,
+		text-shadow:			none,
+		word-break:				normal,
+		word-wrap:				break-word,
+		white-space:			normal,
+		line-break:				auto,
+	),
+	/* Base Arrow Styling */
+	"arrow": (
+		display:				block,
+		position:				absolute,
+	),
+	/* Header Styling */
+	"header": (
+		padding:				0.5rem 1rem,
+		margin:					0,
+		font-size:				1rem,
+		border-bottom:			1px solid rgba(255, 255, 255, .15),
+		border-top-left-radius:	calc(1rem - 1px),
+		border-top-right-radius:calc(1rem - 1px),
+		display:				flex,
+		justify-content:		space-between,
+	),
+	/* Title Styling */
+	"title": (
+		display:				flex,
+		align-items:			center,
+		margin:					0,
+		font-size:				1rem,
+		font-weight:			600,
+	),
+	/* Close Styling */
+	"close": (
+		display:				flex,
+		align-items:			center,
+		cursor: 				pointer,
+		font-size:				1.125rem,
+		font-weight:			600,
+	),
+	/* Body Styling */
+	"body": (
+		padding:				1rem,
+		margin:					0,
+	),
+), $var);
+
+$arrowDir: (
+	up: (
+		top:					calc(-1 * (var(--vs5-popover-arrow-height)) - var(--vs5-popover-border-width)),
+		border-left: 			var(--vs5-popover-border-width) solid transparent,
+		border-right: 			var(--vs5-popover-border-width) solid transparent,
+		border-bottom: 			var(--vs5-popover-border-width) solid var(--vs5-popover-border-color),
+	),
+	down: (
+		bottom:					calc(-1 * (var(--vs5-popover-arrow-height)) - var(--vs5-popover-border-width)),
+		border-left: 			var(--vs5-popover-border-width) solid transparent,
+		border-right: 			var(--vs5-popover-border-width) solid transparent,
+		border-top: 			var(--vs5-popover-border-width) solid var(--vs5-popover-border-color),
+	),
+	left: (
+		left:					calc(-1 * (var(--vs5-popover-arrow-height)) - var(--vs5-popover-border-width)),
+	),
+	right: (
+		right:					calc(-1 * (var(--vs5-popover-arrow-height)) - var(--vs5-popover-border-width)),
+	),
+);

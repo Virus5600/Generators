@@ -12,6 +12,9 @@
 		<!-- Base Design -->
 		<link rel="stylesheet" href="resources/modules/the-hub/index.css">
 
+		<!-- Custom Styles -->
+		<link rel="stylesheet" href="resources/css/widgets/card-widget.css">
+
 		<!-- Favicon -->
 		<link rel="icon" href="resources/modules/the-hub/assets/favicon.png" data-alt="./resources/modules/the-hub/assets/favicon.png">
 
@@ -21,9 +24,40 @@
 
 	<body class="min-vh-100 d-flex flex-column custom-scrollbar apply-to-all" data-bs-theme="dark">
 
+		<!-- Main Body -->
 		<main>
+			<!-- The Hub -->
+			<div class="container-fluid my-3 py-3">
+				<div class="card floating-header">
+					<h3 class="card-header header-center border rounded bg-body-tertiary d-flex align-items-center">
+						<img src="resources/modules/the-hub/assets/favicon.png" alt="The Hub" class="img-fluid me-2" draggable="false">
+						The Hub
+					</h3>
+
+					<div class="card-body">
+						<h5 class="card-text text-center">
+							Welcome to <em>The Hub</em>, where all Generators' sub-applications
+							are located.
+						</h5>
+
+						<p class="card-text text-indent-3">
+							Generators is a collection of web applications that are designed to
+							help you with your daily tasks. Some may not be that useful all the
+							time even. But, it's still a good thing to have them around since you
+							may never know when you'll need them.
+						</p>
+
+						<p class="card-text text-indent-3">
+							You can also find the <a href="About/index.html">About</a> page here
+							if ever you want to know more about the project and the developer.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Generator Sub Applications -->
 			<div class="container-fluid my-3 d-flex flex-column flex-grow-1 h-100">
-				<app-category data-category="Generator" data-add-class="my-3">
+				<app-category data-category="Generator" data-add-title-class="header-center border rounded bg-body-tertiary" data-add-class="floating-header my-3">
 					<sub-application
 						data-title="String Generator"
 						data-desc="Generates random strings"
@@ -41,6 +75,7 @@
 			</div>
 		</main>
 
+		<!-- Footer -->
 		<footer class="navbar navbar-expand bg-body-tertiary mt-auto ">
 			<div class="container-fluid">
 				<ul class="navbar-nav">
@@ -56,6 +91,9 @@
 		<!-- Tutorial (Experimental) -->
 		<link rel="stylesheet" href="resources/css/util/tutorial.js/Tutorial.css">
 		<script type="module" src="resources/js/util/tutorial.js/Tutorial.umd.js" defer></script>
+		<!-- Popover (Experimental) -->
+		<link rel="stylesheet" href="resources/css/util/popover.js/popover.css">
+		<script type="module" src="resources/js/util/popover.js/Popover.umd.js" defer></script>
 
 		<!-- Custom Scripts -->
 		<script type="text/javascript" src="resources/modules/the-hub/index.js" defer></script>

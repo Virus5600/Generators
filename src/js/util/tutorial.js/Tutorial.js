@@ -1,3 +1,5 @@
+import Popover from '../popover.js/Popover.js';
+
 /**
  * `Tutorial` is a class that allows creation of tutorials with the use of popovers. It
  * allows multiple elements to be targeted and also allows `HTML` as content for its
@@ -12,6 +14,14 @@
  * @version 1.0.0
  */
 export default class Tutorial {
+	/**
+	 * Defines the default options that will be used by the `Tutorial` library.
+	 */
+	static #defaultOptions = {
+		arrowBtns: false,
+		includePrev: false,
+	};
+
 	/**
 	 * Defines a list of default keybindings that are used as keyboard controls for
 	 * the Tutorial.
@@ -86,7 +96,7 @@ export default class Tutorial {
 		});
 
 		document.addEventListener(`keydown`, (e) => {
-			if (Tutorial.instantiated())
+			if (!Tutorial.instantiated)
 				return;
 
 			let keyCode = e.keyCode || e.which;
@@ -127,11 +137,16 @@ export default class Tutorial {
 	 * ```js
 	 * "options": {
 	 * 	arrowBtns: false,
-	 * 	includePev: false
+	 * 	includePrev: false
 	 * }
 	 * ```
 	 */
-	static start(components, options) {
+	static start(components = {}, options = Tutorial.defaultOptions) {
+		if (!components)
+			throw new Error(`The components parameter is required.`);
+		if (Object.keys(components).length <= 0)
+			throw new Error(`The components parameter is required.`);
+
 		Tutorial.#components = components;
 		Tutorial.#begin = true;
 
@@ -167,7 +182,7 @@ export default class Tutorial {
 		// Initialize some important variables
 		let body = document.body;
 		let backdrop = `
-		<div class="backdrop" id="vs5-tutorial-backdrop">
+		<div id="vs5-tutorial-backdrop">
 			<div class="vs5-tutorial-text-container">
 				<span class="vs5-tutorial-text">Press <code>Esc</code> to exit tutorial...</span>
 				<span class="vs5-tutorial-text">Click anywhere outside the popup to proceed...</span>
@@ -189,9 +204,11 @@ export default class Tutorial {
 	}
 
 	#prev() {
+		console.log("prev");
 	}
 
 	#next() {
+		console.log("next");
 	}
 
 	#iterate(index) {
@@ -213,11 +230,14 @@ export default class Tutorial {
 		}
 
 		// Prepare the popover
-		const popoverElm = document.querySelector(key);
-		popoverElm.setAttribute(`data-vs5-tutorial-target`, ``);
-		popoverElm.insertAdjacentHTML(`beforeend`, overlay);
+		const popoverTarget = document.querySelector(key);
+		popoverTarget.setAttribute(`data-vs5-tutorial-target`, ``);
+		popoverTarget.insertAdjacentHTML(`beforeend`, overlay);
 
-		popoverElm.scrollIntoView({
+		const popover = new Popover(key, {
+		});
+
+		popoverTarget.scrollIntoView({
 			behavior: `auto`,
 			block: `center`,
 			inline: `center`,
@@ -233,9 +253,9 @@ export default class Tutorial {
 	 * from {@link Tutorial.#begin} as the latter defines whether **it can** instantiate or
 	 * not while this defines whether **it is already** instantiated or not.
 	 *
-	 * @return boolean Returns `true` if an instance already exist; `false` otherwise.
+	 * @return {boolean} Returns `true` if an instance already exist; `false` otherwise.
 	 */
-	static instantiated() {
+	static get instantiated() {
 		return Tutorial.#instantiated;
 	}
 
@@ -254,10 +274,22 @@ export default class Tutorial {
 	 * - **37** - Left Arrow
 	 * - **39** - Right Arrow
 	 *
-	 * @returns JSON A JSON object which contains the action and its corresponding key codes.
+	 * @return {JSON} A JSON object which contains the action and its corresponding key codes.
 	 */
-	static defaultKeybinds() {
+	static get defaultKeybinds() {
 		return JSON.parse(JSON.stringify(Tutorial.#defaultKeybinds));
+	}
+
+	/**
+	 * Returns the default options used by this library.
+	 * The default values are as follows:
+	 * - ***arrowBtns***: `false`
+	 * - ***includePrev***: `false`
+	 *
+	 * @return {JSON} A JSON object which contains the default options.
+	 */
+	static get defaultOptions() {
+		return JSON.parse(JSON.stringify(Tutorial.#defaultOptions));
 	}
 }
 // TODO: Implement the popover, options parameter (at #start method), next, and prev.

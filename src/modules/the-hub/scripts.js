@@ -25,8 +25,8 @@ $(() => {
 		});
 
 		let toAppend = `
-		<div class="card ${Object.keys(appData).includes(`addClass`) ? appData.addClass : ``}">
-			<h5 class="card-header text-center">${appData.category ?? `Sub-Application Category`}</h5>
+		<div class="card ${appData.addClass ?? ``}">
+			<h5 class="card-header text-center ${appData.addTitleClass ?? ``}">${appData.category ?? `Sub-Application Category`}</h5>
 
 			<div class="card-body d-flex flex-row overflow-x-auto sub-application-list" draggable="false">
 				${applications}
@@ -37,4 +37,24 @@ $(() => {
 		$(toAppend).insertAfter(obj);
 		obj.remove();
 	});
+
+	let tutorialDone = localStorage.getItem(`tutorial.hub`) === `true`;
+	if (!tutorialDone) {
+		tutorial();
+	}
 });
+
+const tutorial = () => {
+	Tutorial.start({
+		'#title-bar': {
+			title: "Title",
+			content: "Content"
+		},
+		'#title-bar-btns': {
+			title: "Title",
+			content: "Content"
+		}
+	});
+
+	localStorage.setItem(`tutorial.hub`, `true`);
+};

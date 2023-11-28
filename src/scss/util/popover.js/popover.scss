@@ -1,0 +1,67 @@
+@use "_variables" as vs5p;
+
+:root {
+	@each $target, $props in vs5p.$var {
+		@each $key, $value in $props {
+			--vs5p-popover-#{$target}-#{$key}: #{$value};
+		}
+	}
+
+	@each $dir, $props in vs5p.$arrowDir {
+		@each $key, $value in $props {
+			--vs5p-popover-arrow-#{$dir}-#{$key}: #{$value};
+		}
+	}
+
+	--vs5-popover-border-color: #{darken(#fff, 10%)};
+	--vs5-popover-border-width: .5rem;
+
+	--vs5-popover-arrow-height: .5rem;
+	--vs5-popover-arrow-width: 1rem;
+}
+
+.vs5-popover-popover {
+	@each $key, $value in map-get(vs5p.$var, "popover") {
+		#{$key}: var(--vs5p-popover-popover-#{$key}, $value);
+	}
+
+	.vs5-popover-arrow {
+		@each $key, $value in map-get(vs5p.$var, "arrow") {
+			#{$key}: var(--vs5p-popover-arrow-#{$key}, $value);
+		}
+
+		@each $dir, $props in vs5p.$arrowDir {
+			&.vs5-popover-arrow-#{$dir},
+			&[data-vs5-popover-dir="#{$dir}"] {
+				@each $key, $value in $props {
+					#{$key}: var(--vs5p-popover-arrow-#{$dir}-#{$key});
+				}
+			}
+		}
+	}
+
+	.vs5-popover-header {
+		@each $key, $value in map-get(vs5p.$var, "header") {
+			#{$key}: var(--vs5p-popover-header-#{$key}, $value);
+		}
+
+		.vs5-popover-title {
+			@each $key, $value in map-get(vs5p.$var, "title") {
+				#{$key}: var(--vs5p-popover-title-#{$key}, $value);
+			}
+		}
+
+		.vs5-popover-close {
+			@each $key, $value in map-get(vs5p.$var, "close") {
+				#{$key}: var(--vs5p-popover-close-#{$key}, $value);
+			}
+		}
+	}
+
+	.vs5-popover-body {
+		@each $key, $value in map-get(vs5p.$var, "body") {
+			#{$key}: var(--vs5p-popover-body-#{$key}, $value);
+		}
+	}
+}
+// TODO: Implement Popover Arrow, design, and positioning

@@ -1,35 +1,46 @@
+@use "_variables" as vs5t;
+
+:root {
+	@each $target, $props in vs5t.$var {
+		@each $key, $value in $props {
+			--vs5t-tutorial-#{$target}-#{$key}: #{$value};
+		}
+	}
+}
+
 #vs5-tutorial-backdrop {
-	position: fixed;
-    z-index: 9998;
-	top: 0;
-    left: 0;
-
-    width: 100% !important;
-    height: 100% !important;
-
-    display: flex;
-    cursor: pointer;
-    background-color: rgb(0, 0, 0, .5);
-
-	#vs5-tutorial-overlay {
-		@extend #vs5-tutorial-backdrop;
-
-		z-index: 10000;
-		background-color: transparent;
+	@each $key, $value in map-get(vs5t.$var, "backdrop") {
+		#{$key}: var(--vs5t-tutorial-backdrop-#{$key}, $value);
 	}
 
 	.vs5-tutorial-text-container {
-		margin: auto auto 1rem 1rem;
+		@each $key, $value in map-get(vs5t.$var, "text-container") {
+			#{$key}: var(--vs5t-tutorial-text-container-#{$key}, $value);
+		}
 
 		.vs5-tutorial-text {
-			display: block;
+			@each $key, $value in map-get(vs5t.$var, "text") {
+				#{$key}: var(--vs5t-tutorial-text-#{$key}, $value);
+			}
 		}
 	}
 }
 
 [data-vs5-tutorial-target] {
-	position: relative;
-	z-index: 9999 !important;
-	border: 2.5px red dashed !important;
-	overflow: hidden !important;
+	@each $key, $value in map-get(vs5t.$var, "target") {
+		@if ($key == "z-index") {
+			#{$key}: var(--vs5t-tutorial-target-#{$key}, $value) !important;
+		}
+		@else {
+			#{$key}: var(--vs5t-tutorial-target-#{$key}, $value);
+		}
+	}
+
+	#vs5-tutorial-overlay {
+		@extend #vs5-tutorial-backdrop;
+
+		@each $key, $value in map-get(vs5t.$var, "overlay") {
+			#{$key}: var(--vs5t-tutorial-overlay-#{$key}, $value);
+		}
+	}
 }

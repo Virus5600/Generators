@@ -16,6 +16,10 @@
 			max-width: 90%;
 			overflow: hidden;
 
+			img {
+				height: 1em;
+			}
+
 			@each $breakpoint in map-keys($grid-breakpoints) {
 				@include media-breakpoint-up($breakpoint) {
 					$infix: breakpoint-infix($breakpoint, $grid-breakpoints);

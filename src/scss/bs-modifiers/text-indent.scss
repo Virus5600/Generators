@@ -1,0 +1,11 @@
+$utilities: map-merge(
+	$utilities,
+	(
+		"text-indent": (
+			property: text-indent,
+			class: text-indent,
+			responsive: true,
+			values: map-merge($spacers, (auto: auto))
+		)
+	)
+);

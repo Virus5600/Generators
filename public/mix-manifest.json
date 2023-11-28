@@ -21,10 +21,13 @@
     "/resources/js/util/copy-to-clipboard.js": "/resources/js/util/copy-to-clipboard.js",
     "/resources/js/util/dragcheck/dragcheck.js": "/resources/js/util/dragcheck/dragcheck.js",
     "/resources/js/util/dragcheck/dragcheck.mod.js": "/resources/js/util/dragcheck/dragcheck.mod.js",
+    "/resources/js/util/popover.js/Popover.js": "/resources/js/util/popover.js/Popover.js",
+    "/resources/js/util/popover.js/Popover.umd.js": "/resources/js/util/popover.js/Popover.umd.js",
     "/resources/js/util/serialize-form-json.js": "/resources/js/util/serialize-form-json.js",
     "/resources/js/util/swal-flash/swal-flash.js": "/resources/js/util/swal-flash/swal-flash.js",
     "/resources/js/util/swal-flash/swal-flash.mod.js": "/resources/js/util/swal-flash/swal-flash.mod.js",
     "/resources/js/util/text-counter.js": "/resources/js/util/text-counter.js",
+    "/resources/js/util/tutorial.js/Popover.js": "/resources/js/util/tutorial.js/Popover.js",
     "/resources/js/util/tutorial.js/Tutorial.js": "/resources/js/util/tutorial.js/Tutorial.js",
     "/resources/js/util/tutorial.js/Tutorial.umd.js": "/resources/js/util/tutorial.js/Tutorial.umd.js",
     "/resources/js/util/unique-array/unique-array.js": "/resources/js/util/unique-array/unique-array.js",
@@ -40,5 +43,6 @@
     "/resources/modules/string-gen/assets/favicon.png": "/resources/modules/string-gen/assets/favicon.png",
     "/resources/modules/dtr-gen/Sample Generated DTR.js": "/resources/modules/dtr-gen/Sample Generated DTR.js",
     "/resources/modules/dtr-gen/assets/favicon.png": "/resources/modules/dtr-gen/assets/favicon.png",
-    "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt": "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt"
+    "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt": "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt",
+    "/resources/css/util/popover.js/popover.css": "/resources/css/util/popover.js/popover.css"
 }
