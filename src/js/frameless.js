@@ -130,7 +130,7 @@ function init() {
 		}).then((result) => {
 			if (result.isConfirmed || result.isDenied) {
 				if (result.isConfirmed) {
-					for (v in result.value) {
+					for (let v in result.value) {
 						localStorage.setItem(v, result.value[v]);
 					}
 				}
