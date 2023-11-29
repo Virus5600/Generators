@@ -6,14 +6,12 @@
  * of the popover's styling.
  */
 
- $var: () !default;
-
- $var: map-merge((
+$var: (
 	/* Popover Styling */
 	"popover": (
 		position:				absolute,
 		display:				block,
-		z-index:				10000,
+		z-index:				1000,
 		max-width:				276px,
 		font-size:				0.875rem,
 		font-style:				normal,
@@ -21,13 +19,15 @@
 		line-height:			1.5,
 		letter-spacing:			normal,
 		text-align:				left,
-		text-decoration:		none,
 		text-transform:			none,
 		text-shadow:			none,
 		word-break:				normal,
 		word-wrap:				break-word,
 		white-space:			normal,
 		line-break:				auto,
+		color:					#dee2e6,
+		border-radius:			10px,
+		border:					var(--vs5-popover-border-width) solid var(--vs5-popover-border-color),
 	),
 	/* Base Arrow Styling */
 	"arrow": (
@@ -40,10 +40,10 @@
 		margin:					0,
 		font-size:				1rem,
 		border-bottom:			1px solid rgba(255, 255, 255, .15),
-		border-top-left-radius:	calc(1rem - 1px),
-		border-top-right-radius:calc(1rem - 1px),
+		border-radius:			10px 10px 0 0,
 		display:				flex,
 		justify-content:		space-between,
+		background-color:		#{darken(#2b3035, 7.5%)},
 	),
 	/* Title Styling */
 	"title": (
@@ -65,26 +65,93 @@
 	"body": (
 		padding:				1rem,
 		margin:					0,
+		border-radius:			0 0 10px 10px,
+		background-color:		#2b3035,
 	),
-), $var);
+) !default;
 
 $arrowDir: (
 	up: (
-		top:					calc(-1 * (var(--vs5-popover-arrow-height)) - var(--vs5-popover-border-width)),
-		border-left: 			var(--vs5-popover-border-width) solid transparent,
-		border-right: 			var(--vs5-popover-border-width) solid transparent,
-		border-bottom: 			var(--vs5-popover-border-width) solid var(--vs5-popover-border-color),
+		inset:					0 0 auto auto,
+		width: 					var(--vs5-popover-arrow-width),
+		height: 				var(--vs5-popover-arrow-height),
+		top:					calc(0px - var(--vs5-popover-arrow-height)),
+		left:					calc(50% - (var(--vs5-popover-arrow-width) / 2)),
 	),
 	down: (
-		bottom:					calc(-1 * (var(--vs5-popover-arrow-height)) - var(--vs5-popover-border-width)),
-		border-left: 			var(--vs5-popover-border-width) solid transparent,
-		border-right: 			var(--vs5-popover-border-width) solid transparent,
-		border-top: 			var(--vs5-popover-border-width) solid var(--vs5-popover-border-color),
+		inset:					auto auto 0 0,
+		width: 					var(--vs5-popover-arrow-width),
+		height: 				var(--vs5-popover-arrow-height),
+		bottom:					calc(0px - var(--vs5-popover-arrow-height)),
+		left:					calc(50% - (var(--vs5-popover-arrow-width) / 2)),
 	),
 	left: (
-		left:					calc(-1 * (var(--vs5-popover-arrow-height)) - var(--vs5-popover-border-width)),
+		inset:					0 auto auto 0,
+		width:	 				var(--vs5-popover-arrow-height),
+		height: 				var(--vs5-popover-arrow-width),
+		top:					calc(50% - (var(--vs5-popover-arrow-height) / 2)),
+		left:					calc(0px - var(--vs5-popover-arrow-height)),
 	),
 	right: (
-		right:					calc(-1 * (var(--vs5-popover-arrow-height)) - var(--vs5-popover-border-width)),
+		inset:					0 auto 0 auto,
+		width:	 				var(--vs5-popover-arrow-height),
+		height: 				var(--vs5-popover-arrow-width),
+		top:					calc(50% - (var(--vs5-popover-arrow-height) / 2)),
+		right:					calc(0px - var(--vs5-popover-arrow-height)),
 	),
-);
+) !default;
+
+$arrowPseudoDir: (
+	up: (
+		before: (
+			bottom:	 			var(--vs5-popover-border-width),
+			border-left: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-right: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-bottom: 		calc(var(--vs5-popover-arrow-height) + 1px) solid var(--vs5-popover-border-color),
+		),
+		after: (
+			border-left: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-right: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-bottom: 		var(--vs5-popover-arrow-height) solid var(--vs5-popover-background-color),
+		),
+	),
+	down: (
+		before: (
+			top:	 			var(--vs5-popover-border-width),
+			border-left: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-right: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-top: 		calc(var(--vs5-popover-arrow-height) + 1px) solid var(--vs5-popover-border-color),
+		),
+		after: (
+			border-left: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-right: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-top: 		calc(var(--vs5-popover-arrow-height) + 1px) solid var(--vs5-popover-background-color),
+		),
+	),
+	left: (
+		before: (
+			right:	 			var(--vs5-popover-border-width),
+			border-top: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-bottom: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-right: 		calc(var(--vs5-popover-arrow-height) + 1px) solid var(--vs5-popover-border-color),
+		),
+		after: (
+			border-top: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-bottom: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-right: 		calc(var(--vs5-popover-arrow-height) + 1px) solid var(--vs5-popover-background-color),
+		),
+	),
+	right: (
+		before: (
+			left:	 			var(--vs5-popover-border-width),
+			border-top: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-bottom: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-left: 		calc(var(--vs5-popover-arrow-height) + 1px) solid var(--vs5-popover-border-color),
+		),
+		after: (
+			border-top: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-bottom: 		var(--vs5-popover-arrow-height) solid transparent,
+			border-left: 		calc(var(--vs5-popover-arrow-height) + 1px) solid var(--vs5-popover-background-color),
+		),
+	),
+) !default;

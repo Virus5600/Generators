@@ -20,12 +20,12 @@
 export default class Popover {
 	/// STATIC VARIABLES \\\
 	static #parts = {
-		popover: `<div class="vs5-popover-popover"></div>`,
+		popover: `<div class="vs5-popover-popover" data-vs5-popover-dir="down"></div>`,
 		header: `<div class="vs5-popover-header"></div>`,
 		title: `<div class="vs5-popover-title"></div>`,
 		close: `<div class="vs5-popover-close">&times;</div>`,
 		body: `<div class="vs5-popover-body"></div>`,
-		arrow: `<div class="vs5-popover-arrow" data-vs5-popover-dir="down"></div>`,
+		arrow: `<div class="vs5-popover-arrow"></div>`,
 	};
 
 	static #defaultOptions = {
@@ -35,6 +35,9 @@ export default class Popover {
 		showArrow: true,
 		title: null,
 		content: null,
+		placement: `top`,
+		fallbackPlacement: [`top`, `right`, `bottom`, `left`],
+		trigger: 'click'
 	};
 
 	static #elements = {};
@@ -45,13 +48,30 @@ export default class Popover {
 	#isShown = false;
 	#popoverID = null;
 
+	/**
+	 * Creates a new instance of the popover. The `target` parameter can either be an HTML
+	 * Element or a CSS ID selector (`#stringID`). The `options` parameter is a JSON object
+	 * composed of optional parameters. These optional parameters can be found in the
+	 * `Popover.defaultOptions` getter.
+	 *
+	 * @param {string|HTMLElement} target Either an HTML Element or a CSS ID selector
+	 * @param {JSON} options A JSON object composed of optional parameters.
+	 *
+	 * @see Popover.defaultParts
+	 */
 	constructor(target, options) {
-		this.#target = target instanceof HTMLElement ? [target] : document.querySelectorAll(target);
-		this.#target.forEach(element => {
-			if (!Popover.hasInstance(element)) {
-				Popover.#elements[element] = this;
-			}
-		});
+		if (typeof target !== `string` && !(target instanceof HTMLElement)) {
+			throw new TypeError(`The 'target' parameter must be a string or an HTMLElement.`);
+		}
+		if (typeof target === `string` && target.charAt(0) !== `#`) {
+			throw new TypeError(`The 'target' parameter must be a CSS' ID selector.`);
+		}
+
+		this.#target = target instanceof HTMLElement ? [target][0] : document.getElementById(target.substring(1));
+		if (Popover.hasInstance(this.#target))
+			return Popover.getInstance(this.#target);
+
+		Popover.#elements[this.#target] = this;
 
 		options.parts = {
 			...Popover.#defaultOptions.parts,
@@ -77,14 +97,27 @@ export default class Popover {
 		return JSON.parse(JSON.stringify(Popover.#elements));
 	}
 
+	static get PLACEMENTS() {
+		return {
+			TOP: `top`,
+			RIGHT: `right`,
+			LEFT: `left`,
+			BOTTOM: `bottom`,
+		};
+	}
+
 	/// GETTERS \\\
 	/**
 	 * Returns the default parts of the popover.
 	 *
 	 * @return {JSON} The default parts of the popover.
 	 */
-	get parts() {
+	get defaultParts() {
 		return JSON.parse(JSON.stringify(Popover.#parts));
+	}
+
+	get defaultOptions() {
+		return JSON.parse(JSON.stringify(Popover.#defaultOptions));
 	}
 
 	/// SETTERS \\\
@@ -117,6 +150,9 @@ export default class Popover {
 	 * @return {Popover} The current instance of the popover.
 	 */
 	show() {
+		if (this.#isShown)
+			return this;
+
 		let showHeader = this.#options.showHeader;
 		let showCloseBtn = this.#options.showCloseBtn;
 		let showArrow = this.#options.showArrow;
@@ -139,6 +175,10 @@ export default class Popover {
 			if (showCloseBtn) {
 				let close = new DOMParser().parseFromString(this.#options.parts.close, 'text/html').body.firstChild;
 				header.append(close);
+
+				close.addEventListener('click', (e) => {
+					this.hide();
+				});
 			}
 		}
 
@@ -148,6 +188,7 @@ export default class Popover {
 		}
 
 		document.body.insertAdjacentElement(`beforeend`, popover);
+		this.reposition();
 
 		this.#isShown = true;
 		return this;
@@ -176,5 +217,70 @@ export default class Popover {
 		else				this.show();
 
 		return this;
+	}
+
+	/**
+	 * Repositions the popover.
+	 *
+	 * @return {Popover} The current instance of the popover.
+	 */
+	reposition() {
+		if (!this.#isShown)
+			return this;
+
+		let popover = {
+			el: document.getElementById(this.#popoverID),
+			rect: this.el.getBoundingClientRect(),
+			direction: this.el.dataset.vs5PopoverDir,
+		};
+		let target = {
+			el: this.#target,
+			rect: this.#target.getBoundingClientRect(),
+		};
+
+		let newPlacement;
+		if (this.#isOutOfBounds()) {
+			for (p in Popover.PLACEMENTS) {
+				if (this.#isValidPos(Popover.PLACEMENTS[p])) {
+					newPlacement = Popover.PLACEMENTS[p];
+					break;
+				}
+			}
+		}
+
+		return this;
+	}
+
+	/// UTILITY METHODS \\\
+	/**
+	 * Checks whether this popover is out of bounds. This is done by checking the popover's
+	 * rectangle and the window's/viewport's rectangle.
+	 */
+	#isOutOfBounds() {
+		if (!this.#isShown) return false;
+
+		const rect = document.getElementById(this.#popoverID).getBoundingClientRect();
+
+		return !(
+			rect.top >= 0 &&
+			rect.left >= 0 &&
+			rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+			rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+		);
+	}
+
+	/**
+	 * Determines whether the provided placement is a valid position. The positions
+	 * are determined by the `placement` parameter and accepts any one of the
+	 * provided values. These values are as follows:
+	 * - `top`
+	 * - `right`
+	 * - `bottom`
+	 * - `left`
+	 *
+	 * @param {Popover.PLACEMENTS} placement Any value from `Popover.PLACEMENTS`
+	 */
+	#isValidPos(placement) {
+
 	}
 }
