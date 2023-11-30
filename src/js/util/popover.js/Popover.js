@@ -19,6 +19,10 @@
  */
 export default class Popover {
 	/// STATIC VARIABLES \\\
+	/**
+	 * The default parts of the popover. These parts can be modified through the
+	 * `Popover.modParts()` method.
+	 */
 	static #parts = {
 		popover: `<div class="vs5-popover-popover" data-vs5-popover-dir="down"></div>`,
 		header: `<div class="vs5-popover-header"></div>`,
@@ -28,6 +32,11 @@ export default class Popover {
 		arrow: `<div class="vs5-popover-arrow"></div>`,
 	};
 
+	/**
+	 * The default options of the popover. These options should not be modified
+	 * by any means and should only be used as a getter. For public access, use
+	 * `Popover.defaultOptions` instead.
+	 */
 	static #defaultOptions = {
 		parts: JSON.parse(JSON.stringify(Popover.#parts)),
 		showCloseBtn: true,
@@ -36,17 +45,42 @@ export default class Popover {
 		title: null,
 		content: null,
 		placement: `top`,
-		fallbackPlacement: [`top`, `right`, `bottom`, `left`],
+		fallbackPlacement: [`top`, `right`, `left`, `bottom`],
 		trigger: 'click'
 	};
 
+	/**
+	 * Contains all the list of elements that has a popover. This list should not be accessed
+	 * directly and should only be accessed through the `Popover.instances` getter.
+	 */
 	static #elements = {};
 
 	/// VARIABLES \\\
+	/**
+	 * The target of the popover. This only stores an HTMLElement instance.
+	 */
 	#target = null;
+
+	/**
+	 * Contains the options of the popover. This is a JSON object composed of optional parameters.
+	 * These optional parameters can be found in the `Popover.defaultOptions` getter.
+	 */
 	#options = null;
+
+	/**
+	 * Defines whether the popover is shown or not.
+	 */
 	#isShown = false;
+
+	/**
+	 * The ID of the popover. This is used to identify the popover in the DOM.
+	 */
 	#popoverID = null;
+
+	/**
+	 * The current placement of the popover. This is used to determine the position of the popover.
+	 */
+	#currentPlacement = `top`;
 
 	/**
 	 * Creates a new instance of the popover. The `target` parameter can either be an HTML
@@ -82,6 +116,10 @@ export default class Popover {
 			...Popover.#defaultOptions,
 			...options
 		};
+
+		window.addEventListener(`scroll`, () => {
+			this.reposition();
+		});
 	}
 
 	/// STATIC GETTERS \\\
@@ -98,12 +136,36 @@ export default class Popover {
 	}
 
 	static get PLACEMENTS() {
-		return {
+		const placements = {
 			TOP: `top`,
 			RIGHT: `right`,
 			LEFT: `left`,
 			BOTTOM: `bottom`,
 		};
+
+		return JSON.parse(JSON.stringify(placements));
+	}
+
+	static #ARROW_DIR(placement) {
+		const arrowDir = {
+			top: `down`,
+			right: `left`,
+			bottom: `up`,
+			left: `right`
+		};
+
+		return JSON.parse(JSON.stringify(arrowDir[placement]));
+	}
+
+	static get TRIGGERS() {
+		const triggers = {
+			CLICK: `click`,
+			HOVER: `hover`,
+			FOCUS: `focus`,
+			MANUAL: `manual`
+		};
+
+		return JSON.parse(JSON.stringify(triggers));
 	}
 
 	/// GETTERS \\\
@@ -129,7 +191,7 @@ export default class Popover {
 	 *
 	 * @return {Popover} The current instance of the popover.
 	 */
-	parts(part, template) {
+	modParts(part, template) {
 		if (typeof part !== `string`) {
 			throw new TypeError(`The 'part' parameter must be a string.`);
 		}
@@ -187,10 +249,17 @@ export default class Popover {
 			popover.append(arrow);
 		}
 
+		// Clean the popover and remove the script tags.
+		popover.querySelectorAll(`script`)
+			.forEach(v => {
+				v.removeAll();
+			});
+
 		document.body.insertAdjacentElement(`beforeend`, popover);
+		this.#isShown = true;
+		this.#setPosition(this.#options.placement);
 		this.reposition();
 
-		this.#isShown = true;
 		return this;
 	}
 
@@ -220,7 +289,8 @@ export default class Popover {
 	}
 
 	/**
-	 * Repositions the popover.
+	 * Repositions the popover based on the current placement, the fallback placement, and
+	 * the position of the viewport when window scrolling is viable.
 	 *
 	 * @return {Popover} The current instance of the popover.
 	 */
@@ -230,25 +300,78 @@ export default class Popover {
 
 		let popover = {
 			el: document.getElementById(this.#popoverID),
-			rect: this.el.getBoundingClientRect(),
-			direction: this.el.dataset.vs5PopoverDir,
-		};
-		let target = {
-			el: this.#target,
-			rect: this.#target.getBoundingClientRect(),
-		};
+		}
+		popover['rect'] = popover.el.getBoundingClientRect();
+		popover['direction'] = popover.el.dataset.vs5PopoverDir;
 
-		let newPlacement;
-		if (this.#isOutOfBounds()) {
-			for (p in Popover.PLACEMENTS) {
-				if (this.#isValidPos(Popover.PLACEMENTS[p])) {
-					newPlacement = Popover.PLACEMENTS[p];
-					break;
+		if (this.#isOutOfBounds() || this.#currentPlacement !== this.#options.placement) {
+			let validPosExists = !this.#options.fallbackPlacement.every((p) => {
+				if (this.#isValidPos(p)) {
+					this.#currentPlacement = p;
+					return false;
 				}
+
+				return true;
+			});
+
+			// If there are no valid positions, then use the fallback placement.
+			if (!validPosExists) {
+				// Fetch all necessary data.
+				let preferredPlacement = this.#options.placement;
+				let fallbackPlacement = this.#options.fallbackPlacement;
+				let viewport = {
+					width: window.innerWidth || document.documentElement.clientWidth,
+					height: window.innerHeight || document.documentElement.clientHeight,
+					top: window.scrollY,
+					left: window.scrollX,
+				}
+				let target = this.#target;
+				let targetRect = {
+					width: target.getBoundingClientRect().width - 1,
+					height: target.getBoundingClientRect().height - 1,
+					top: target.offsetTop,
+					left: target.offsetLeft,
+				};
+
+				// Calculate the origin and the viewport position
+				let origin = {
+					x: targetRect.left + (targetRect.width / 2),
+					y: targetRect.top + (targetRect.height / 2),
+				};
+				let pos = {
+					x: (viewport.left + (viewport.width / 2)) - origin.x,
+					y: (viewport.top + (viewport.height / 2)) - origin.y,
+				};
+
+				// Check whether the x-axis is greater than the y-axis or vice-versa.
+				if ((Math.abs(pos.x) > Math.abs(pos.y)) && (
+					fallbackPlacement.includes(`left`) ||
+					fallbackPlacement.includes(`right`)
+				)) {
+					let x = pos.x - origin.x;
+					preferredPlacement = x > 0 ? `right` : `left`;
+				}
+				else if (Math.abs(pos.x) < Math.abs(pos.y) && (
+					fallbackPlacement.includes(`top`) ||
+					fallbackPlacement.includes(`bottom`)
+				)) {
+					let y = pos.y - origin.y;
+					preferredPlacement = y > 0 ? `bottom` : `top`;
+				}
+
+				this.#setPosition(preferredPlacement);
 			}
 		}
 
 		return this;
+	}
+
+	/**
+	 * Destroys the popover.
+	 */
+	destroy() {
+		this.hide();
+		delete Popover.#elements[this.#target];
 	}
 
 	/// UTILITY METHODS \\\
@@ -281,8 +404,47 @@ export default class Popover {
 	 * @param {Popover.PLACEMENTS} placement Any value from `Popover.PLACEMENTS`
 	 */
 	#isValidPos(placement) {
+		this.#setPosition(placement);
+		return !this.#isOutOfBounds();
+	}
 
+	#setPosition(placement) {
+		const arrowSize = 10;
+
+		let popover = document.getElementById(this.#popoverID);
+		let target = this.#target;
+
+		let popoverRect = {
+			top: popover.offsetTop,
+			left: popover.offsetLeft,
+			width: popover.getBoundingClientRect().width - 1,
+			height: popover.getBoundingClientRect().height - 1
+		};
+		let targetRect = {
+			top: target.offsetTop,
+			left: target.offsetLeft,
+			width: target.getBoundingClientRect().width - 1,
+			height: target.getBoundingClientRect().height - 1
+		};
+		popover.dataset.vs5PopoverDir = Popover.#ARROW_DIR(placement);
+
+		if (placement === `top`) {
+			popover.style.top = `${targetRect.top - (popoverRect.height + arrowSize)}px`;
+			popover.style.left = `${targetRect.left + (targetRect.width / 2) - (popoverRect.width / 2)}px`;
+		}
+		else if (placement === `bottom`) {
+			popover.style.top = `${targetRect.top + targetRect.height + arrowSize}px`;
+			popover.style.left = `${targetRect.left + (targetRect.width / 2) - (popoverRect.width / 2)}px`;
+		}
+		else if (placement === `right`) {
+			popover.style.top = `${targetRect.top + (targetRect.height / 2) - (popoverRect.height / 2)}px`;
+			popover.style.left = `${targetRect.left + targetRect.width + arrowSize}px`;
+		}
+		else if (placement === `left`) {
+			popover.style.top = `${targetRect.top + (targetRect.height / 2) - (popoverRect.height / 2)}px`;
+			popover.style.left = `${targetRect.left - popoverRect.width - arrowSize}px`;
+		}
+
+		this.#currentPlacement = placement;
 	}
 }
-
-// TODO: Implement the `isViablePos()` method and the `reposition()` method.

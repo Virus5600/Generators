@@ -1,4 +1,5 @@
-import Popover from '../popover.js/Popover.js';
+import Popover from "./../../libs/bootstrap-components/popover.js";
+// const Popover = require("./../../libs/bootstrap-components/popover.js");
 
 /**
  * `Tutorial` is a class that allows creation of tutorials with the use of popovers. It
