@@ -135,7 +135,9 @@ function init() {
 					}
 				}
 				else {
+					let tutorialDone = localStorage.getItem(`tutorial.hub`) === `true`;
 					localStorage.clear();
+					localStorage.setItem(`tutorial.hub`, tutorialDone);
 					initConfigs();
 				}
 

@@ -1,6 +1,5 @@
 {
     "/resources/js/general.js": "/resources/js/general.js",
-    "/resources/js/libs/bootstrap-components/popover.js": "/resources/js/libs/bootstrap-components/popover.js",
     "/resources/modules/the-hub/index.js": "/resources/modules/the-hub/index.js",
     "/resources/modules/about/index.js": "/resources/modules/about/index.js",
     "/resources/modules/string-gen/index.js": "/resources/modules/string-gen/index.js",
@@ -31,6 +30,7 @@
     "/resources/js/util/swal-flash/swal-flash.js": "/resources/js/util/swal-flash/swal-flash.js",
     "/resources/js/util/swal-flash/swal-flash.mod.js": "/resources/js/util/swal-flash/swal-flash.mod.js",
     "/resources/js/util/text-counter.js": "/resources/js/util/text-counter.js",
+    "/resources/js/util/tutorial.js/Tutorial.esm.js": "/resources/js/util/tutorial.js/Tutorial.esm.js",
     "/resources/js/util/tutorial.js/Tutorial.js": "/resources/js/util/tutorial.js/Tutorial.js",
     "/resources/js/util/tutorial.js/Tutorial.umd.js": "/resources/js/util/tutorial.js/Tutorial.umd.js",
     "/resources/js/util/unique-array/unique-array.js": "/resources/js/util/unique-array/unique-array.js",

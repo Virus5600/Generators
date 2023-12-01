@@ -48,8 +48,6 @@ mix.webpackConfig({
 	// Utility Scripts
 	.copy('src/js/util/', 'public/resources/js/util/')
 
-	.js('src/js/libs/bootstrap-components/popover.js', '/resources/js/libs/bootstrap-components')
-
 	////////// \\\\\\\\\\
 	// MODULE COMPILER \\
 	// The Hub Compiler

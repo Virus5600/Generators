@@ -1,4 +1,4 @@
-import Popover from "./../../libs/bootstrap-components/popover.js";
+import Popover from "bootstrap/js/dist/popover.js";
 // const Popover = require("./../../libs/bootstrap-components/popover.js");
 
 /**
@@ -20,6 +20,10 @@ export default class Tutorial {
 	 */
 	static #defaultOptions = {
 		arrowBtns: false,
+		arrow: {
+			left: `<span style="background-image: background-image: url("data:image/svg+xml,%3Csvg width='25' height='25' viewBox='0 0 0.469 0.469' xmlns='http://www.w3.org/2000/svg' transform='scale(-1 1)'%3E%3Cpath d='M.259.072a.031.031 0 0 1 .044 0l.141.141a.031.031 0 0 1 0 .044L.303.398A.031.031 0 0 1 .259.354L.344.266H.047a.031.031 0 0 1 0-.063h.297L.259.116a.031.031 0 0 1 0-.044Z'/%3E%3C/svg%3E");"></span>`,
+			right: `<span style="background-image: url("data:image/svg+xml,%3Csvg width='25' height='25' viewBox='0 0 0.469 0.469' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M.259.072a.031.031 0 0 1 .044 0l.141.141a.031.031 0 0 1 0 .044L.303.398A.031.031 0 0 1 .259.354L.344.266H.047a.031.031 0 0 1 0-.063h.297L.259.116a.031.031 0 0 1 0-.044Z'/%3E%3C/svg%3E");">`,
+		},
 		includePrev: false,
 	};
 
@@ -59,6 +63,11 @@ export default class Tutorial {
 	static #components = null;
 
 	/**
+	 * Defines the options used by the `Tutorial` instance.
+	 */
+	static #options = null;
+
+	/**
 	 * Identifies whether this can instantiate `Tutorial` or not. This allows the singleton
 	 * to work properly. Furthermore, this variable also identifies whether to start the
 	 * actual "tutorial".
@@ -83,6 +92,11 @@ export default class Tutorial {
 	static #previous = null;
 
 	/**
+	 * Defines the event listeners used by the `Tutorial` instance. Default value is `null`.
+	 */
+	#eventListener = null;
+
+	/**
 	 * @throws Error `Tutorial` is a static singleton class. It cannot be instantiated. Instead, please use `Tutorial.start()`.
 	 */
 	constructor() {
@@ -90,22 +104,29 @@ export default class Tutorial {
 			throw Error('Tutorial is a static class and cannot be instantiated');
 
 		// Add the listeners
-		document.addEventListener(`click`, (e) => {
-			if (e.target
-				.closest(`#vs5-tutorial-overlay, #vs5-tutorial-backdrop`))
-				this.#next();
-		});
+		this.#eventListener = {
+			click: (e) => {
+				if (e.target
+					.closest(`#vs5-tutorial-overlay, #vs5-tutorial-backdrop`))
+					this.#next();
+			},
+			keyDown: (e) => {
+				if (!Tutorial.instantiated)
+					return;
 
-		document.addEventListener(`keydown`, (e) => {
-			if (!Tutorial.instantiated)
-				return;
+				let keyCode = e.keyCode || e.which;
 
-			let keyCode = e.keyCode || e.which;
+				if (Tutorial.keybinds.prev.includes(keyCode)) this.#prev();
+				else if (Tutorial.keybinds.next.includes(keyCode)) this.#next();
+				else if (Tutorial.keybinds.end.includes(keyCode)) Tutorial.end();
+			}
+		}
 
-			if (Tutorial.keybinds.prev.includes(keyCode)) this.#prev();
-			else if (Tutorial.keybinds.next.includes(keyCode)) this.#next();
-			else if (Tutorial.keybinds.end.includes(keyCode)) Tutorial.end();
-		});
+		this.#eventListener.click = this.#eventListener.click.bind(this);
+		this.#eventListener.keyDown = this.#eventListener.keyDown.bind(this);
+
+		document.addEventListener(`click`, this.#eventListener.click, false);
+		document.addEventListener(`keydown`, this.#eventListener.keyDown, false);
 
 		this.#init();
 	}
@@ -150,6 +171,10 @@ export default class Tutorial {
 
 		Tutorial.#components = components;
 		Tutorial.#begin = true;
+		Tutorial.#options = {
+			...Tutorial.defaultOptions,
+			...options,
+		}
 
 		const tutorial = new this();
 	}
@@ -158,11 +183,12 @@ export default class Tutorial {
 	 * Ends the tutorial and removes the backdrop.
 	 */
 	static end() {
-		document.querySelector(Tutorial.#previous)
-			.removeAttribute(`data-vs5-tutorial-target`);
+		const prev = document.querySelector(Tutorial.#previous);
+		prev.removeAttribute(`data-vs5-tutorial-target`);
+		prev.querySelector(`#vs5-tutorial-overlay`).remove();
 
-		Tutorial.#index = null;
-		Tutorial.#previous = 0;
+		Tutorial.#index = 0;
+		Tutorial.#previous = null;
 		Tutorial.#instantiated = false;
 
 		document.body
@@ -175,6 +201,11 @@ export default class Tutorial {
 	}
 
 	/// PRIVATE METHODS \\\
+	/**
+	 * Initializes the tutorial and adds the backdrop. This also filters out another call
+	 * when the tutorial is already instantiated. If users wish to initialize the tutorial
+	 * again, they must call {@link Tutorial.end} first.
+	 */
 	#init() {
 		// Prevents further initialization when the tutorial is already instantiated...
 		if (Tutorial.#instantiated)
@@ -204,14 +235,62 @@ export default class Tutorial {
 		this.#iterate(0);
 	}
 
+	/**
+	 * Moves the tutorial to the previous component
+	 */
 	#prev() {
 		console.log("prev");
 	}
 
+	/**
+	 * Moves the tutorial to the next component
+	 */
 	#next() {
-		console.log("next");
+		// If the index is greater or equal than 0, then set the `previous` variable
+		if ((Tutorial.#index - 1) >= 0) {
+			// Sets the variables needed for later
+			const prevIndex = Tutorial.#index - 1;
+			const component = Tutorial.#components[Tutorial.#previous];
+
+			// Check if there's an end callback
+			if (Object.keys(component).includes(`callbackEnd`))
+				component.callbackEnd();
+
+			// Removes the popover
+			let prevPopover = Popover.getInstance(Tutorial.#previous);
+			prevPopover._element.removeAttribute(`role`);
+			prevPopover._element.removeAttribute(`data-bs-selector`);
+			prevPopover._element.removeAttribute(`data-bs-html`);
+			prevPopover._element.removeAttribute(`data-bs-placement`);
+			prevPopover._element.removeAttribute(`data-bs-toggle`);
+			prevPopover._element.removeAttribute(`data-bs-trigger`);
+			prevPopover._element.removeAttribute(`data-bs-title`);
+			prevPopover._element.removeAttribute(`data-bs-content`);
+			prevPopover._element.removeAttribute(`data-vs5-tutorial-target`);
+			prevPopover.dispose();
+		}
+
+		// Further setting of variables...
+		const keyLen = Object.keys(Tutorial.#components).length;
+
+		// Ends the tutorial if the index is greater or equal to the length of the components
+		if (Tutorial.#index >= keyLen) {
+			document.removeEventListener(`click`, this.#eventListener.click);
+			document.removeEventListener(`keydown`, this.#eventListener.keyDown);
+
+			Tutorial.end();
+			return;
+		}
+
+		// If the condition above is not met, then continue the tutorial
+		this.#iterate(Tutorial.#index);
 	}
 
+	/**
+	 * Process the current component based from the given `index`.
+	 *
+	 * @param {number} index The current index of the tutorial
+	 */
 	#iterate(index) {
 		// Fetch the component
 		const key = Object.keys(Tutorial.#components)[index++];
@@ -223,10 +302,9 @@ export default class Tutorial {
 
 		const overlay = `<div id="vs5-tutorial-overlay"></div>`;
 
-		if (Tutorial.#previous !== null &&
-			Tutorial.#previous?.length > 0) {
-			Tutorial.#previous
-				.getElementById(`vs5-tutorial-overlay`)
+		if (Tutorial.#previous !== null) {
+			document.querySelector(Tutorial.#previous)
+				.querySelector(`#vs5-tutorial-overlay`)
 				?.remove();
 		}
 
@@ -235,8 +313,40 @@ export default class Tutorial {
 		popoverTarget.setAttribute(`data-vs5-tutorial-target`, ``);
 		popoverTarget.insertAdjacentHTML(`beforeend`, overlay);
 
+		// Initialize the popover
+		let content = component.content ?? key;
+		if (Tutorial.#options.arrowBtns) {
+			if (Tutorial.#options.includePrev) {
+				content += `
+					<span class="vs5-tutorial-left-arrow">${Tutorial.#options.arrow.left.replaceAll("\"", "'")}</span>
+					<span class="vs5-tutorial-right-arrow">${Tutorial.#options.arrow.right.replaceAll("\"", "'")}</span>
+				`;
+			}
+			else {
+				content += `
+					<div class="vs5-tutorial-bottom">
+						<span class="vs5-tutorial-exit-btn">Exit</span>
+						<span class="vs5-tutorial-right-arrow">${Tutorial.options.arrow.right.replaceAll("\"", "'")}</span>
+					</div>
+				`;
+			}
+		}
+		// TODO: Fix the SVG arrows
+
+		popoverTarget.setAttribute(`role`, `button`);
+		popoverTarget.setAttribute(`data-bs-selector`, key);
+		popoverTarget.setAttribute(`data-bs-html`, `true`);
+		popoverTarget.setAttribute(`data-bs-placement`, `top`);
+		popoverTarget.setAttribute(`data-bs-toggle`, `popover`);
+		popoverTarget.setAttribute(`data-bs-trigger`, `focus`);
+		popoverTarget.setAttribute(`data-bs-title`, component.title ?? key);
+		popoverTarget.setAttribute(`data-bs-content`, content);
+
 		const popover = new Popover(key, {
+			trigger: `manual`,
+			customClass: `vs5-tutorial-popover`
 		});
+		popover.show();
 
 		popoverTarget.scrollIntoView({
 			behavior: `auto`,
@@ -244,7 +354,7 @@ export default class Tutorial {
 			inline: `center`,
 		});
 
-		Tutorial.index = index;
+		Tutorial.#index = index;
 		Tutorial.#previous = key;
 	}
 
@@ -284,13 +394,62 @@ export default class Tutorial {
 	/**
 	 * Returns the default options used by this library.
 	 * The default values are as follows:
-	 * - ***arrowBtns***: `false`
-	 * - ***includePrev***: `false`
+	 * - ***arrowBtns***:	`false`	- Identifies whether to show the arrow buttons or not. When `includePrev` is `false`, the buttons will be shown below the content with an exit button.
+	 * - ***includePrev***:	`false`	- Identifies whether to include the previous button or not.
+	 * - ***arrow***:				- Contains the HTML for the arrow buttons. The default values are as follows:
+	 * 	- **left**: *SVG Object*	- Contains the SVG for the left arrow button.
+	 * 	- **right**: *SVG Object*	- Contains the SVG for the right arrow button.
 	 *
 	 * @return {JSON} A JSON object which contains the default options.
 	 */
 	static get defaultOptions() {
 		return JSON.parse(JSON.stringify(Tutorial.#defaultOptions));
 	}
+
+	/**
+	 * Returns the current options used by the `Tutorial` instance.
+	 */
+	static get options() {
+		if (Tutorial.#options === null || Object.keys(Tutorial.#options).length <= 0) {
+			Tutorial.#options = Tutorial.defaultOptions;
+		}
+
+		return JSON.parse(JSON.stringify(Tutorial.#options));
+	}
+
+	/**
+	 * Returns the list of components currently used by Tutorial.
+	 */
+	static get components() {
+		return JSON.parse(JSON.stringify(Tutorial.#components));
+	}
+
+	/// SETTERS \\\
+	static updateOptions(options = Tutorial.defaultOptions) {
+		this.#options = {
+			...Tutorial.defaultOptions,
+			...options,
+		};
+
+		return Tutorial;
+	}
+	static setOption(key, value) {
+		let keys = key.split(/\./g);
+		key = keys.pop();
+		let option = Tutorial.#options;
+
+		if (option === null || Object.keys(option).length <= 0) {
+			option = Tutorial.defaultOptions;
+		}
+
+		let node = keys.reduce(
+			(node, key) => node[key],
+			option
+		);
+		node[key] = value;
+
+		return Tutorial;
+	}
 }
-// TODO: Implement the popover, options parameter (at #start method), next, and prev.
+// TODO: Implement `prev` method.
+window.Tutorial = Tutorial;
