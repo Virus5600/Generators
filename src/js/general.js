@@ -1,3 +1,5 @@
+const { default: Tutorial } = require("./util/tutorial.js/Tutorial");
+
 // jQuery
 require("./libs/jQuery");
 
@@ -9,3 +11,7 @@ require("./libs/swal");
 
 // Fontawesome 5
 require("./libs/fontawesome");
+
+window.addEventListener("run-tutorial", (e) => {
+	Tutorial.start(e.detail.steps);
+});

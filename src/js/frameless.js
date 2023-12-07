@@ -5,6 +5,7 @@ import Validator from './util/validator/Validator.js';
 
 const win = remote.getCurrentWindow();
 let initialized = false;
+var tutorial = {};
 
 document.readyState === 'complete' ? init() : initialized ? null : window.addEventListener('load', init);
 
@@ -14,6 +15,7 @@ function init() {
 	initConfigs();
 	prependTitleBar();
 
+	const tutorialButton = document.querySelector('button#tutorial-btn');
 	const optionsButton = document.querySelector('button#options-btn');
 	const minimizeButton = document.querySelector('button#min-btn');
 	const maximizeButton = document.querySelector('button#max-btn');
@@ -161,6 +163,29 @@ function init() {
 			}
 		});
 	});
+	if (Object.keys(tutorial) > 0) {
+		tutorialButton.addEventListener('click', () => {
+			let tutorialDone = localStorage.getItem(`tutorial.hub`) === `true`;
+			if (tutorialDone) {
+				Swal.fire({
+					title: `Tutorial`,
+					text: `You have already completed the tutorial. Do you want to restart the tutorial?`,
+					icon: `question`,
+					iconColor: `#3fc3ee`,
+					showDenyButton: true,
+					confirmButtonText: `Yes`,
+					denyButtonText: `No`,
+				}).then((result) => {
+					if (result.isConfirmed) {
+						runTutorial();
+					}
+				});
+			}
+			else {
+				runTutorial()
+			}
+		});
+	}
 
 	win.on('unmaximize', () => {
 		isMaximized = false;
@@ -202,6 +227,26 @@ function init() {
 function prependTitleBar() {
 	const favicon = document.querySelector(`link[rel=icon]`).dataset['alt'];
 	const title = document.querySelector(`head > title`).innerText;
+	tutorial = {
+		happened: localStorage.getItem(`tutorial.${document.querySelector('meta[property=shortname]')?.content}`) === `true`,
+		stepsDir: document.querySelector('meta[property=tutorial-steps]')?.content ?? null,
+		button: ``,
+	};
+
+	if (tutorial.stepsDir != null) {
+		document.querySelector('meta[property=tutorial-steps]').remove();
+		fetch(tutorial.stepsDir)
+			.then((res) => res.json())
+			.then((data) => {
+				tutorial.stepsDir = data;
+			});
+
+		tutorial.button = `
+			<button id="tutorial-btn" title="Tutorial">
+				<i class="fas fa-question-circle"></i>
+			</button>
+		`;
+	}
 
 	const titleBar = `
 	<div id="title-bar">
@@ -211,6 +256,8 @@ function prependTitleBar() {
 		</div>
 
 		<div id="title-bar-btns">
+			${tutorial.button}
+
 			<button id="options-btn" title="Options">
 				<i class="fas fa-gear"></i>
 			</button>
@@ -520,3 +567,11 @@ function openExternal(e) {
 	});
 }
 window.addEventListener('open-external', openExternal);
+
+function runTutorial() {
+	window.dispatchEvent(new CustomEvent('run-tutorial', {
+		detail: {
+			steps: tutorial.stepsDir
+		}
+	}));
+}

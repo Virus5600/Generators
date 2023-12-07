@@ -21,8 +21,8 @@ export default class Tutorial {
 	static #defaultOptions = {
 		arrowBtns: false,
 		arrow: {
-			left: `<span style="background-image: background-image: url("data:image/svg+xml,%3Csvg width='25' height='25' viewBox='0 0 0.469 0.469' xmlns='http://www.w3.org/2000/svg' transform='scale(-1 1)'%3E%3Cpath d='M.259.072a.031.031 0 0 1 .044 0l.141.141a.031.031 0 0 1 0 .044L.303.398A.031.031 0 0 1 .259.354L.344.266H.047a.031.031 0 0 1 0-.063h.297L.259.116a.031.031 0 0 1 0-.044Z'/%3E%3C/svg%3E");"></span>`,
-			right: `<span style="background-image: url("data:image/svg+xml,%3Csvg width='25' height='25' viewBox='0 0 0.469 0.469' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M.259.072a.031.031 0 0 1 .044 0l.141.141a.031.031 0 0 1 0 .044L.303.398A.031.031 0 0 1 .259.354L.344.266H.047a.031.031 0 0 1 0-.063h.297L.259.116a.031.031 0 0 1 0-.044Z'/%3E%3C/svg%3E");">`,
+			left: `Prev`,
+			right: `Next`,
 		},
 		includePrev: false,
 	};
@@ -106,9 +106,21 @@ export default class Tutorial {
 		// Add the listeners
 		this.#eventListener = {
 			click: (e) => {
-				if (e.target
-					.closest(`#vs5-tutorial-overlay, #vs5-tutorial-backdrop`))
+				if (e.target.closest(`#vs5-tutorial-overlay, #vs5-tutorial-backdrop`)) {
 					this.#next();
+				}
+
+				if (Tutorial.options.arrowBtns) {
+					if (e.target.closest(`.vs5-tutorial-left-arrow`)) {
+						this.#prev();
+					}
+					else if (e.target.closest(`.vs5-tutorial-right-arrow`)) {
+						this.#next();
+					}
+					else if (e.target.closest(`.vs5-tutorial-exit-btn`)) {
+						Tutorial.end();
+					}
+				}
 			},
 			keyDown: (e) => {
 				if (!Tutorial.instantiated)
@@ -184,6 +196,9 @@ export default class Tutorial {
 	 */
 	static end() {
 		const prev = document.querySelector(Tutorial.#previous);
+
+		Popover.getInstance(Tutorial.#previous)?.dispose();
+
 		prev.removeAttribute(`data-vs5-tutorial-target`);
 		prev.querySelector(`#vs5-tutorial-overlay`).remove();
 
@@ -239,7 +254,33 @@ export default class Tutorial {
 	 * Moves the tutorial to the previous component
 	 */
 	#prev() {
-		console.log("prev");
+		// If the index-1 is equal to 0, then do nothing at all. Lmao.
+		if ((Tutorial.#index - 1) <= 0)
+			return;
+
+		// Check if there's an end callback
+		const component = Tutorial.#components[Tutorial.#previous];
+		if (Object.keys(component).includes(`callbackEnd`))
+			component.callbackEnd();
+
+		// Proceed to remove the popover
+		let prevPopover = Popover.getInstance(Tutorial.#previous);
+		prevPopover._element.removeAttribute(`role`);
+		prevPopover._element.removeAttribute(`data-bs-selector`);
+		prevPopover._element.removeAttribute(`data-bs-html`);
+		prevPopover._element.removeAttribute(`data-bs-placement`);
+		prevPopover._element.removeAttribute(`data-bs-toggle`);
+		prevPopover._element.removeAttribute(`data-bs-trigger`);
+		prevPopover._element.removeAttribute(`data-bs-title`);
+		prevPopover._element.removeAttribute(`data-bs-content`);
+		prevPopover._element.removeAttribute(`data-vs5-tutorial-target`);
+		prevPopover.dispose();
+
+		// Otherwise, proceed to decrement the index and move to the previous component
+		Tutorial.#index -= 2;
+
+		Tutorial.#previous = Tutorial.#index > 0 ? Object.keys(Tutorial.#components)[Tutorial.#index - 1] : null;
+		this.#iterate(Tutorial.#index);
 	}
 
 	/**
@@ -249,7 +290,6 @@ export default class Tutorial {
 		// If the index is greater or equal than 0, then set the `previous` variable
 		if ((Tutorial.#index - 1) >= 0) {
 			// Sets the variables needed for later
-			const prevIndex = Tutorial.#index - 1;
 			const component = Tutorial.#components[Tutorial.#previous];
 
 			// Check if there's an end callback
@@ -318,20 +358,21 @@ export default class Tutorial {
 		if (Tutorial.#options.arrowBtns) {
 			if (Tutorial.#options.includePrev) {
 				content += `
-					<span class="vs5-tutorial-left-arrow">${Tutorial.#options.arrow.left.replaceAll("\"", "'")}</span>
-					<span class="vs5-tutorial-right-arrow">${Tutorial.#options.arrow.right.replaceAll("\"", "'")}</span>
+				<div class="vs5-tutorial-bottom vs5-tutorial-prev-included">
+					<span class="vs5-tutorial-button vs5-tutorial-left-arrow ${Tutorial.#index - 1 < 0 ? 'disabled' : ''}">${Tutorial.#options.arrow.left.replaceAll("\"", "'")}</span>
+					<span class="vs5-tutorial-button vs5-tutorial-right-arrow">${Tutorial.#options.arrow.right.replaceAll("\"", "'")}</span>
+				</div>
 				`;
 			}
 			else {
 				content += `
 					<div class="vs5-tutorial-bottom">
-						<span class="vs5-tutorial-exit-btn">Exit</span>
-						<span class="vs5-tutorial-right-arrow">${Tutorial.options.arrow.right.replaceAll("\"", "'")}</span>
+						<span class="vs5-tutorial-button vs5-tutorial-exit-btn">Exit</span>
+						<span class="vs5-tutorial-button vs5-tutorial-right-arrow">${Tutorial.options.arrow.right.replaceAll("\"", "'")}</span>
 					</div>
 				`;
 			}
 		}
-		// TODO: Fix the SVG arrows
 
 		popoverTarget.setAttribute(`role`, `button`);
 		popoverTarget.setAttribute(`data-bs-selector`, key);
@@ -343,6 +384,8 @@ export default class Tutorial {
 		popoverTarget.setAttribute(`data-bs-content`, content);
 
 		const popover = new Popover(key, {
+			html: true,
+			sanitize: false,
 			trigger: `manual`,
 			customClass: `vs5-tutorial-popover`
 		});
@@ -451,5 +494,4 @@ export default class Tutorial {
 		return Tutorial;
 	}
 }
-// TODO: Implement `prev` method.
 window.Tutorial = Tutorial;

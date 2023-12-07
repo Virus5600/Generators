@@ -48,4 +48,47 @@
 
 .vs5-tutorial-popover {
 	z-index: 10001;
+
+	.vs5-tutorial-bottom {
+		@each $key, $value in map-get(vs5t.$var, "bottom") {
+			#{$key}: var(--vs5t-tutorial-bottom-#{$key}, $value);
+		}
+
+		&.vs5-tutorial-prev-included {
+			justify-content: space-between;
+		}
+
+		/* Button Styling */
+		.vs5-tutorial-button {
+			-webkit-user-select:	none;
+			user-select:			none;
+			cursor:					pointer;
+			text-align:				center;
+			min-width:				2.5em;
+			margin:					.25rem;
+			padding:				.25rem;
+			border-radius:			.25rem;
+			background-color:		#6c757d;
+			border:					1px solid #6c757d;
+			transition: 			.15s ease-in-out;
+
+			&:hover {
+				background-color:	darken(#6c757d, 15%);
+				border-color: 		darken(#6c757d, 20%);
+			}
+
+			&:active {
+				background-color:	darken(#6c757d, 20%);
+				border-color:		darken(#6c757d, 25%);
+				box-shadow:			inset 0 1px 0 rgba(#6c757d, .15), 0 1px 1px rgba(#6c757d, .075);
+			}
+
+			&.disabled {
+				pointer-events: none;
+				background-color: #6c757d;
+				border-color: #6c757d;
+				opacity: .65;
+			}
+		}
+	}
 }

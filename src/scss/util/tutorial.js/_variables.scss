@@ -39,6 +39,14 @@
 		user-select:			none,
 	),
 
+	/* Bottom/Footer Styling */
+	"bottom": (
+		display:				flex,
+		justify-content:		flex-end,
+		align-items:			center,
+		margin:					.25rem,
+	),
+
 	/* Target Styling */
 	"target": (
 		position:				relative,

@@ -30,9 +30,7 @@
     "/resources/js/util/swal-flash/swal-flash.js": "/resources/js/util/swal-flash/swal-flash.js",
     "/resources/js/util/swal-flash/swal-flash.mod.js": "/resources/js/util/swal-flash/swal-flash.mod.js",
     "/resources/js/util/text-counter.js": "/resources/js/util/text-counter.js",
-    "/resources/js/util/tutorial.js/Tutorial.esm.js": "/resources/js/util/tutorial.js/Tutorial.esm.js",
     "/resources/js/util/tutorial.js/Tutorial.js": "/resources/js/util/tutorial.js/Tutorial.js",
-    "/resources/js/util/tutorial.js/Tutorial.umd.js": "/resources/js/util/tutorial.js/Tutorial.umd.js",
     "/resources/js/util/unique-array/unique-array.js": "/resources/js/util/unique-array/unique-array.js",
     "/resources/js/util/unique-array/unique-array.mod.js": "/resources/js/util/unique-array/unique-array.mod.js",
     "/resources/js/util/validator/MessageBag.js": "/resources/js/util/validator/MessageBag.js",
@@ -46,5 +44,6 @@
     "/resources/modules/string-gen/assets/favicon.png": "/resources/modules/string-gen/assets/favicon.png",
     "/resources/modules/dtr-gen/Sample Generated DTR.js": "/resources/modules/dtr-gen/Sample Generated DTR.js",
     "/resources/modules/dtr-gen/assets/favicon.png": "/resources/modules/dtr-gen/assets/favicon.png",
-    "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt": "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt"
+    "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt": "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt",
+    "/resources/modules/the-hub/assets/tutorial.json": "/resources/modules/the-hub/assets/tutorial.json"
 }
