@@ -76,8 +76,11 @@ const DTR = {
 				<div class="dtr-cell text-end px-1">${i}</div>
 			`;
 			if (date.attr('name').match(/holiday\[\]/)) {
+				let holidayName = $(`[name="holidayName[]"][data-date="${i}"]`).val();
+				holidayName = holidayName.length > 0 ? holidayName : "HOLIDAY";
+
 				dates += `
-					<div class="dtr-cell dtr-cell-5 border border-secondary small holiday">HOLIDAY</div>
+					<div class="dtr-cell dtr-cell-5 border border-secondary small holiday">${holidayName.toUpperCase()}</div>
 				`;
 			}
 			else {
@@ -425,6 +428,7 @@ const DTR = {
 	}
 };
 
+// TODO: Implement Tutorial for the Holiday Names
 const TUTORIAL = {
 	components: {
 		"#jobOrderArea": {
@@ -926,6 +930,60 @@ $(() => {
 
 			label.removeClass(`btn-outline-warning`);
 		}
+	});
+
+	// HOLIDAY HANDLER
+	$(document).on('change', `[data-dragcheck] > input[type=checkbox]`, (e) => {
+		const temp = `
+			<div class="col-6 col-lg-4" data-holiday=":date">
+				<div class="form-group">
+					<div class="input-group">
+						<span class="input-group-text">:date</span>
+						<input type="hidden" name="holidayNameDate[]" value=":date">
+						<input type="text" class="form-control" name="holidayName[]" data-date=":date" placeholder="Holiday" aria-label="Holiday Name for :date">
+					</div>
+				</div>
+			</div>
+		`;
+
+		let hnContainer = $(`#holidayNames`);
+		let hn = hnContainer.find(`input[name="holidayName[]"]`);
+		let h = $(`[data-dragcheck] > input[name="holiday[]"]`);
+
+		let hCount = h.length;
+		let hnCount = hn.length;
+
+		// If the holiday count is greater than the holiday name count, add a new holiday name
+		if (hCount > hnCount) {
+			h.each((k, v) => {
+				let targetHn = $(`[data-holiday=${v.value}]`);
+
+				if (targetHn.length <= 0) {
+					targetHn = $(temp.replace(/:date/gi, v.value));
+					hnContainer.append(targetHn);
+				}
+			});
+
+			hnContainer.html(
+				hnContainer.find(`[data-holiday]`).sort((a, b) => {
+					return +$(a).data('holiday') - +$(b).data('holiday');
+				})
+			);
+		}
+		else if (hCount < hnCount) {
+			hn.each((k, v) => {
+				let targetH = $(`[name="holiday[]"][value="${v.dataset.date}"]`);
+
+				if (targetH.length <= 0) {
+					$(`[data-holiday=${v.dataset.date}]`).remove();
+				}
+			});
+		}
+	});
+
+	$(document).on('change', `[name="holidayName[]"]`, (e) => {
+		DTR.reset();
+		$(`#jobOrderList`).trigger('change');
 	});
 
 	// RESET HANDLER
