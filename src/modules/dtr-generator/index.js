@@ -930,7 +930,17 @@ $(() => {
 
 	// RESET HANDLER
 	$(`#reset`).on(`click`, (e) => {
-		confirmLeave(window.location, undefined, `This will reset all fields.`);
+		if (typeof confirmLeave == "function") {
+			try {
+				confirmLeave(window.location, undefined, `This will reset all fields.`);
+			}
+			catch (e) {
+				console.warn(e);
+			}
+		}
+		else {
+			console.warn(`confirmLeave function not defined.`);
+		}
 	});
 
 	// Adding a little animation on hover (for the footer buttons) //
