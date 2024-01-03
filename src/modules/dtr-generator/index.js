@@ -428,7 +428,6 @@ const DTR = {
 	}
 };
 
-// TODO: Implement Tutorial for the Holiday Names
 const TUTORIAL = {
 	components: {
 		"#jobOrderArea": {
@@ -462,6 +461,14 @@ const TUTORIAL = {
 		"#datesArea": {
 			title: `Select the Dates`,
 			content: `Select all the dates that falls within the provided <code>period</code>. These dates will reflect upon the DTR template and show that these are the days that the employees worked.<br><br>Do note that <code>left click</code>s assigns them as regular dates and <code>right click</code>s assigns them as a holiday.`
+		},
+		"#optionalConfigsArea": {
+			title: `Optional Configurations`,
+			content: `These are optional configurations that can be applied to the DTR. An example would be the "Duplicate DTR" option which duplicates the DTR, allowing for two identical DTRs in a single page instead of the usual two different DTRs in a single page.`
+		},
+		"#holidayNames": {
+			title: `Holiday Names`,
+			content: `If a date is marked as a holiday, a text field will pop here. This text field will allow you to provide an optional name of the said holiday.`
 		},
 		"#dtrSample": {
 			title: `Preview the General Template`,
@@ -1072,6 +1079,8 @@ $(() => {
 			return;
 
 		let keyCode = e.keyCode || e.which;
+		e.preventDefault();
+		e.stopPropagation();
 
 		if (keyCode == 13 || keyCode == 32) TUTORIAL.next();
 		else if (keyCode == 27) TUTORIAL.end();
