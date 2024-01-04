@@ -47,7 +47,18 @@
 
 
 .vs5-tutorial-popover {
-	z-index: 10001;
+	z-index: 10001 !important;
+
+	.vs5-close-container {
+		float: right;
+
+		height: 100%;
+
+		button#vs5EndTutorial.btn-close {
+			width: .5em;
+			height: .5em;
+		}
+	}
 
 	.vs5-tutorial-bottom {
 		@each $key, $value in map-get(vs5t.$var, "bottom") {

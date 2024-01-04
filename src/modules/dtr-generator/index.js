@@ -2,6 +2,7 @@
 import UniqueArray from "../../js/util/unique-array/unique-array.mod.js";
 import SwalFlash from "../../js/util/swal-flash/swal-flash.mod.js";
 import Dragcheck from "../../js/util/dragcheck/dragcheck.mod.js";
+import Tutorial from "../../js/util/tutorial.js/Tutorial.js";
 import jsPDF from "jspdf";
 
 // HTML2PDF Libs
@@ -33,6 +34,7 @@ const DTR = {
 		duplicateDTR: false,
 	},
 	list: [],
+	session: null,
 	displayContent(e) {
 		DTR.reset();
 
@@ -425,10 +427,32 @@ const DTR = {
 		}
 
 		target.prepend(DTR_SAMPLE);
+	},
+	saveSession() {
+		DTR.session = $(`#dtrSample`).html();
+	},
+	restoreSession() {
+		if (DTR.session != null) {
+			$(`#dtrSample`).html(DTR.session);
+
+			DTR.session = null;
+		}
+	},
+	resetSession() {
+		$(`#dtrSample`).html(``);
+		DTR.session = null;
 	}
 };
 
 const TUTORIAL = {
+	options: {
+		arrowBtns: true,
+		arrow: {
+			left: `◀`,
+			right: `▶`,
+		},
+		includePrev: true
+	},
 	components: {
 		"#jobOrderArea": {
 			title: `Insert List of Job Orders`,
@@ -472,7 +496,29 @@ const TUTORIAL = {
 		},
 		"#dtrSample": {
 			title: `Preview the General Template`,
-			content: `Every time the selected <code>dates</code> changes, this DTR template will update and reflect what a generated one will look like.`
+			content: `Every time the selected <code>dates</code> changes, this DTR template will update and reflect what a generated one will look like.`,
+			callbackInit: () => {
+				setTimeout(
+					() => {
+						let target = $(`#dtrSample`)
+						target.css(`scroll-margin-top`, `1rem`);
+
+						target[0].scrollIntoView({
+							behavior: `auto`,
+							block: `start`,
+							inline: `center`
+						});
+
+						setTimeout(
+							() => {
+								window.scrollTo(window.scrollX, target[0].offsetTop - 175);
+							},
+							500
+						);
+					},
+					500
+				);
+			},
 		},
 		"#dtrGenFooter": {
 			title: `Generator Controls`,
@@ -514,119 +560,6 @@ const TUTORIAL = {
 				DTR.generate(true, true);
 			}
 		}
-	},
-	index: 0,
-	previous: "null",
-	previousPopover: null,
-	instantiated: false,
-	init() {
-		let body = $(`body`);
-		let backdrop = `
-		<div class="backdrop" id="tutorial-backdrop">
-			<div class="mt-auto me-auto mb-3 ms-3">
-				<span class="d-block">Press <code>Esc</code> to exit tutorial...</span>
-				<span class="d-block">Click anywhere outside the popup to proceed...</span>
-			</div>
-		</div>`;
-
-		body.find(`.backdrop`).remove();
-
-		body.addClass(`highlight`)
-			.append(backdrop);
-
-		if (TUTORIAL.instantiated)
-			return;
-
-		TUTORIAL.instantiated = true;
-		TUTORIAL.iterate(0);
-	},
-	iterate(index) {
-		const key = Object.keys(TUTORIAL.components)[index++];
-		const obj = TUTORIAL.components[key];
-
-		if (Object.keys(obj).includes(`callbackInit`)) {
-			obj.callbackInit();
-		}
-
-		const overlay = `<div class="overlay" id="tutorial-overlay"></div>`
-
-		if (TUTORIAL.previous != null &&
-			TUTORIAL.previous?.length > 0) {
-			$(TUTORIAL.previous).find(`#tutorial-overlay`)
-				.remove();
-		}
-		let popoverElem = $(key).addClass(`position-relative target`)
-			.attr(`role`, `button`)
-			.attr(`data-bs-selector`, key)
-			.attr(`data-bs-html`, `true`)
-			.attr(`data-bs-placement`, `top`)
-			.attr(`data-bs-toggle`, `popover`)
-			.attr(`data-bs-trigger`, `focus`)
-			.attr(`data-bs-title`, obj.title ?? key)
-			.attr(`data-bs-content`, obj.content ?? key)
-			.append(overlay);
-
-		popoverElem[0].scrollIntoView({
-			behavior: `auto`,
-			block: `center`,
-			inline: `center`
-		});
-
-		let popover = new bootstrap.Popover(popoverElem[0]);
-		popover.show();
-
-		TUTORIAL.index = index;
-		TUTORIAL.previous = key;
-		TUTORIAL.previousPopover = popover;
-	},
-	next() {
-		const keyLen = Object.keys(TUTORIAL.components).length;
-		let prevObj = TUTORIAL.components[TUTORIAL.previous];
-
-		if (Object.keys(prevObj).includes(`callbackEnd`)) {
-			prevObj.callbackEnd();
-		};
-
-		let previous = $(TUTORIAL.previous);
-		previous.removeClass(`position-relative target`)
-			.removeAttr(`role`)
-			.removeAttr(`data-bs-html`)
-			.removeAttr(`data-bs-placement`)
-			.removeAttr(`data-bs-toggle`)
-			.removeAttr(`data-bs-trigger`)
-			.removeAttr(`data-bs-title`)
-			.removeAttr(`data-bs-content`)
-			.find(`#tutorial-overlay`)
-			.remove();
-
-		if (TUTORIAL.previousPopover != null) {
-			TUTORIAL.previousPopover.dispose();
-			TUTORIAL.previousPopover = null;
-		}
-
-		if (TUTORIAL.index >= keyLen) {
-			TUTORIAL.end();
-			return;
-		}
-
-		TUTORIAL.iterate(TUTORIAL.index);
-	},
-	end() {
-		if (TUTORIAL.previousPopover != null) {
-			TUTORIAL.previousPopover.dispose();
-			TUTORIAL.previousPopover = null;
-		}
-
-		$(TUTORIAL.previous).removeClass(`target`);
-
-		TUTORIAL.index = null;
-		TUTORIAL.previous = 0;
-		TUTORIAL.previousPopover = null;
-		TUTORIAL.instantiated = false;
-
-		let body = $(`body`);
-		body.removeClass(`highlight`)
-			.find(`.backdrop`).remove();
 	}
 }
 
@@ -1072,17 +1005,8 @@ $(() => {
 		.prop(`disabled`, true);
 
 	// TUTORIAL
-	$(`#tutorial`).on(`click`, TUTORIAL.init);
-	$(document).on(`click`, `#tutorial-overlay, #tutorial-backdrop`, TUTORIAL.next);
-	$(document).on(`keydown`, (e) => {
-		if (!TUTORIAL.instantiated)
-			return;
-
-		let keyCode = e.keyCode || e.which;
-		e.preventDefault();
-		e.stopPropagation();
-
-		if (keyCode == 13 || keyCode == 32) TUTORIAL.next();
-		else if (keyCode == 27) TUTORIAL.end();
+	$(`#tutorial`).on(`click`, () => {
+		if (!Tutorial.instantiated)
+			Tutorial.start(TUTORIAL.components, TUTORIAL.options);
 	});
 });

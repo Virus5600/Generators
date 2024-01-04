@@ -25,6 +25,10 @@ export default class Tutorial {
 			right: `Next`,
 		},
 		includePrev: false,
+		callbacks: {
+			start: null,
+			end: null
+		}
 	};
 
 	/**
@@ -110,6 +114,10 @@ export default class Tutorial {
 					this.#next();
 				}
 
+				if (e.target.closest(`button#vs5EndTutorial`)) {
+					Tutorial.end();
+				}
+
 				if (Tutorial.options.arrowBtns) {
 					if (e.target.closest(`.vs5-tutorial-left-arrow`)) {
 						this.#prev();
@@ -127,6 +135,8 @@ export default class Tutorial {
 					return;
 
 				let keyCode = e.keyCode || e.which;
+				e.preventDefault();
+				e.stopPropagation();
 
 				if (Tutorial.keybinds.prev.includes(keyCode)) this.#prev();
 				else if (Tutorial.keybinds.next.includes(keyCode)) this.#next();
@@ -181,6 +191,9 @@ export default class Tutorial {
 		if (Object.keys(components).length <= 0)
 			throw new Error(`The components parameter is required.`);
 
+		if (Tutorial.instantiated)
+			return;
+
 		Tutorial.#components = components;
 		Tutorial.#begin = true;
 		Tutorial.#options = {
@@ -195,15 +208,19 @@ export default class Tutorial {
 	 * Ends the tutorial and removes the backdrop.
 	 */
 	static end() {
+		if (!Tutorial.instantiated)
+			return;
+
 		const prev = document.querySelector(Tutorial.#previous);
 
 		Popover.getInstance(Tutorial.#previous)?.dispose();
 
 		prev.removeAttribute(`data-vs5-tutorial-target`);
-		prev.querySelector(`#vs5-tutorial-overlay`).remove();
+		prev.querySelector(`#vs5-tutorial-overlay`)?.remove();
 
 		Tutorial.#index = 0;
 		Tutorial.#previous = null;
+		Tutorial.#begin = false;
 		Tutorial.#instantiated = false;
 
 		document.body
@@ -391,6 +408,14 @@ export default class Tutorial {
 		});
 		popover.show();
 
+		popover.tip
+			.querySelector('h3')
+			.insertAdjacentHTML('beforeend', `
+			<span class="vs5-close-container">
+				<button type="button" class="btn-close" aria-label="Close" id="vs5EndTutorial"></button>
+			</span>
+			`);
+
 		popoverTarget.scrollIntoView({
 			behavior: `auto`,
 			block: `center`,
@@ -431,22 +456,28 @@ export default class Tutorial {
 	 * @return {JSON} A JSON object which contains the action and its corresponding key codes.
 	 */
 	static get defaultKeybinds() {
-		return JSON.parse(JSON.stringify(Tutorial.#defaultKeybinds));
+		return {
+			...Tutorial.#defaultKeybinds
+		};
 	}
 
 	/**
 	 * Returns the default options used by this library.
 	 * The default values are as follows:
 	 * - ***arrowBtns***:	`false`	- Identifies whether to show the arrow buttons or not. When `includePrev` is `false`, the buttons will be shown below the content with an exit button.
-	 * - ***includePrev***:	`false`	- Identifies whether to include the previous button or not.
+	 * - ***includePrev***:	`false`	- Identifies whether to include the previous button or not. This will only work when `arrowBtns` is `true`.
 	 * - ***arrow***:				- Contains the HTML for the arrow buttons. The default values are as follows:
-	 * 	- **left**: *SVG Object*	- Contains the SVG for the left arrow button.
-	 * 	- **right**: *SVG Object*	- Contains the SVG for the right arrow button.
+	 * 	- **left**: *SVG Object*	- Contains the text for the left arrow button.
+	 * 	- **right**: *SVG Object*	- Contains the text for the right arrow button.
 	 *
 	 * @return {JSON} A JSON object which contains the default options.
 	 */
 	static get defaultOptions() {
-		return JSON.parse(JSON.stringify(Tutorial.#defaultOptions));
+		return {
+			...Tutorial.#defaultOptions,
+			arrow: {...Tutorial.#defaultOptions.arrow},
+			callbacks: {...Tutorial.#defaultOptions.callbacks}
+		};
 	}
 
 	/**
@@ -457,7 +488,11 @@ export default class Tutorial {
 			Tutorial.#options = Tutorial.defaultOptions;
 		}
 
-		return JSON.parse(JSON.stringify(Tutorial.#options));
+		return {
+			...Tutorial.#options,
+			arrow: {...Tutorial.#options.arrow},
+			callbacks: {...Tutorial.#options.callbacks}
+		};
 	}
 
 	/**
@@ -468,14 +503,33 @@ export default class Tutorial {
 	}
 
 	/// SETTERS \\\
+	/**
+	 * Update the entire {@link Tutorial.options} with the given `options` parameter.
+	 * All options that aren't provided to the `options` parameter will be set to its
+	 * default value.
+	 *
+	 * @param {JSON} options A JSON object which contains the options to be updated.
+	 *
+	 * @see {@link Tutorial.defaultOptions}
+	 */
 	static updateOptions(options = Tutorial.defaultOptions) {
 		this.#options = {
 			...Tutorial.defaultOptions,
 			...options,
 		};
-
-		return Tutorial;
 	}
+
+	/**
+	 * Updates a specific option with the given `key` and `value` parameters.
+	 * The `key` follows a dot-notation format. For example, if you want to update
+	 * the `left` option in the `arrow` option, you can do so by passing `arrow.left`
+	 * as the `key` parameter.
+	 *
+	 * @param {string} key The option's dot-notation key.
+	 * @param {any} value The value to be set for the given `key`.
+	 *
+	 * @see {@link Tutorial.defaultOptions}
+	 */
 	static setOption(key, value) {
 		let keys = key.split(/\./g);
 		key = keys.pop();
@@ -490,8 +544,6 @@ export default class Tutorial {
 			option
 		);
 		node[key] = value;
-
-		return Tutorial;
 	}
 }
 window.Tutorial = Tutorial;
