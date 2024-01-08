@@ -422,24 +422,25 @@ const DTR = {
 	},
 	generateTutorial(target, end = false) {
 		if (end) {
-			target.html(``);
+			target.html(DTR.session);
 			return;
 		}
-
-		target.prepend(DTR_SAMPLE);
+		else {
+			target.html(DTR_SAMPLE);
+		}
 	},
 	saveSession() {
-		DTR.session = $(`#dtrSample`).html();
+		DTR.session = $(`#generatedDTR`).html();
 	},
 	restoreSession() {
 		if (DTR.session != null) {
-			$(`#dtrSample`).html(DTR.session);
+			$(`#generatedDTR`).html(DTR.session);
 
 			DTR.session = null;
 		}
 	},
 	resetSession() {
-		$(`#dtrSample`).html(``);
+		$(`#generatedDTR`).html(``);
 		DTR.session = null;
 	}
 };
@@ -534,6 +535,7 @@ const TUTORIAL = {
 			title: `Print Preview`,
 			content: `Once the <code>Generate</code> button is pressed and successful on it, the preview for the said DTR will be shown here.<br> The preview allows individual DTR editing to allow changes to the time and days they are present, allowing flexibility to time changes and absences.`,
 			callbackInit: () => {
+				DTR.saveSession();
 				DTR.generate(true);
 				setTimeout(
 					() => {
@@ -558,6 +560,7 @@ const TUTORIAL = {
 			},
 			callbackEnd: () => {
 				DTR.generate(true, true);
+				DTR.restoreSession();
 			}
 		}
 	}

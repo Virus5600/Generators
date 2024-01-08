@@ -207,7 +207,7 @@ export default class Tutorial {
 	/**
 	 * Ends the tutorial and removes the backdrop.
 	 */
-	static end() {
+	static end(trueEnd = false) {
 		if (!Tutorial.instantiated)
 			return;
 
@@ -217,6 +217,12 @@ export default class Tutorial {
 
 		prev.removeAttribute(`data-vs5-tutorial-target`);
 		prev.querySelector(`#vs5-tutorial-overlay`)?.remove();
+
+		// Check if there's an end callback to call them before ending the tutorial
+		const component = Tutorial.#components[Tutorial.#previous];
+		if (Object.keys(component).includes(`callbackEnd`) && !trueEnd) {
+			component.callbackEnd();
+		}
 
 		Tutorial.#index = 0;
 		Tutorial.#previous = null;
@@ -310,8 +316,9 @@ export default class Tutorial {
 			const component = Tutorial.#components[Tutorial.#previous];
 
 			// Check if there's an end callback
-			if (Object.keys(component).includes(`callbackEnd`))
+			if (Object.keys(component).includes(`callbackEnd`)) {
 				component.callbackEnd();
+			}
 
 			// Removes the popover
 			let prevPopover = Popover.getInstance(Tutorial.#previous);
@@ -335,7 +342,7 @@ export default class Tutorial {
 			document.removeEventListener(`click`, this.#eventListener.click);
 			document.removeEventListener(`keydown`, this.#eventListener.keyDown);
 
-			Tutorial.end();
+			Tutorial.end(true);
 			return;
 		}
 
