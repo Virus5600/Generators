@@ -67,6 +67,7 @@ function init() {
 
 			<div class="card-footer text-center">
 				<button id="check-for-updates" class="btn btn-primary">Check for Updates</button>
+				<button id="check-version-changes" class="btn btn-primary">Changelog</button>
 			</div>
 		</div>
 		`;
@@ -132,7 +133,7 @@ function init() {
 		}).then((result) => {
 			if (result.isConfirmed || result.isDenied) {
 				if (result.isConfirmed) {
-					for (v in result.value) {
+					for (let v in result.value) {
 						localStorage.setItem(v, result.value[v]);
 					}
 				}
@@ -163,8 +164,8 @@ function init() {
 			}
 		});
 	});
-	if (Object.keys(tutorial) > 0) {
-		tutorialButton.addEventListener('click', () => {
+	if (Object.keys(tutorial).length > 0) {
+		tutorialButton?.addEventListener('click', () => {
 			let tutorialDone = localStorage.getItem(`tutorial.hub`) === `true`;
 			if (tutorialDone) {
 				Swal.fire({
@@ -222,6 +223,9 @@ function init() {
 
 	// Auto Updater - Detects whether there's an update or not
 	updateCheck();
+
+	// Add listener to all [data-open-external] anchor tags
+	initOpenExternal();
 }
 
 function prependTitleBar() {
@@ -429,7 +433,7 @@ function updateCheck() {
 		<p>A new update is available. Do you want to update now?</p>
 
 		<h4 class="text-start">Patch Notes</h4>
-		<div class="text-bg-secondary rounded text-start p-3">${data.releaseNotes}</div>
+		<div class="text-bg-secondary rounded text-start p-3">${data.releaseNotes.replaceAll(/(\<a.+".+")(\>)/gi, "$1 data-open-external$2")}</div>
 		`;
 
 		Swal.fire({
@@ -547,6 +551,20 @@ function initEventListeners() {
 				console.log(`Checking for updates...`, getConfigs());
 				ipcRenderer.send('check-for-updates', getConfigs(), true);
 			});
+		}
+	});
+}
+
+function initOpenExternal() {
+	document.addEventListener(`click`, (e) => {
+		if (e.target.closest(`a[data-open-external]`)) {
+			e.preventDefault();
+
+			let event = new CustomEvent(`open-external`, {
+				detail: {url: e.target.href}
+			});
+
+			window.dispatchEvent(event);
 		}
 	});
 }

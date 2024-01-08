@@ -56,7 +56,6 @@ mix.webpackConfig({
 	.copy('src/resources/the-hub/', 'public/resources/modules/the-hub/assets')
 
 	// About Page Compiler
-	.js('src/modules/about/index.js', 'resources/modules/about/index.js')
 	.copy('src/resources/about/', 'public/resources/modules/about/assets')
 
 	// String Generator Compiler

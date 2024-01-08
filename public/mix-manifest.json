@@ -1,7 +1,6 @@
 {
     "/resources/js/general.js": "/resources/js/general.js",
     "/resources/modules/the-hub/index.js": "/resources/modules/the-hub/index.js",
-    "/resources/modules/about/index.js": "/resources/modules/about/index.js",
     "/resources/modules/string-gen/index.js": "/resources/modules/string-gen/index.js",
     "/resources/modules/dtr-gen/index.js": "/resources/modules/dtr-gen/index.js",
     "/resources/css/util/custom-scrollbar.css": "/resources/css/util/custom-scrollbar.css",
