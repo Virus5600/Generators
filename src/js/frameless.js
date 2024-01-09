@@ -1,6 +1,8 @@
 const { ipcRenderer, shell } = require('electron');
 const remote = require('@electron/remote');
 const semver = require('semver');
+const md = require('markdown-it');
+
 import Validator from './util/validator/Validator.js';
 
 const win = remote.getCurrentWindow();
@@ -67,7 +69,7 @@ function init() {
 
 			<div class="card-footer text-center">
 				<button id="check-for-updates" class="btn btn-primary">Check for Updates</button>
-				<button id="check-version-changes" class="btn btn-primary">Changelog</button>
+				<button id="check-version-changes" class="btn btn-secondary">Changelog</button>
 			</div>
 		</div>
 		`;
@@ -537,6 +539,7 @@ function updateCheck() {
 
 function initEventListeners() {
 	document.addEventListener('click', (e) => {
+		// CHECK FOR UPDATES
 		if (e.target.closest(`#check-for-updates`)) {
 			Swal.fire({
 				title: `Include skipped versions?`,
@@ -551,6 +554,96 @@ function initEventListeners() {
 				console.log(`Checking for updates...`, getConfigs());
 				ipcRenderer.send('check-for-updates', getConfigs(), true);
 			});
+		}
+		// CHANGELOG
+		else if (e.target.closest(`#check-version-changes`)) {
+			fetch("resources/modules/the-hub/assets/changelog.json").then((res) => {
+				return res.json();
+			}).then((data) => {
+				const changelogTypes = ["added", "updated", "removed"],
+					changelogBullets = ["🟢", "🟡", "🔴"];
+
+				let changelog = {
+					added: null,
+					updated: null,
+					removed: null
+				},
+					navContent = `<div class="col-12 col-lg-2 d-flex flex-column position-relative">`,
+					content = `<div class="col-12 col-lg-10" data-bs-spy="scroll" data-bs-target="#vcNavContent" tabindex="0" id="vcContent">`,
+					versions = [];
+
+				for (let c of data.changelogs) {
+					c.date = new Date(c.date).toLocaleString("default", {
+						month: "short",
+						day: "2-digit",
+						year: "numeric",
+					});
+
+					changelogTypes.forEach((type, index) => {
+						if (c.changelog[type] instanceof Array) {
+							changelog[type] = c.changelog[type].map((item) => {
+								return `${changelogBullets[index]} ${item}`;
+							}).join("\n\n");
+						}
+					});
+
+					versions.push(c.version.replaceAll(".", "_"));
+
+					content += `
+					<div class="card floating-header my-5 fs-6">
+						<div class="card-header border rounded d-flex flex-row align-items-center bg-body-tertiary" id="${c.version.replaceAll(".", "_")}">
+							${c["pre-release"] ? `<small class="me-3 d-flex flex-row align-items-center"><span class="badge rounded-pill bg-info text-dark">Pre-release</span></small>` : ``}
+							<h3 class="my-0">${c.version}</h3>
+						</div>
+
+						<div class="card-body text-start pt-5">
+							<div class="card-text d-flex flex-row mb-2">
+								<h4 class="my-auto me-2">${c.date}</h4>
+								<hr class="w-auto flex-grow-1">
+							</div>
+
+							${md().render(c.description)}
+							<br>
+
+							<div class="card-text d-flex flex-row mb-2">
+								<h4 class="my-auto me-2">Changelog</h4>
+								<hr class="w-auto flex-grow-1">
+							</div>
+
+							<div class="container-fluid">
+								${changelog.added ? `<h5 class="mt-2 mb-3">Added</h5>${md().render(changelog.added).replaceAll(/(\<p)(>)/g, "$1 class=\"my-0\"$2")}` : ``}
+								${changelog.updated ? `<h5 class="mt-2 mb-3">Updated</h5>${md().render(changelog.updated).replaceAll(/(\<p)(>)/g, "$1 class=\"my-0\"$2")}` : ``}
+								${changelog.removed ? `<h5 class="mt-2 mb-3">Removed</h5>${md().render(changelog.removed).replaceAll(/(\<p)(>)/g, "$1 class=\"my-0\"$2")}` : ``}
+							</div>
+						</div>
+
+						<div class="card-footer text-end">
+							<a href="${c.download}" class="btn btn-secondary" data-open-external>Release Page</a>
+							<a href="#top-vc" class="btn btn-primary d-block d-lg-none">Back to Top</a>
+						</div>
+					</div>
+					`;
+				}
+
+				navContent += `
+				<nav class="border border-light rounded bg-body-tertiary sticky-top posabs-vertical-middle mx-3 mt-4 p-3" id="vcNavContent">
+				`;
+				versions.forEach((v) => {navContent += `<a href="#${v}" class="btn btn-dark w-lg-100 mx-2 mx-lg-auto my-1">${v.replaceAll("_", ".")}</a>`;});
+				navContent += `
+				</nav>
+				`;
+
+				Swal.fire({
+					title: `<span id="top-vc">Version Changes</span>`,
+					html: `<div class="d-flex flex-column flex-lg-row">${navContent}</div>	${content}</div></div>`,
+					showDenyButton: false,
+					confirmButtonText: `Close`,
+					width: `75%`
+				});
+
+				bootstrap.ScrollSpy.getOrCreateInstance(`#vcContent`);
+			});
+
 		}
 	});
 }

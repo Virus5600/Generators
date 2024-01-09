@@ -52,3 +52,15 @@
 
 // Utilities
 @import "bootstrap/scss/utilities/api";
+
+// OVERRIDES
+code {
+	background-color: var(--bs-code-bg);
+	color: var(--bs-code-color);
+	padding: .2em .4em;
+	border-radius: 6px;
+}
+
+:root, * {
+	scroll-behavior: smooth;
+}
