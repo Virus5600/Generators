@@ -147,6 +147,7 @@ function initUpdater() {
 
 	ipcMain.on('restart-app', () => {
 		log.info('Restarting app to install updates');
+		orig_win.webContents.send('open-update-log');
 		autoUpdater.quitAndInstall();
 	});
 }

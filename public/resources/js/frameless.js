@@ -332,6 +332,80 @@ function updateFavicon(favicon) {
 	return (firstSuccess || secondSuccess);
 }
 
+function openUpdateLog() {
+	fetch("resources/modules/the-hub/assets/changelog.json").then((res) => {
+		return res.json();
+	}).then((data) => {
+		let c = data.changelogs[0];
+
+		const changelogTypes = ["added", "updated", "removed"],
+			changelogBullets = ["🟢", "🟡", "🔴"];
+
+		let changelog = {
+			added: null,
+			updated: null,
+			removed: null
+		},
+		content = ``;
+
+		c.date = new Date(c.date).toLocaleString("default", {
+			month: "short",
+			day: "2-digit",
+			year: "numeric",
+		});
+
+		changelogTypes.forEach((type, index) => {
+			if (c.changelog[type] instanceof Array) {
+				changelog[type] = c.changelog[type].map((item) => {
+					return `${changelogBullets[index]} ${item}`;
+				}).join("\n\n");
+			}
+		});
+
+		content += `
+		<div class="col-12 col-lg-10">
+			<div class="card floating-header my-5 fs-6">
+				<div class="card-header border rounded d-flex flex-row align-items-center bg-body-tertiary">
+					${c["pre-release"] ? `<small class="me-3 d-flex flex-row align-items-center"><span class="badge rounded-pill bg-info text-dark">Pre-release</span></small>` : ``}
+					<h3 class="my-0">${c.version}</h3>
+				</div>
+
+				<div class="card-body text-start pt-5">
+					<div class="card-text d-flex flex-row mb-2">
+						<h4 class="my-auto me-2">${c.date}</h4>
+						<hr class="w-auto flex-grow-1">
+					</div>
+
+					${md().render(c.description)}
+					<br>
+
+					<div class="card-text d-flex flex-row mb-2">
+						<h4 class="my-auto me-2">Changelog</h4>
+						<hr class="w-auto flex-grow-1">
+					</div>
+
+					<div class="container-fluid">
+						${changelog.added ? `<h5 class="mt-2 mb-3">Added</h5>${md().render(changelog.added).replaceAll(/(\<p)(>)/g, "$1 class=\"my-0\"$2")}` : ``}
+						${changelog.updated ? `<h5 class="mt-2 mb-3">Updated</h5>${md().render(changelog.updated).replaceAll(/(\<p)(>)/g, "$1 class=\"my-0\"$2")}` : ``}
+						${changelog.removed ? `<h5 class="mt-2 mb-3">Removed</h5>${md().render(changelog.removed).replaceAll(/(\<p)(>)/g, "$1 class=\"my-0\"$2")}` : ``}
+					</div>
+				</div>
+			</div>
+		</div>
+		`;
+
+		Swal.fire({
+			title: `Successfully Updated to ${c.version}!`,
+			html: content,
+			showDenyButton: false,
+			confirmButtonText: `Close`,
+			width: `75%`
+		});
+
+		localStorage.setItem(`openUpdateLog`, false);
+	});
+}
+
 // INITIALIZED CONFIGS IF NOT YET
 function initConfigs() {
 	let config = getConfigs(true);
@@ -358,6 +432,7 @@ function getConfigs(rawData = false) {
 			autoDownload: localStorage.getItem('autoDownload'),
 			checkForUpdates: localStorage.getItem('checkForUpdates'),
 			skipVersion: localStorage.getItem('skipVersion'),
+			openUpdateLog: localStorage.getItem('openUpdateLog'),
 		};
 	}
 
@@ -366,6 +441,7 @@ function getConfigs(rawData = false) {
 		autoDownload: localStorage.getItem('autoDownload') === 'true',
 		checkForUpdates: localStorage.getItem('checkForUpdates') === 'true',
 		skipVersion: localStorage.getItem('skipVersion'),
+		openUpdateLog: localStorage.getItem('openUpdateLog') === 'true',
 	};
 }
 
@@ -380,7 +456,7 @@ function updateCheck() {
 	// Error
 	ipcRenderer.on('update-error', (e, ...data) => {
 		console.error("Something went wrong\n", data[0]);
-		isManual = data[1];
+		let isManual = data[1];
 
 		Swal.fire({
 			title: 'Update Error',
@@ -498,6 +574,10 @@ function updateCheck() {
 				text: 'You are currently using the latest version of the application.',
 			});
 		}
+
+		if (getConfigs().openUpdateLog) {
+			openUpdateLog();
+		}
 	});
 
 	// Downloading Update
@@ -528,6 +608,13 @@ function updateCheck() {
 			if (result.isConfirmed)
 				ipcRenderer.send('restart-app');
 		});
+	});
+
+	// Sets the Update Log Frame to open after an update.
+	ipcRenderer.on('open-update-log', (e) => {
+		if (localStorage.getItem(`openUpdateLog`) === `false`) {
+			localStorage.setItem(`openUpdateLog`, true);
+		}
 	});
 
 	// Sends the request to the main process
