@@ -3,7 +3,7 @@
 	"version": "1.1.0-beta.1",
 	"description": "A series of mini-applications that all create a library of generator application",
 	"main": "main.js",
-	"license": "UNLICENSED",
+	"license": "MIT",
 	"private": true,
 	"author": {
 		"name": "Virus5600",
@@ -58,7 +58,6 @@
 		"resolve-url-loader": "^5.0.0",
 		"sass": "^1.60.0",
 		"sass-loader": "^13.2.1",
-		"semver": "^7.5.4",
 		"sweetalert2": "^10.16.9",
 		"textfit": "^2.4.0",
 		"webpack": "^5.76.3",
@@ -69,7 +68,8 @@
 		"electron-log": "^5.0.0",
 		"electron-reloader": "^1.2.3",
 		"electron-updater": "^5.3.0",
-		"markdown-it": "^14.0.0"
+		"markdown-it": "^14.0.0",
+		"semver": "^7.5.4"
 	},
 	"files": [
 		"!*",

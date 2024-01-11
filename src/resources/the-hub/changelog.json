@@ -87,29 +87,29 @@
 					"Removed the old Dragcheck script within DTRG code base"
 				]
 			},
-			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.2.0-beta"
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0-beta.5"
 		},
 		{
-			"version": "v1.1.1-beta",
+			"version": "v1.0.0-beta.4",
 			"pre-release": true,
 			"date": "2023-08-18",
 			"description": "Minor bug fixes",
 			"changelog": {
 				"updated": [
-					"Bumped version to v1.1.1-beta",
+					"Bumped version to v1.0.0-beta.4",
 					"Changed Sample Generated DTR from .txt file to a .js file module",
 					"Updated method of rendering the Sample Generated DTR",
 					"Updated `generatedDTR` component's callbacks",
 					"Fixed a bug wherein multiple instances of TUTORIAL can be created, resulting to a leftover popovers from the other TUTORIAL instances"
 				]
 			},
-			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.1-beta"
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0-beta.4"
 		},
 		{
-			"version": "v1.1.0-beta",
+			"version": "v1.0.0-beta.3",
 			"pre-release": true,
 			"date": "2023-08-17",
-			"description": "This build is in now moved to beta phase and can be considered as stable. However, as it is still in beta, all problems and bugs that may exists or be encountered shall be reported in order to release a hotfix or patch. Download at your own risk.",
+			"description": "The previously alpha version feature is in now moved to beta phase and can be considered as partially stable. However, as it is still in beta, all problems and bugs that may exists or be encountered shall be reported in order to release a hotfix or patch. Download at your own risk.",
 			"changelog": {
 				"added": [
 					"Added DTR Generator sub application",
@@ -139,10 +139,10 @@
 					"Removed `lint` script command from npm's `package.json` file"
 				]
 			},
-			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.0-beta"
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0-beta.3"
 		},
 		{
-			"version": "v1.0.1-alpha",
+			"version": "v1.0.0-beta.2",
 			"pre-release": true,
 			"date": "2023-04-03",
 			"description": "This build is in its alpha phase and thus may prove to be unstable. Download at your own risk.",
@@ -157,10 +157,10 @@
 					"Updated ReadMe"
 				]
 			},
-			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.1-alpha"
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0-beta.2"
 		},
 		{
-			"version": "v1.0.0-beta",
+			"version": "v1.0.0-beta.1",
 			"pre-release": true,
 			"date": "2023-04-03",
 			"description": "Initial Beta Release",
@@ -169,7 +169,7 @@
 					"Added String Generator"
 				]
 			},
-			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0-beta"
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0-beta.1"
 		}
 	]
 }

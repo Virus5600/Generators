@@ -317,7 +317,9 @@ function updateFavicon(favicon) {
 			win.setIcon(__dirname + favicon);
 		} catch (e) {
 			firstSuccess = false;
-			console.warn("First attempt to set icon failed\nUsing: " + favicon, e);
+
+			if (!ipcRenderer.sendSync('get-app-version'))
+				console.warn("First attempt to set icon failed\nUsing: " + favicon, e);
 		}
 
 		// Second Attempt
@@ -326,7 +328,9 @@ function updateFavicon(favicon) {
 		}
 	} catch (ex) {
 		secondSuccess = false;
-		console.warn("Second attempt to set icon failed\nUsing: " + favicon, ex);
+
+		if (!ipcRenderer.sendSync('get-app-version'))
+			console.warn("Second attempt to set icon failed\nUsing: " + favicon, ex);
 	}
 
 	return (firstSuccess || secondSuccess);
