@@ -103,6 +103,10 @@
 }
 
 #printContainer {
+	width: 790px;
+	min-width: 790px;
+	max-width: 790px;
+
 	size: A4 portrait;
 	padding: 0;
 	display: none;

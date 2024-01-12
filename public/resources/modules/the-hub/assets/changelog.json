@@ -1,6 +1,26 @@
 {
 	"changelogs": [
 		{
+			"version": "v1.1.0-beta.2",
+			"pre-release": true,
+			"date": "2024-01-12",
+			"description": "Milestone v1.1.0 is now officially at 84% completion. Issue [#21](https://github.com/Virus5600/Generators/issues/21) is still under review and will be checked once the next pre-release is uploaded. DTR Template Generator will then take the remaining unfinished part of the milestone.",
+			"changelog": {
+				"added": [
+					"Added feature in DTR Generator (DTRG) to now allow naming of these holidays. The fields only appear when a holiday is present in the form.",
+					"Added Privacy Policy page.",
+					"Added a button in the config frame to show changelogs."
+				],
+				"updated": [
+					"Bumped the release version to v1.1.0-beta.1. A beta version for the testing of the implemented features and fixes for the [v1.1.0 milestone](https://github.com/Virus5600/Generators/milestone/1).",
+					"Fixed the DTRG's reset button where when clicked, nothing happens.",
+					"Fixed a bug where the generated DTR isn't shown back after a tutorial when users start the tutorial after generating the DTR.",
+					"Updated the Update download progress bar's value from a very long decimal to a rounded integer."
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.0-beta.2"
+		},
+		{
 			"version": "v1.1.0-beta.1",
 			"pre-release": true,
 			"date": "2024-01-12",
@@ -14,7 +34,8 @@
 				"updated": [
 					"Bumped the release version to v1.1.0-beta.1. A beta version for the testing of the implemented features and fixes for the [v1.1.0 milestone](https://github.com/Virus5600/Generators/milestone/1).",
 					"Fixed the DTRG's reset button where when clicked, nothing happens.",
-					"Fixed a bug where the generated DTR isn't shown back after a tutorial when users start the tutorial after generating the DTR."
+					"Fixed a bug where the generated DTR isn't shown back after a tutorial when users start the tutorial after generating the DTR.",
+					"Updated the Update download progress bar's value from a very long decimal to a rounded integer."
 				]
 			},
 			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.0-beta.1"

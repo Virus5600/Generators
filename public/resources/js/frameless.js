@@ -400,7 +400,7 @@ function openUpdateLog() {
 
 		Swal.fire({
 			title: `Successfully Updated to ${c.version}!`,
-			html: content,
+			html: content.replaceAll(/(\<a.+".+")(\>)/gi, "$1 data-open-external$2"),
 			showDenyButton: false,
 			confirmButtonText: `Close`,
 			width: `75%`

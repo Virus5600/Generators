@@ -491,7 +491,7 @@ const TUTORIAL = {
 			title: `Optional Configurations`,
 			content: `These are optional configurations that can be applied to the DTR. An example would be the "Duplicate DTR" option which duplicates the DTR, allowing for two identical DTRs in a single page instead of the usual two different DTRs in a single page.`
 		},
-		"#holidayNames": {
+		"#holidayNamesArea": {
 			title: `Holiday Names`,
 			content: `If a date is marked as a holiday, a text field will pop here. This text field will allow you to provide an optional name of the said holiday.`
 		},
