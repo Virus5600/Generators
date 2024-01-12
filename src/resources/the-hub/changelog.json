@@ -1,6 +1,25 @@
 {
 	"changelogs": [
 		{
+			"version": "v1.1.0-beta.1",
+			"pre-release": true,
+			"date": "2024-01-12",
+			"description": "This update will be bringing in some new features and fixes/improvements for the DTR Generator.\n\nA new privacy policy page is also added with contents being generated from a Privacy Policy Generator (commit f3048e1) which can be accessed in *The Hub*.\n\nThe Tutorial is also now mandatory for first time users and will trigger immediately when the app is opened for the first time. This also now allows the use of Tutorial in all sub-application after including it as a dependency for the `frameless` script.",
+			"changelog": {
+				"added": [
+					"Added feature in DTR Generator (DTRG) to now allow naming of these holidays. The fields only appear when a holiday is present in the form.",
+					"Added Privacy Policy page.",
+					"Added a button in the config frame to show changelogs"
+				],
+				"updated": [
+					"Bumped the release version to v1.1.0-beta.1. A beta version for the testing of the implemented features and fixes for the [v1.1.0 milestone](https://github.com/Virus5600/Generators/milestone/1).",
+					"Fixed the DTRG's reset button where when clicked, nothing happens.",
+					"Fixed a bug where the generated DTR isn't shown back after a tutorial when users start the tutorial after generating the DTR."
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.0-beta.1"
+		},
+		{
 			"version": "v1.0.2",
 			"pre-release": false,
 			"date": "2023-11-29",
@@ -61,7 +80,7 @@
 			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0"
 		},
 		{
-			"version": "v1.2.0-beta",
+			"version": "v1.0.0-beta.5",
 			"pre-release": true,
 			"date": "2023-11-16",
 			"description": "Addressed some user-side issues and implemented some new dev-side features that will help sub-app integrations.",

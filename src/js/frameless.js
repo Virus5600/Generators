@@ -589,6 +589,7 @@ function updateCheck() {
 		console.log('Downloading update...', data);
 
 		if (Swal.getPopup() != null) {
+			let progress = Math.round(data.percent);
 			Swal.update({
 				html: `<div class="progress" role="progressbar" aria-label="Download Progress" aria-valuenow="${data.percent}" aria-valuemin="0" aria-valuemax="100">
 					<div class="progress-bar progress-bar-striped progress-bar-animated" style="width: ${data.percent}%;">${data.percent}%</div>
@@ -616,6 +617,8 @@ function updateCheck() {
 
 	// Sets the Update Log Frame to open after an update.
 	ipcRenderer.on('open-update-log', (e) => {
+		localStorage.removeItem(`skipVersion`);
+
 		if (localStorage.getItem(`openUpdateLog`) === `false`) {
 			localStorage.setItem(`openUpdateLog`, true);
 		}
@@ -710,7 +713,7 @@ function initEventListeners() {
 
 						<div class="card-footer text-end">
 							<a href="${c.download}" class="btn btn-secondary" data-open-external>Release Page</a>
-							<a href="#top-vc" class="btn btn-primary d-block d-lg-none">Back to Top</a>
+							<a href="#top-vc" class="btn btn-primary d-inline-block d-lg-none">Back to Top</a>
 						</div>
 					</div>
 					`;
@@ -726,7 +729,7 @@ function initEventListeners() {
 
 				Swal.fire({
 					title: `<span id="top-vc">Version Changes</span>`,
-					html: `<div class="d-flex flex-column flex-lg-row">${navContent}</div>	${content}</div></div>`,
+					html: `<div class="d-flex flex-column flex-lg-row">${navContent}</div>	${content.replaceAll(/(\<a.+".+")(\>)/gi, "$1 data-open-external$2")}</div></div>`,
 					showDenyButton: false,
 					confirmButtonText: `Close`,
 					width: `75%`
