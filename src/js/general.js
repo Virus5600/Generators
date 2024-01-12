@@ -13,5 +13,5 @@ require("./libs/swal");
 require("./libs/fontawesome");
 
 window.addEventListener("run-tutorial", (e) => {
-	Tutorial.start(e.detail.steps);
+	Tutorial.start(e.detail.steps, e.detail.options);
 });

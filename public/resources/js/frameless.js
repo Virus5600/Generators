@@ -185,7 +185,7 @@ function init() {
 				});
 			}
 			else {
-				runTutorial()
+				runTutorial();
 			}
 		});
 	}
@@ -224,7 +224,8 @@ function init() {
 	initEventListeners();
 
 	// Auto Updater - Detects whether there's an update or not
-	updateCheck();
+	if (localStorage.getItem(`tutorial.hub`) === `true`)
+		updateCheck();
 
 	// Add listener to all [data-open-external] anchor tags
 	initOpenExternal();
@@ -776,7 +777,21 @@ window.addEventListener('open-external', openExternal);
 function runTutorial() {
 	window.dispatchEvent(new CustomEvent('run-tutorial', {
 		detail: {
-			steps: tutorial.stepsDir
+			steps: tutorial.stepsDir,
+			options: {
+				arrowBtns: false,
+				arrow: {
+					left: `Prev`,
+					right: `Next`,
+				},
+				includePrev: false,
+				callbacks: {
+					start: null,
+					end: () => {
+						updateCheck();
+					}
+				}
+			}
 		}
 	}));
 }
