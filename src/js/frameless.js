@@ -591,8 +591,8 @@ function updateCheck() {
 		if (Swal.getPopup() != null) {
 			let progress = Math.round(data.percent);
 			Swal.update({
-				html: `<div class="progress" role="progressbar" aria-label="Download Progress" aria-valuenow="${data.percent}" aria-valuemin="0" aria-valuemax="100">
-					<div class="progress-bar progress-bar-striped progress-bar-animated" style="width: ${data.percent}%;">${data.percent}%</div>
+				html: `<div class="progress" role="progressbar" aria-label="Download Progress" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">
+					<div class="progress-bar progress-bar-striped progress-bar-animated" style="width: ${progress}%;">${progress}%</div>
 				</div>`
 			});
 		}
