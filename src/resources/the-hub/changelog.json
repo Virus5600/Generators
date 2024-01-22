@@ -1,6 +1,34 @@
 {
 	"changelogs": [
 		{
+			"version": "v1.1.0-beta.4",
+			"pre-release": true,
+			"date": "2024-01-22",
+			"description": "Quick patch to the missing changelog, resulting to v1.1.0-beta.2 changelog's contents being shown in place of v1.1.0-beta.3 changelog. A further version checker fix is also implemented which will be handy in the future to allow versions from here forth to detect if the user has downgraded to this version and let the auto-updater function correctly.",
+			"changelog": {
+				"added": [
+					"Added the v1.1.0-beta.3's changelog to the changelog list."
+				],
+				"updated": [
+					"Bumped the release version to v1.1.0-beta.4.",
+					"Updated the conditional statement to the version identifier, automatically updating the stored version of the app to the current version if they are different."
+				]
+			}
+		},
+		{
+			"version": "v1.1.0-beta.3",
+			"pre-release": true,
+			"date": "2024-01-22",
+			"description": "More Patches for some issues related on startup and when saving preferences.",
+			"changelog": {
+				"updated": [
+					"Bumped the release version to v1.1.0-beta.3.",
+					"Fixed an issue in the update checker where it might run even if its inside other sub-applications.",
+					"Fixed illogical logical conditional statement."
+				]
+			}
+		},
+		{
 			"version": "v1.1.0-beta.2",
 			"pre-release": true,
 			"date": "2024-01-12",

@@ -426,7 +426,8 @@ function initConfigs() {
 		localStorage.setItem('autoDownload', false);
 	if (config.checkForUpdates === null)
 		localStorage.setItem('checkForUpdates', true);
-	if (config.skipVersion === null)
+
+	if (config.skipVersion === null || semver.eq(config.skipVersion, ipcRenderer.sendSync('get-app-version')))
 		localStorage.setItem('skipVersion', ipcRenderer.sendSync('get-app-version'));
 }
 
