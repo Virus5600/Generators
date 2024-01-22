@@ -5,6 +5,8 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta http-equiv="Content-Language" content="en-US" />
+		<meta property="shortname" content="hub">
+		<meta property="tutorial-steps" content="resources/modules/the-hub/assets/tutorial.json">
 
 		<!-- Libraries -->
 		<link rel="stylesheet" href="resources/css/general.css">
@@ -21,12 +23,44 @@
 
 	<body class="min-vh-100 d-flex flex-column custom-scrollbar apply-to-all" data-bs-theme="dark">
 
+		<!-- Main Body -->
 		<main>
+			<!-- The Hub -->
+			<div class="container-fluid my-3 py-3">
+				<div class="card floating-header">
+					<h3 class="card-header header-center border rounded bg-body-tertiary d-flex align-items-center" id="page-title">
+						<img src="resources/modules/the-hub/assets/favicon.png" alt="The Hub" class="img-fluid me-2" draggable="false">
+						The Hub
+					</h3>
+
+					<div class="card-body">
+						<h5 class="card-text text-center">
+							Welcome to <em>The Hub</em>, where all Generators' sub-applications
+							are located.
+						</h5>
+
+						<p class="card-text text-indent-3">
+							Generators is a collection of web applications that are designed to
+							help you with your daily tasks. Some may not be that useful all the
+							time even. But, it's still a good thing to have them around since you
+							may never know when you'll need them.
+						</p>
+
+						<p class="card-text text-indent-3">
+							You can also find the <a href="About/index.html">About</a> page here
+							if ever you want to know more about the project and the developer.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Generator Sub Applications -->
 			<div class="container-fluid my-3 d-flex flex-column flex-grow-1 h-100">
-				<app-category data-category="Generator" data-add-class="my-3">
+				<app-category data-category="Generator" data-add-title-class="header-center border rounded bg-body-tertiary" data-add-class="floating-header my-3">
 					<sub-application
 						data-title="String Generator"
 						data-desc="Generates random strings"
+						data-id="str-gen"
 						data-img="resources/modules/string-gen/assets/favicon.png"
 						data-link="String Generator/index.html"
 						/>
@@ -34,6 +68,7 @@
 					<sub-application
 						data-title="Daily Time Record (DTR) Generator"
 						data-desc="Helps generate a DTR easily"
+						data-id="dtr-gen"
 						data-img="resources/modules/dtr-gen/assets/favicon.png"
 						data-link="DTR Generator/index.html"
 						/>
@@ -48,10 +83,19 @@
 			</div>
 		</main>
 
+		<!-- Footer -->
 		<footer class="navbar navbar-expand bg-body-tertiary mt-auto ">
-			<div class="container-fluid">
-				<ul class="navbar-nav">
-					<li class="nav-item"><a href="About/index.html" class="nav-link">About</a></li>
+			<div class="container-fluid justify-content-between">
+				<ul class="navbar-nav w-50">
+					<li class="nav-item">
+						<a href="About/index.html" class="nav-link">About</a>
+					</li>
+				</ul>
+
+				<ul class="navbar-nav w-50 flex-row-reverse">
+					<li class="nav-item">
+						<a href="Privacy Policy/index.html" class="nav-link">Privacy Policy</a>
+					</li>
 				</ul>
 			</div>
 		</footer>

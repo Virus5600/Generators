@@ -1,0 +1,243 @@
+{
+	"changelogs": [
+		{
+			"version": "v1.1.0-beta.4",
+			"pre-release": true,
+			"date": "2024-01-22",
+			"description": "Quick patch to the missing changelog, resulting to v1.1.0-beta.2 changelog's contents being shown in place of v1.1.0-beta.3 changelog. A further version checker fix is also implemented which will be handy in the future to allow versions from here forth to detect if the user has downgraded to this version and let the auto-updater function correctly.",
+			"changelog": {
+				"added": [
+					"Added the v1.1.0-beta.3's changelog to the changelog list."
+				],
+				"updated": [
+					"Bumped the release version to v1.1.0-beta.4.",
+					"Updated the conditional statement to the version identifier, automatically updating the stored version of the app to the current version if they are different."
+				]
+			}
+		},
+		{
+			"version": "v1.1.0-beta.3",
+			"pre-release": true,
+			"date": "2024-01-22",
+			"description": "More Patches for some issues related on startup and when saving preferences.",
+			"changelog": {
+				"updated": [
+					"Bumped the release version to v1.1.0-beta.3.",
+					"Fixed an issue in the update checker where it might run even if its inside other sub-applications.",
+					"Fixed illogical logical conditional statement."
+				]
+			}
+		},
+		{
+			"version": "v1.1.0-beta.2",
+			"pre-release": true,
+			"date": "2024-01-12",
+			"description": "Milestone v1.1.0 is now officially at 84% completion. Issue [#21](https://github.com/Virus5600/Generators/issues/21) is still under review and will be checked once the next pre-release is uploaded. DTR Template Generator will then take the remaining unfinished part of the milestone.",
+			"changelog": {
+				"added": [
+					"Added feature in DTR Generator (DTRG) to now allow naming of these holidays. The fields only appear when a holiday is present in the form.",
+					"Added Privacy Policy page.",
+					"Added a button in the config frame to show changelogs."
+				],
+				"updated": [
+					"Bumped the release version to v1.1.0-beta.1. A beta version for the testing of the implemented features and fixes for the [v1.1.0 milestone](https://github.com/Virus5600/Generators/milestone/1).",
+					"Fixed the DTRG's reset button where when clicked, nothing happens.",
+					"Fixed a bug where the generated DTR isn't shown back after a tutorial when users start the tutorial after generating the DTR.",
+					"Updated the Update download progress bar's value from a very long decimal to a rounded integer."
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.0-beta.2"
+		},
+		{
+			"version": "v1.1.0-beta.1",
+			"pre-release": true,
+			"date": "2024-01-12",
+			"description": "This update will be bringing in some new features and fixes/improvements for the DTR Generator.\n\nA new privacy policy page is also added with contents being generated from a Privacy Policy Generator (commit f3048e1) which can be accessed in *The Hub*.\n\nThe Tutorial is also now mandatory for first time users and will trigger immediately when the app is opened for the first time. This also now allows the use of Tutorial in all sub-application after including it as a dependency for the `frameless` script.",
+			"changelog": {
+				"added": [
+					"Added feature in DTR Generator (DTRG) to now allow naming of these holidays. The fields only appear when a holiday is present in the form.",
+					"Added Privacy Policy page.",
+					"Added a button in the config frame to show changelogs"
+				],
+				"updated": [
+					"Bumped the release version to v1.1.0-beta.1. A beta version for the testing of the implemented features and fixes for the [v1.1.0 milestone](https://github.com/Virus5600/Generators/milestone/1).",
+					"Fixed the DTRG's reset button where when clicked, nothing happens.",
+					"Fixed a bug where the generated DTR isn't shown back after a tutorial when users start the tutorial after generating the DTR.",
+					"Updated the Update download progress bar's value from a very long decimal to a rounded integer."
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.0-beta.1"
+		},
+		{
+			"version": "v1.0.2",
+			"pre-release": false,
+			"date": "2023-11-29",
+			"description": "More Patches for some issues related on startup and when saving preferences\n\nFor manual downloads, feel free to visit this link:\n[https://github.com/Virus5600/Generators/releases/tag/v1.0.2](https://github.com/Virus5600/Generators/releases/tag/v1.0.2)\n\nFor the changelog of developers, please see the commit changes in GitHub:\n[`v1.0.1...v1.0.2`](https://github.com/Virus5600/Generators/compare/v1.0.1...v1.0.2)",
+			"changelog": {
+				"updated": [
+					"Bumped the release version to v1.0.2",
+					"Fixed an issue where on startup, an error is thrown",
+					"Fixed an issue where preferences cannot be saved and is throwing a hidden error."
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.2"
+		},
+		{
+			"version": "v1.0.1",
+			"pre-release": false,
+			"description": "Patched some issues and fixed the never-ending Auto Update pop-up. Various additions for troubleshooting potential crashes and user customization.\nFor manual downloads, feel free to visit this link:\n[https://github.com/Virus5600/Generators/releases/tag/v1.0.1](https://github.com/Virus5600/Generators/releases/tag/v1.0.1)\n\nFor the changelog of developers, please see the commit changes in GitHub:\n[`v1.0.0...v1.0.1`](https://github.com/Virus5600/Generators/compare/v1.0.0...v1.0.1)",
+			"date": "2023-11-20",
+			"changelog": {
+				"added": [
+					"Added a logger to create a log file that could be used when troubleshooting problems or even crashes.",
+					"Added a footer at *The Hub* where some application information will be displayed.",
+					"Added a popup after clicking the \"Check for Updates\" button in the config, which asks whether to include the skipped version or not."
+				],
+				"updated": [
+					"Bumped the release version to v1.0.1",
+					"Normalized the base design of the sub applications within *The Hub*.",
+					"Fixed the Update/Reset config message popup to now be dismissible by clicking outside the said popup or by pressing the `Esc` key.",
+					"Changed the Auto Updater's behavior to now respect the \"Later\" option. They now don't popup every time you load the sub-applications or when going back to *The Hub* after saying \"Later\".",
+					"Fixed an issue where when downloading the update and progress popup is closed, the dev tools is spammed with warnings from the library.",
+					"Fixed an issue with the Copy-To-Clipboard script where it uses the \"all\" version resulting to the dark theme being overridden."
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.1"
+		},
+		{
+			"version": "v1.0.0",
+			"pre-release": false,
+			"date": "2023-11-18",
+			"description": "The official release of Generators application! I'm proud to announce that the application is finally stable enough to be released and used!",
+			"changelog": {
+				"added": [
+					"Added the Semver NPM package",
+					"Added the `*app-update.yml` generator file for the app to counter an issue where the said file does not generate automatically",
+					"Added a node script that renames the artifact name to identify whether the build being built is an installer or portable",
+					"Added Sweet Alert 2's dark theme"
+				],
+				"updated": [
+					"Updated to the release version v1.0.0",
+					"Updated some NPM scripts which allows easier building and deployment of the app",
+					"Updated the default app's artifact name to easily distinguish what kind of build is being built",
+					"Updated the main entry point to now include the unresponsive auto updater",
+					"Improved some of the auto updater event listeners",
+					"Updated the frameless handler script to now handle the auto update events properly and relay them to their users in an understandable fashion",
+					"Updated `MessageBag`'s `first()` method to now return the very first message of the entire class if no parameter are passed"
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0"
+		},
+		{
+			"version": "v1.0.0-beta.5",
+			"pre-release": true,
+			"date": "2023-11-16",
+			"description": "Addressed some user-side issues and implemented some new dev-side features that will help sub-app integrations.",
+			"changelog": {
+				"added": [
+					"Added `readme.md`s in String Generator, DTR Generator (DTRG), and \"The Hub\"",
+					"Added sub-application integrator script for \"The Hub\"",
+					"Added the Second Verifier area in compliance with issue [#5](https://github.com/Virus5600/Generators/issues/5)",
+					"Added an `Esc` key function to the tutorial which allows users to exit the Tutorial mode in DTRG",
+					"Added `textFit` as dependency, which allows long names and positions to fit within their respective cells when using the 2nd Verifier Option"
+				],
+				"updated": [
+					"Updated to v1.2.0-beta",
+					"Updated sub-application's HTML code in \"The Hub\" to now utilize the Sub-Application Integrator (SAI) script",
+					"Updated some styling to properly implement the sub-application derived from SAI",
+					"Updated Validator library in respect to issue [#5](https://github.com/Virus5600/Generators/issues/5), along with a new rule named as `required_if`.",
+					"Fixed some issues residing within other rules of the Validator library such as a null unsafe lines which results to either a `null` value or `undefined` value in a message or cleansed values or at worst case, throwing errors",
+					"Updated some Tutorial description in DTRG after the implementation of features from issues [#5](https://github.com/Virus5600/Generators/issues/5), [#6](https://github.com/Virus5600/Generators/issues/6), and [#7](https://github.com/Virus5600/Generators/issues/7)",
+					"Fixed a highlighting issue in Tutorial where a remnant of the last Tutorial is not removed when exiting via the `Esc` key",
+					"Fixed a visual glitch or error where a line is visible on the bottom of the page when saving the DTR"
+				],
+				"removed": [
+					"Removed the old Dragcheck script within DTRG code base"
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0-beta.5"
+		},
+		{
+			"version": "v1.0.0-beta.4",
+			"pre-release": true,
+			"date": "2023-08-18",
+			"description": "Minor bug fixes",
+			"changelog": {
+				"updated": [
+					"Bumped version to v1.0.0-beta.4",
+					"Changed Sample Generated DTR from .txt file to a .js file module",
+					"Updated method of rendering the Sample Generated DTR",
+					"Updated `generatedDTR` component's callbacks",
+					"Fixed a bug wherein multiple instances of TUTORIAL can be created, resulting to a leftover popovers from the other TUTORIAL instances"
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0-beta.4"
+		},
+		{
+			"version": "v1.0.0-beta.3",
+			"pre-release": true,
+			"date": "2023-08-17",
+			"description": "The previously alpha version feature is in now moved to beta phase and can be considered as partially stable. However, as it is still in beta, all problems and bugs that may exists or be encountered shall be reported in order to release a hotfix or patch. Download at your own risk.",
+			"changelog": {
+				"added": [
+					"Added DTR Generator sub application",
+					"Added transition utility styling",
+					"Added MIT License",
+					"Added DragCheck script, which will be tested and improved upon, leading to its movement to the global scope",
+					"Added a new local Tutorial script for the DTR Generator, which will be tested and improved upon, leading to its movement to the global scope"
+				],
+				"updated": [
+					"Updated README for the application",
+					"Refactored some documentations from the Validator module",
+					"Updated Bootstrap from version 4.6 to version 5.3",
+					"Minor style tweak to \"Go back\" links",
+					"Updated webpack's target directories",
+					"Updated webpack's copy directories",
+					"Updated CTC (Cope-To-Clipboard) to now include Sweet Alert 2 on its instance if the said library isn't present",
+					"Updated color utility to now include all the present colors in Bootstrap 5",
+					"Improved warning message from failed Favicon update",
+					"Updated a validation rule wherein `Nullable` fails to stop the validation of its input regardless of its condition",
+					"Updated Bootstrap's JavaScript `require` on webpack to allow usage of Bootstrap 5 plugins",
+					"Updated git's ignore list to accommodate the renamed output directory from \"out\" to \"dist\""
+				],
+				"removed": [
+					"Removed unused script",
+					"Removed Bootstrap forevolve dark theme",
+					"Removed \"Animate CSS\" comment from all comments as the said package isn't present",
+					"Removed `lint` script command from npm's `package.json` file"
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0-beta.3"
+		},
+		{
+			"version": "v1.0.0-beta.2",
+			"pre-release": true,
+			"date": "2023-04-03",
+			"description": "This build is in its alpha phase and thus may prove to be unstable. Download at your own risk.",
+			"changelog": {
+				"added": [
+					"Added `index.js` for the main application script",
+					"Added electron updater and updater scripts for the main application"
+				],
+				"updated": [
+					"Updated git ignore to ignore a sensitive file",
+					"Bumped version to 1.0.1-alpha",
+					"Updated ReadMe"
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0-beta.2"
+		},
+		{
+			"version": "v1.0.0-beta.1",
+			"pre-release": true,
+			"date": "2023-04-03",
+			"description": "Initial Beta Release",
+			"changelog": {
+				"added": [
+					"Added String Generator"
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.0.0-beta.1"
+		}
+	]
+}

@@ -1,0 +1,88 @@
+@use "_variables" as vs5p;
+
+:root {
+	--vs5-popover-background-color: #2b3035;
+	--vs5-popover-border-color: #{lighten(#2b3035, 10%)};
+	--vs5-popover-border-width: 1px;
+	--vs5-popover-arrow-height: .5rem;
+	--vs5-popover-arrow-width: 1rem;
+
+	--vs5-popover-x: 0;
+	--vs5-popover-y: 0;
+
+	@each $target, $props in vs5p.$var {
+		@each $key, $value in $props {
+			--vs5p-popover-#{$target}-#{$key}: #{$value};
+		}
+	}
+}
+
+.vs5-popover-popover {
+	@each $key, $value in map-get(vs5p.$var, "popover") {
+		#{$key}: var(--vs5p-popover-popover-#{$key}, $value);
+	}
+
+	left: var(--vs5-popover-x, 0);
+	top: var(--vs5-popover-y, 0);
+
+	.vs5-popover-arrow {
+		@each $key, $value in map-get(vs5p.$var, "arrow") {
+			#{$key}: var(--vs5p-popover-arrow-#{$key}, $value);
+		}
+	}
+
+	@each $dir, $props in vs5p.$arrowDir {
+		&.vs5-popover-arrow-#{$dir},
+		&[data-vs5-popover-dir="#{$dir}"] {
+			.vs5-popover-arrow {
+				@each $key, $value in $props {
+					#{$key}: #{$value};
+				}
+
+				&::before,
+				&::after {
+					position: absolute;
+					bottom: 0;
+					content: "";
+				}
+
+				&::before {
+					@each $key, $value in map-get(map-get(vs5p.$arrowPseudoDir, $dir), "before") {
+						#{$key}: #{$value};
+					}
+				}
+
+				&::after {
+					@each $key, $value in map-get(map-get(vs5p.$arrowPseudoDir, $dir), "after") {
+						#{$key}: #{$value};
+					}
+				}
+			}
+		}
+	}
+
+	.vs5-popover-header {
+		@each $key, $value in map-get(vs5p.$var, "header") {
+			#{$key}: var(--vs5p-popover-header-#{$key}, $value);
+		}
+
+		.vs5-popover-title {
+			@each $key, $value in map-get(vs5p.$var, "title") {
+				#{$key}: var(--vs5p-popover-title-#{$key}, $value);
+			}
+		}
+
+		.vs5-popover-close {
+			@each $key, $value in map-get(vs5p.$var, "close") {
+				#{$key}: var(--vs5p-popover-close-#{$key}, $value);
+			}
+		}
+	}
+
+	.vs5-popover-body {
+		@each $key, $value in map-get(vs5p.$var, "body") {
+			#{$key}: var(--vs5p-popover-body-#{$key}, $value);
+		}
+	}
+}
+// TODO: Implement Popover Arrow, design, and positioning

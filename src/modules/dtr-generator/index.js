@@ -2,6 +2,7 @@
 import UniqueArray from "../../js/util/unique-array/unique-array.mod.js";
 import SwalFlash from "../../js/util/swal-flash/swal-flash.mod.js";
 import Dragcheck from "../../js/util/dragcheck/dragcheck.mod.js";
+import Tutorial from "../../js/util/tutorial.js/Tutorial.js";
 import jsPDF from "jspdf";
 
 // HTML2PDF Libs
@@ -33,6 +34,7 @@ const DTR = {
 		duplicateDTR: false,
 	},
 	list: [],
+	session: null,
 	displayContent(e) {
 		DTR.reset();
 
@@ -76,8 +78,11 @@ const DTR = {
 				<div class="dtr-cell text-end px-1">${i}</div>
 			`;
 			if (date.attr('name').match(/holiday\[\]/)) {
+				let holidayName = $(`[name="holidayName[]"][data-date="${i}"]`).val();
+				holidayName = holidayName.length > 0 ? holidayName : "HOLIDAY";
+
 				dates += `
-					<div class="dtr-cell dtr-cell-5 border border-secondary small holiday">HOLIDAY</div>
+					<div class="dtr-cell dtr-cell-5 border border-secondary small holiday">${holidayName.toUpperCase()}</div>
 				`;
 			}
 			else {
@@ -417,15 +422,38 @@ const DTR = {
 	},
 	generateTutorial(target, end = false) {
 		if (end) {
-			target.html(``);
+			target.html(DTR.session);
 			return;
 		}
+		else {
+			target.html(DTR_SAMPLE);
+		}
+	},
+	saveSession() {
+		DTR.session = $(`#generatedDTR`).html();
+	},
+	restoreSession() {
+		if (DTR.session != null) {
+			$(`#generatedDTR`).html(DTR.session);
 
-		target.prepend(DTR_SAMPLE);
+			DTR.session = null;
+		}
+	},
+	resetSession() {
+		$(`#generatedDTR`).html(``);
+		DTR.session = null;
 	}
 };
 
 const TUTORIAL = {
+	options: {
+		arrowBtns: true,
+		arrow: {
+			left: `◀`,
+			right: `▶`,
+		},
+		includePrev: true
+	},
 	components: {
 		"#jobOrderArea": {
 			title: `Insert List of Job Orders`,
@@ -459,9 +487,39 @@ const TUTORIAL = {
 			title: `Select the Dates`,
 			content: `Select all the dates that falls within the provided <code>period</code>. These dates will reflect upon the DTR template and show that these are the days that the employees worked.<br><br>Do note that <code>left click</code>s assigns them as regular dates and <code>right click</code>s assigns them as a holiday.`
 		},
+		"#optionalConfigsArea": {
+			title: `Optional Configurations`,
+			content: `These are optional configurations that can be applied to the DTR. An example would be the "Duplicate DTR" option which duplicates the DTR, allowing for two identical DTRs in a single page instead of the usual two different DTRs in a single page.`
+		},
+		"#holidayNamesArea": {
+			title: `Holiday Names`,
+			content: `If a date is marked as a holiday, a text field will pop here. This text field will allow you to provide an optional name of the said holiday.`
+		},
 		"#dtrSample": {
 			title: `Preview the General Template`,
-			content: `Every time the selected <code>dates</code> changes, this DTR template will update and reflect what a generated one will look like.`
+			content: `Every time the selected <code>dates</code> changes, this DTR template will update and reflect what a generated one will look like.`,
+			callbackInit: () => {
+				setTimeout(
+					() => {
+						let target = $(`#dtrSample`)
+						target.css(`scroll-margin-top`, `1rem`);
+
+						target[0].scrollIntoView({
+							behavior: `auto`,
+							block: `start`,
+							inline: `center`
+						});
+
+						setTimeout(
+							() => {
+								window.scrollTo(window.scrollX, target[0].offsetTop - 175);
+							},
+							500
+						);
+					},
+					500
+				);
+			},
 		},
 		"#dtrGenFooter": {
 			title: `Generator Controls`,
@@ -477,6 +535,7 @@ const TUTORIAL = {
 			title: `Print Preview`,
 			content: `Once the <code>Generate</code> button is pressed and successful on it, the preview for the said DTR will be shown here.<br> The preview allows individual DTR editing to allow changes to the time and days they are present, allowing flexibility to time changes and absences.`,
 			callbackInit: () => {
+				DTR.saveSession();
 				DTR.generate(true);
 				setTimeout(
 					() => {
@@ -501,121 +560,9 @@ const TUTORIAL = {
 			},
 			callbackEnd: () => {
 				DTR.generate(true, true);
+				DTR.restoreSession();
 			}
 		}
-	},
-	index: 0,
-	previous: "null",
-	previousPopover: null,
-	instantiated: false,
-	init() {
-		let body = $(`body`);
-		let backdrop = `
-		<div class="backdrop" id="tutorial-backdrop">
-			<div class="mt-auto me-auto mb-3 ms-3">
-				<span class="d-block">Press <code>Esc</code> to exit tutorial...</span>
-				<span class="d-block">Click anywhere outside the popup to proceed...</span>
-			</div>
-		</div>`;
-
-		body.find(`.backdrop`).remove();
-
-		body.addClass(`highlight`)
-			.append(backdrop);
-
-		if (TUTORIAL.instantiated)
-			return;
-
-		TUTORIAL.instantiated = true;
-		TUTORIAL.iterate(0);
-	},
-	iterate(index) {
-		const key = Object.keys(TUTORIAL.components)[index++];
-		const obj = TUTORIAL.components[key];
-
-		if (Object.keys(obj).includes(`callbackInit`)) {
-			obj.callbackInit();
-		}
-
-		const overlay = `<div class="overlay" id="tutorial-overlay"></div>`
-
-		if (TUTORIAL.previous != null &&
-			TUTORIAL.previous?.length > 0) {
-			$(TUTORIAL.previous).find(`#tutorial-overlay`)
-				.remove();
-		}
-		let popoverElem = $(key).addClass(`position-relative target`)
-			.attr(`role`, `button`)
-			.attr(`data-bs-selector`, key)
-			.attr(`data-bs-html`, `true`)
-			.attr(`data-bs-placement`, `top`)
-			.attr(`data-bs-toggle`, `popover`)
-			.attr(`data-bs-trigger`, `focus`)
-			.attr(`data-bs-title`, obj.title ?? key)
-			.attr(`data-bs-content`, obj.content ?? key)
-			.append(overlay);
-
-			popoverElem[0].scrollIntoView({
-				behavior: `auto`,
-				block: `center`,
-				inline: `center`
-			});
-
-		let popover = new bootstrap.Popover(popoverElem[0]);
-		popover.show();
-
-		TUTORIAL.index = index;
-		TUTORIAL.previous = key;
-		TUTORIAL.previousPopover = popover;
-	},
-	next() {
-		const keyLen = Object.keys(TUTORIAL.components).length;
-		let prevObj = TUTORIAL.components[TUTORIAL.previous];
-
-		if (Object.keys(prevObj).includes(`callbackEnd`)) {
-			prevObj.callbackEnd();
-		};
-
-		let previous = $(TUTORIAL.previous);
-		previous.removeClass(`position-relative target`)
-			.removeAttr(`role`)
-			.removeAttr(`data-bs-html`)
-			.removeAttr(`data-bs-placement`)
-			.removeAttr(`data-bs-toggle`)
-			.removeAttr(`data-bs-trigger`)
-			.removeAttr(`data-bs-title`)
-			.removeAttr(`data-bs-content`)
-			.find(`#tutorial-overlay`)
-			.remove();
-
-		if (TUTORIAL.previousPopover != null) {
-			TUTORIAL.previousPopover.dispose();
-			TUTORIAL.previousPopover = null;
-		}
-
-		if (TUTORIAL.index >= keyLen) {
-			TUTORIAL.end();
-			return;
-		}
-
-		TUTORIAL.iterate(TUTORIAL.index);
-	},
-	end() {
-		if (TUTORIAL.previousPopover != null) {
-			TUTORIAL.previousPopover.dispose();
-			TUTORIAL.previousPopover = null;
-		}
-
-		$(TUTORIAL.previous).removeClass(`target`);
-
-		TUTORIAL.index = null;
-		TUTORIAL.previous = 0;
-		TUTORIAL.previousPopover = null;
-		TUTORIAL.instantiated = false;
-
-		let body = $(`body`);
-		body.removeClass(`highlight`)
-			.find(`.backdrop`).remove();
 	}
 }
 
@@ -928,9 +875,73 @@ $(() => {
 		}
 	});
 
+	// HOLIDAY HANDLER
+	$(document).on('change', `[data-dragcheck] > input[type=checkbox]`, (e) => {
+		const temp = `
+			<div class="col-6 col-lg-4" data-holiday=":date">
+				<div class="form-group">
+					<div class="input-group">
+						<span class="input-group-text">:date</span>
+						<input type="hidden" name="holidayNameDate[]" value=":date">
+						<input type="text" class="form-control" name="holidayName[]" data-date=":date" placeholder="Holiday" aria-label="Holiday Name for :date">
+					</div>
+				</div>
+			</div>
+		`;
+
+		let hnContainer = $(`#holidayNames`);
+		let hn = hnContainer.find(`input[name="holidayName[]"]`);
+		let h = $(`[data-dragcheck] > input[name="holiday[]"]`);
+
+		let hCount = h.length;
+		let hnCount = hn.length;
+
+		// If the holiday count is greater than the holiday name count, add a new holiday name
+		if (hCount > hnCount) {
+			h.each((k, v) => {
+				let targetHn = $(`[data-holiday=${v.value}]`);
+
+				if (targetHn.length <= 0) {
+					targetHn = $(temp.replace(/:date/gi, v.value));
+					hnContainer.append(targetHn);
+				}
+			});
+
+			hnContainer.html(
+				hnContainer.find(`[data-holiday]`).sort((a, b) => {
+					return +$(a).data('holiday') - +$(b).data('holiday');
+				})
+			);
+		}
+		else if (hCount < hnCount) {
+			hn.each((k, v) => {
+				let targetH = $(`[name="holiday[]"][value="${v.dataset.date}"]`);
+
+				if (targetH.length <= 0) {
+					$(`[data-holiday=${v.dataset.date}]`).remove();
+				}
+			});
+		}
+	});
+
+	$(document).on('change', `[name="holidayName[]"]`, (e) => {
+		DTR.reset();
+		$(`#jobOrderList`).trigger('change');
+	});
+
 	// RESET HANDLER
 	$(`#reset`).on(`click`, (e) => {
-		confirmLeave(window.location, undefined, `This will reset all fields.`);
+		if (typeof confirmLeave == "function") {
+			try {
+				confirmLeave(window.location, undefined, `This will reset all fields.`);
+			}
+			catch (e) {
+				console.warn(e);
+			}
+		}
+		else {
+			console.warn(`confirmLeave function not defined.`);
+		}
 	});
 
 	// Adding a little animation on hover (for the footer buttons) //
@@ -997,15 +1008,8 @@ $(() => {
 		.prop(`disabled`, true);
 
 	// TUTORIAL
-	$(`#tutorial`).on(`click`, TUTORIAL.init);
-	$(document).on(`click`, `#tutorial-overlay, #tutorial-backdrop`, TUTORIAL.next);
-	$(document).on(`keydown`, (e) => {
-		if (!TUTORIAL.instantiated)
-			return;
-
-		let keyCode = e.keyCode || e.which;
-
-		if (keyCode == 13 || keyCode == 32) TUTORIAL.next();
-		else if (keyCode == 27) TUTORIAL.end();
+	$(`#tutorial`).on(`click`, () => {
+		if (!Tutorial.instantiated)
+			Tutorial.start(TUTORIAL.components, TUTORIAL.options);
 	});
 });

@@ -34,7 +34,14 @@ $modifiers: (
 .position-md-absolute,
 .position-lg-absolute,
 .position-xl-absolute,
-.position-xxl-absolute {
+.position-xxl-absolute,
+.sticky-top,
+.sticky-xs-top,
+.sticky-sm-top,
+.sticky-md-top,
+.sticky-lg-top,
+.sticky-xl-top,
+.sticky-xxl-top {
 
 	// Iterate through the breakpoints
 	@each $bk, $bv in $sizes {

@@ -32,7 +32,7 @@
 
 				<div class="container-fluid">
 					<p>To insert the list of JOs (Job Orders), upload a <code>.txt</code> file containing the full name of each employee per line similar to this:</p>
-					<pre class="border p-2"><code>Doug D. Sims<br>Cristina A. Dougherty<br>Dee J. Coon, Jr.<br>Hugo L. Davidson<br><span data-bs-toggle="tooltip" data-bs-content="More names below.">...</span></code></pre>
+					<pre class="border p-2"><code class="no-format">Doug D. Sims<br>Cristina A. Dougherty<br>Dee J. Coon, Jr.<br>Hugo L. Davidson<br><span data-bs-toggle="tooltip" data-bs-content="More names below.">...</span></code></pre>
 
 					<div class="d-flex flex-row">
 						<button type="button" class="btn btn-secondary mx-auto" id="tutorial">Tutorial</button>
@@ -295,7 +295,8 @@
 								</table>
 							</div>
 
-							<div class="card">
+							<!-- OPTIONAL CONFIGURATIONS AREA -->
+							<div class="card my-3" id="optionalConfigsArea">
 								<!-- REMOVE LEADING ZEROES -->
 								<div class="card-body border-bottom">
 									<div class="d-flex justify-content-between">
@@ -329,6 +330,16 @@
 												<code id="dtrAmt">One (1)</code>
 											</span>
 										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- HOLIDAY NAMES -->
+							<div class="card my-3" id="holidayNamesArea">
+								<h4 class="card-header">Holiday Names</h4>
+
+								<div class="card-body">
+									<div class="row" id="holidayNames">
 									</div>
 								</div>
 							</div>
@@ -480,7 +491,7 @@
 		</div>
 
 		<!-- FOR PRINTING -->
-		<div id="printContainer" class="bg-white text-dark" data-bs-theme="light">
+		<div id="printContainer" class="mx-auto bg-white text-dark" data-bs-theme="light">
 		</div>
 
 		<!-- Base Script -->
@@ -488,7 +499,7 @@
 		<script type="module" src="../resources/js/frameless.js"></script>
 
 		<!-- Custom Scripts -->
-		<script type="module" src="../resources/js/util/confirm-leave.js" defer></script>
+		<script src="../resources/js/util/confirm-leave.js" defer></script>
 		<script type="module" src="../resources/js/util/serialize-form-json.js" defer></script>
 		<script type="module" src="../resources/modules/dtr-gen/index.js" defer></script>
 	</body>
