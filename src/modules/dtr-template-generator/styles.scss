@@ -1,9 +1,52 @@
-// Fontawesome
-@use "../fontawesome.scss";
+.box {
+	--btn-tmp-height: 50px !important;
 
-// Bootstrap
-@use "../mixins/colors";
-@use "bootstrap";
+	min-height: var(--btn-tmp-height);
+	height: var(--btn-tmp-height);
+	min-width: var(--btn-tmp-height);
+	width: var(--btn-tmp-height);
+}
 
-@use "../../css/frameless";
-@use "../../css/custom-scrollbar";
+.box-sm {
+	@extend .box;
+	--btn-tmp-height: 37.5px !important;
+}
+
+#builder {
+	min-height: 100vh;
+	background-color: white;
+
+	&, & > * {
+		color: var(--bs-body-color);
+	}
+
+	& > * {
+		transition: outline .25s, box-shadow .25s, background .25s, opacity .25s;
+
+		&[contenteditable=true]:empty:not(:focus):before {
+			content: attr(placeholder);
+			color: grey;
+			font-style: italic;
+		}
+
+		&:focus {
+			outline: solid 1px var(--bs-secondary);
+			box-shadow: var(--bs-secondary) 0px 0px 10px;
+		}
+
+		&.highlight {
+			outline: solid 1px var(--bs-primary);
+			box-shadow: var(--bs-primary) 0px 0px 10px;
+			background: inherit;
+			opacity: .75;
+		}
+	}
+}
+
+.handle {
+	cursor: grab !important;
+
+	&:focus, &:active {
+		cursor: grabbing !important;
+	}
+}

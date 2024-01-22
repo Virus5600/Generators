@@ -3,11 +3,13 @@
     "/resources/modules/the-hub/index.js": "/resources/modules/the-hub/index.js",
     "/resources/modules/string-gen/index.js": "/resources/modules/string-gen/index.js",
     "/resources/modules/dtr-gen/index.js": "/resources/modules/dtr-gen/index.js",
+    "/resources/modules/dtr-tmp-gen/index.js": "/resources/modules/dtr-tmp-gen/index.js",
     "/resources/css/util/custom-scrollbar.css": "/resources/css/util/custom-scrollbar.css",
     "/resources/css/util/animations.css": "/resources/css/util/animations.css",
     "/resources/css/components/button-expansion.css": "/resources/css/components/button-expansion.css",
     "/resources/css/components/absolute-positions.css": "/resources/css/components/absolute-positions.css",
     "/resources/css/general.css": "/resources/css/general.css",
+    "/resources/modules/dtr-tmp-gen/index.css": "/resources/modules/dtr-tmp-gen/index.css",
     "/resources/modules/dtr-gen/index.css": "/resources/modules/dtr-gen/index.css",
     "/resources/modules/string-gen/index.css": "/resources/modules/string-gen/index.css",
     "/resources/modules/the-hub/index.css": "/resources/modules/the-hub/index.css",
@@ -28,6 +30,10 @@
     "/resources/js/util/serialize-form-json.js": "/resources/js/util/serialize-form-json.js",
     "/resources/js/util/swal-flash/swal-flash.js": "/resources/js/util/swal-flash/swal-flash.js",
     "/resources/js/util/swal-flash/swal-flash.mod.js": "/resources/js/util/swal-flash/swal-flash.mod.js",
+    "/resources/js/util/templater/Data.js": "/resources/js/util/templater/Data.js",
+    "/resources/js/util/templater/Elements/Element.js": "/resources/js/util/templater/Elements/Element.js",
+    "/resources/js/util/templater/PopoverData.js": "/resources/js/util/templater/PopoverData.js",
+    "/resources/js/util/templater/templater.js": "/resources/js/util/templater/templater.js",
     "/resources/js/util/text-counter.js": "/resources/js/util/text-counter.js",
     "/resources/js/util/tutorial.js/Tutorial.js": "/resources/js/util/tutorial.js/Tutorial.js",
     "/resources/js/util/unique-array/unique-array.js": "/resources/js/util/unique-array/unique-array.js",
@@ -45,5 +51,6 @@
     "/resources/modules/string-gen/assets/favicon.png": "/resources/modules/string-gen/assets/favicon.png",
     "/resources/modules/dtr-gen/Sample Generated DTR.js": "/resources/modules/dtr-gen/Sample Generated DTR.js",
     "/resources/modules/dtr-gen/assets/favicon.png": "/resources/modules/dtr-gen/assets/favicon.png",
-    "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt": "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt"
+    "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt": "/resources/modules/dtr-gen/assets/JO List - Tutorial.txt",
+    "/resources/modules/dtr-tmp-gen/assets/favicon.png": "/resources/modules/dtr-tmp-gen/assets/favicon.png"
 }

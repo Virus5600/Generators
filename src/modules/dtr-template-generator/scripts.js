@@ -1,15 +1,24 @@
-// jQuery
-window.$ = window.jQuery = require("node_modules/jquery/dist/jquery.min.js");
-require("node_modules/jquery-ui/dist/jquery-ui.min.js");
+import $ from 'jquery';
+import 'jquery-ui/ui/widgets/sortable.js';
 
-// PopperJS
-window.Popper = require("node_modules/@popperjs/core");
+$(() => {
+	$(`[data-bs-tooltip]`).each((k, v) => {
+		let tooltip = new bootstrap.Tooltip(v, {
+			title: v.title,
+			trigger: `hover`
+		});
+	});
 
-// Bootstrap
-window.bootstrap = require("node_modules/bootstrap/dist/js/bootstrap.min.js");
+	$(`#builder`).sortable({
+		cursor: `grabbing`,
+		handle: `.handle`,
+		revert: true,
+		scroll: true,
+		start: (e, ui) => { ui.item.addClass(`highlight`); },
+		stop: (e, ui) => { ui.item.removeClass(`highlight`); }
+	});
 
-// Sweet Alert 2
-window.Swal = require("node_modules/sweetalert2/dist/sweetalert2.all.min.js");
-
-// Fontawesome
-require("../fontawesome.js");
+	$(`#builder`).on(`change`, (e) => {
+		$(e.currentTarget).sortable(`refresh`);
+	});
+});

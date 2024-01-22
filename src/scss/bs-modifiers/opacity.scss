@@ -1,0 +1,23 @@
+$values: (
+	'0': 0,
+	'12\\.5': .125,
+	'25': .25,
+	'37\\.5': .375,
+	'50': .5,
+	'62\\.5': .625,
+	'75': .75,
+	'87\\.5': .875,
+	'100': 1,
+);
+
+$utilities: map-merge(
+	$utilities,
+	(
+		"opacity": (
+			property: opacity,
+			class: opacity,
+			responsive: true,
+			values: $values
+		)
+	)
+);

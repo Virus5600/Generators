@@ -1,6 +1,14 @@
 {
 	"changelogs": [
 		{
+			"version": "v1.1.0-beta.5",
+			"pre-release": true,
+			"date": "TBA",
+			"description": "TBA",
+			"changelog": {},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.0-beta.5"
+		},
+		{
 			"version": "v1.1.0-beta.4",
 			"pre-release": true,
 			"date": "2024-01-22",

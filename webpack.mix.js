@@ -69,6 +69,11 @@ mix.webpackConfig({
 	.copy('src/modules/dtr-generator/Sample Generated DTR.js', 'public/resources/modules/dtr-gen/Sample Generated DTR.js')
 	.copy('src/resources/dtr-generator/', 'public/resources/modules/dtr-gen/assets')
 
+	// DTR Template Generator Compiler
+	.js('src/modules/dtr-template-generator/scripts.js', 'resources/modules/dtr-tmp-gen/index.js')
+	.sass('src/modules/dtr-template-generator/styles.scss', 'resources/modules/dtr-tmp-gen/index.css')
+	.copy('src/resources/dtr-template-generator/', 'public/resources/modules/dtr-tmp-gen/assets')
+
 	// FINAL CONFIGURATIONS
 	.setPublicPath("public/")
 	.sourceMaps()
