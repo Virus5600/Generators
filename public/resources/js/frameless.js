@@ -620,7 +620,7 @@ function updateCheck() {
 	ipcRenderer.on('open-update-log', (e) => {
 		localStorage.removeItem(`skipVersion`);
 
-		if (localStorage.getItem(`openUpdateLog`) === `false`) {
+		if (!getConfigs().openUpdateLog) {
 			localStorage.setItem(`openUpdateLog`, true);
 		}
 	});
