@@ -13,7 +13,8 @@
 					"Bumped the release version to v1.1.0-beta.4.",
 					"Updated the conditional statement to the version identifier, automatically updating the stored version of the app to the current version if they are different."
 				]
-			}
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.0-beta.4"
 		},
 		{
 			"version": "v1.1.0-beta.3",
@@ -26,7 +27,8 @@
 					"Fixed an issue in the update checker where it might run even if its inside other sub-applications.",
 					"Fixed illogical logical conditional statement."
 				]
-			}
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.0-beta.3"
 		},
 		{
 			"version": "v1.1.0-beta.2",
