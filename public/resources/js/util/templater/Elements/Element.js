@@ -1,10 +1,20 @@
 import Data from '../Data.js';
 import { PopoverData } from '../PopoverData.js';
 
+// ---------------------------------------------------------------------------------------------- //
+// This counter will serve as the time (in hours) the developer tried to understand and fix this
+// mess of an implementation. The implementor is drunk or stupid when he implemented this.
+//
+// Let this be a warning...
+//
+// Counter: 2
+//
+// ---------------------------------------------------------------------------------------------- //
+
 /**
  * The base class for all HTML elements for the Templater. It contains all common attributes and
  * methods needed to make an element.
- * 
+ *
  * @author Satch Navida
  * @version 1.0.0
  */
@@ -237,6 +247,9 @@ export default class Element {
 		VIRTUAL_KEYBOARD_POLICY: `virtualKeyboardPolicy`,
 	};
 
+	// PROTECTED(?) VARIABLES
+	__tools = null;
+
 	// PRIVATE VARIABLES
 	/**
 	 * The actual HTML element fetched from the newly created Element.
@@ -247,20 +260,46 @@ export default class Element {
 	 */
 	#popover = null;
 
+	/**
+	 * The constructor for the {@link Element} class. It accepts a single parameter, which is the
+	 * `props` object. The `props` object contains all the properties of the element that will be
+	 * created.
+	 *
+	 * Unknown properties that aren't listed in {@link Element.PROPS} will be filtered and not
+	 * added to the element.
+	 *
+	 * @param {Element.PROPS} props An object containing all the properties of the element, along with their supposedly values.
+	 *
+	 * @see {@link Element.PROPS}
+	 */
 	constructor(props) {
+		// Assign the element to this instance
 		this.#element = props.el;
 
+		// Adds the object properties.
+		for (let p in props) {
+			// Filters whether the property is a valid property of the element.
+			let inProps = Object.keys(Element.PROPS).includes(p);
+			if (p == `el` || !inProps)
+				continue;
+
+			this.#element[p] = props[p];
+		}
 	}
 
 	// PRIVATE FUNCTIONS
 	/**
-	 * Updates the current element into a different one. This does not replace the current
-	 * element in the document by default.
-	 * 
+	 * Updates the current element into a different one.
+	 *
 	 * @param {HTMLElement}	elm		The element to replace the current one.
-	 * @param {boolean}		paint	Defaults to `false`. Determines whether to replace the element in the document or not.
 	 */
-	#changeElm(elm, paint = false) {
+	#changeElm(elm) {
+		if (!elm instanceof HTMLElement)
+			throw new TypeError(`${elm} is not an instance of HTMLElement.`);
+
+		this.#element.replaceWith(elm);
+		this.#element = elm;
+
 		return this;
 	}
 
@@ -280,7 +319,7 @@ export default class Element {
 	#hidePopover() {
 		if (!this.#popover.visible)
 			return;
-		
+
 		this.#popover.hide();
 	}
 
@@ -291,7 +330,7 @@ export default class Element {
 	// PUBLIC FUNCTIONS
 	/**
 	 * Returns the element reference, allowing direct element modifications.
-	 * 
+	 *
 	 * @return {HTMLElement}	An instance of HTML element.
 	 */
 	element() {
@@ -300,9 +339,9 @@ export default class Element {
 
 	/**
 	 * Gets or sets the element's text. Behaves similar to jQuery's `.text()` function.
-	 * 
+	 *
 	 * @param	{string}	text	String value which will be displayed by the element.
-	 * 
+	 *
 	 * @return	{Element | string}	Depending on the context of use; returns an `Element`
 	 * instance when used as a "setter" otherwise, returns the current text value as a `string`.
 	 */
@@ -317,10 +356,10 @@ export default class Element {
 
 	/**
 	 * Gets or sets the element's properties. Behaves quite similar to jQuery's `.prop()` function.
-	 * 
+	 *
 	 * @param	{Element.PROPS}	property	A value from the `Element.PROPS` enum.
 	 * @param	{mixed}			value		An optional parameter which defines the new value for the given `property`.
-	 * 
+	 *
 	 * @return	{Element | Object | string | null}	Depending on the context of use; returns an `Element`
 	 * instance when used as a "setter" otherwise, returns the current value as a `string`. If no property is specified,
 	 * the method returns an `Object`. However, an invalid property will just return a `null`.
@@ -345,10 +384,10 @@ export default class Element {
 
 	/**
 	 * Assign the Popover instance provided to this element.
-	 * 
+	 *
 	 * @param {Popper}	popover				A created popover instance.
 	 * @param {boolean}	storeAsPopoverData	Determines whether to store the popover as PopoverData or not. Default to `true`.
-	 * 
+	 *
 	 * @return {Element}	An instance of this class, which allows for function chaining.
 	 */
 	createPopover(popover, storeAsPopoverData = true) {
@@ -364,7 +403,7 @@ export default class Element {
 
 	/**
 	 * Fetch the Popover instance assigned to this element.
-	 * 
+	 *
 	 * @return {Popper}	An instance of PopperJS.
 	 */
 	getPopover() {
@@ -372,102 +411,37 @@ export default class Element {
 	}
 
 	// OVERRIDE FUNCTIONS
+	/**
+	 * Gets the tools to render on the element's popover. The tools is composed of three
+	 * sections which are the `start`, `center`, and `end`, and are positioned on the left,
+	 * center, and right respectively.
+	 *
+	 * The contents of this method is defined by the local static {@link TOOLS} property.
+	 */
 	getTools() {
+		if (this.__tools)
+			return this.__tools;
+
 		throw new Error(`Unimplemented abstract method: getTools()`);
 	}
 
 	static getInstance(el) {
 		return 	Data.get(el, "templator");
 	}
-}
-
-///////\\\\\\\
-// ELEMENTS \\
-///////\\\\\\\
-
-export class Header extends Element {
-	static TYPES = [`h1`, `h2`, `h3`, `h4`, `h5`, `h6`];
-	static TOOLS = {
-		types: {
-			type: `dropdown`,
-			values: Header.TYPES,
-			icon: `fa-heading`,
-		}
-	};
-
-	constructor(type = Header.TYPES[0], props = {}) {
-		if (!Header.TYPES.includes(type))
-			type = Header.TYPES[0];
-
-		props = {
-			...props,
-			el: document.createElement(type)
-		};
-
-		super(props);
-	}
-
-	getTools() {
-		let tools = ``;
-
-		Object.keys(Header.TOOLS).forEach((v) => {
-			let btnType = Header.TOOLS[v].type;
-
-			let btn = `
-				<button class="btn btn-outline-secondary ${btnType == 'dropdown' ? `dropdown-toggle` : `` } border-0" type="button" title="${v}" ${btnType == 'dropdown' ? `data-bs-toggle="dropdown" aria-expanded="false"` : ``} contenteditable="false">
-					<i class="fas ${Header.TOOLS[v].icon ?? `fa-gear`}"></i>
-				</button>
-			`;
-
-			if (btnType == 'button') {
-				tools += btn;
-			}
-			else if (btnType == 'dropdown') {
-				tools += `
-					<div class="dropdown" contenteditable="false">
-						${btn}
-
-						<ul class="dropdown-menu" contenteditable="false">`;
-
-				Header.TOOLS[v].values.forEach((t) => {
-					tools += `\n<li class="dropdown-item" contenteditable="false">${t}</li>`;
-				});
-
-				tools += `
-						</ul>
-					</div>
-				`;
-			}			
-		});
-
-		return tools;
-	}
-}
-
-export class Paragraph extends Element {
-	constructor(props = {}) {
-		props = {
-			...props,
-			el: document.createElement(`p`)
-		};
-
-		super(props);
-	}
-}
-
-////////\\\\\\\\
-// CONTAINERS \\
-////////\\\\\\\\
-
-export class Container extends Element {
-	static TYPES = [`container`, `row`, `column`];
 
 	/**
-	 * Identifies whether the row or column is in reverse order. Does
-	 * not do anything when the type is set to container.
+	 * Deletes this element and removes it from the editor. This is a static method and can
+	 * be called without an instance of the class.
+	 *
+	 * @param {Element} el The element to delete.
+	 *
+	 * @throws {TypeError} If the parameter is not an instance of Element.
 	 */
-	#reverse = false;
+	static delete(el) {
+		if (!el instanceof Element) {
+			throw new TypeError(`${el} is not an instance of Element.`);
+		}
 
-	constructor(type = Container.TYPES[0], props = {}) {
+		el.element().remove();
 	}
 }

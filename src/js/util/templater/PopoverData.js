@@ -1,17 +1,17 @@
 /**
  * A Popover container, used for creating a tooltip-esque popup powered by PopperJS.
  * The code is designed to return itself whenever possible to allow method chaining.
- * 
+ *
  * Current implementation is experimental at best as it was rushed. Future plans are
  * to create a component class which will serves as the base class for all components,
  * allowing easier and more efficient development of other components such as (potentially)
  * a toast or alerts.
- * 
+ *
  * @author Satch Navida
  * @version 1.0.0
  */
 export class PopoverData {
-	// STATIC VAIRABLES
+	// STATIC VARIABLES
 	static EVENTS = {
 		ALL: [`click`, `focus`, `hover`],
 		CLICK: `click`,
@@ -35,7 +35,7 @@ export class PopoverData {
 	}
 
 	// PRIVATE VARIABLES
-	
+
 	/**
 	 * Contains the Popover instance of the element.
 	 */
@@ -68,16 +68,16 @@ export class PopoverData {
 	#listeners = {};
 
 	// PUBLIC VARIABLES
-	
+
 	/**
 	 * Identifies the visibility of the Popover.
 	 */
 	visible = false;
-	
+
 	/**
 	 * Creates an instance of Popover Data, which holds all necessary information for this popover, along
 	 * with some basic yet, useful functions.
-	 * 
+	 *
 	 * @param {Popper}				popover		A PopperJS popper instance.
 	 * @param {Data}				data		An instance reference for the `Data` class used by the popover. Provide `null` if none.
 	 * @param {string}				dataKey		A string instance, which defines what component is used for this popper. Provide `null` if `data` is `null`.
@@ -96,7 +96,7 @@ export class PopoverData {
 
 	/**
 	 * Removes all currently attached listeners to this popover.
-	 * 
+	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	#clearListeners() {
@@ -111,9 +111,9 @@ export class PopoverData {
 
 	/**
 	 * Attaches the provided event to the parent element, provided a way to trigger the popover.
-	 * 
+	 *
 	 * @param {string}	trigger	A valid event from the provided `PopoverData.EVENTS`.
-	 * 
+	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	#attachListener(trigger) {
@@ -141,7 +141,7 @@ export class PopoverData {
 
 	/**
 	 * Attaches the current event list to the parent element, providing a way to trigger the popover.
-	 * 
+	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	#attachListeners() {
@@ -163,9 +163,9 @@ export class PopoverData {
 
 	/**
 	 * Sets a new list of events that will trigger the popover.
-	 * 
+	 *
 	 * @param {PopoverData.EVENTS}	triggers	An array of strings. Allowed values are provided by the static enum `PopoverData.EVENTS`. Defaults to `PopoverData.EVENTS.FOCUS`.
-	 * 
+	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	setListener(triggers = [PopoverData.EVENTS.FOCUS]) {
@@ -176,9 +176,9 @@ export class PopoverData {
 
 	/**
 	 * Adds an event to the current list that will trigger the popover.
-	 * 
+	 *
 	 * @param {PopoverData.EVENTS}	triggers	A series of strings or enum value from `PopoverData.EVENTS`.
-	 * 
+	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	addListener(...triggers) {
@@ -197,9 +197,9 @@ export class PopoverData {
 
 	/**
 	 * Sets the `visible` value.
-	 * 
+	 *
 	 * @param {boolean}	visible	The current visibility of this Popover. `true` if visible; `false` otherwise.
-	 * 
+	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	setVisible(visible) {
@@ -225,7 +225,7 @@ export class PopoverData {
 
 	/**
 	 * Shows and makes the popover visible and interactible.
-	 * 
+	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	show() {
@@ -252,7 +252,7 @@ export class PopoverData {
 
 	/**
 	 * Hides the popover, removing it from the document tree.
-	 * 
+	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	hide() {
@@ -268,7 +268,7 @@ export class PopoverData {
 
 	/**
 	 * Toggles the visibility of the popover.
-	 * 
+	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	toggle() {
@@ -295,4 +295,28 @@ export class PopoverData {
 	getPopper() {
 		return this.#popover;
 	}
+
+	// STATIC FUNCTIONS
+
+	/**
+	 * Fetches the PopoverData instance from the given identifier. The identifier can either
+	 * be an instance of `Popper` or an `Element`.
+	 *
+	 * @param {Popper|Element} identifier An instance of Popper or Element which could identify the PopoverData instance.
+	 *
+	 * @return {PopoverData|null} The PopoverData instance if found; `null` otherwise.
+	 */
+	static getInstance(identifier) {
+		let instance = null;
+
+		if (identifier instanceof Popper)
+			instance = PopoverData.getInstance(identifier.state.elements.reference);
+		else if (identifier instanceof Element)
+			instance = bootstrap.Popover.getInstance(identifier);
+
+		return instance;
+	}
 }
+
+// TODO: Update PopoverData class to be more coherent. Various methods needs to be refactored to match its actual name use as well.
+// Refer to "Update 20230827 - Existential Crisis" for the beginning of this class' implementation.
