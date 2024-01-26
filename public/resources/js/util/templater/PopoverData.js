@@ -1,5 +1,7 @@
+import Data from "./Data";
+
 /**
- * A Popover container, used for creating a tooltip-esque popup powered by PopperJS.
+ * A Popover container, used for creating a tooltip-esq popup powered by PopperJS.
  * The code is designed to return itself whenever possible to allow method chaining.
  *
  * Current implementation is experimental at best as it was rushed. Future plans are
@@ -10,16 +12,15 @@
  * @author Satch Navida
  * @version 1.0.0
  */
-export class PopoverData {
+export class PopoverData extends Data {
 	// STATIC VARIABLES
-	static EVENTS = {
-		ALL: [`click`, `focus`, `hover`],
+	static TRIGGERS = {
 		CLICK: `click`,
 		FOCUS: `focus`,
 		HOVER: `hover`,
 	};
 
-	static #EVENT_TRIGGERS = {
+	static #TRIGGERS_VANILLA = {
 		click: {
 			on: `click`,
 			off: `click`,
@@ -47,7 +48,7 @@ export class PopoverData {
 	#id = null;
 
 	/**
-	 * A data reference fror `Data` class used by `Element` class to track component instances.
+	 * A data reference for `Data` class used by `Element` class to track component instances.
 	 */
 	#data = null;
 
@@ -60,7 +61,7 @@ export class PopoverData {
 	 * Defines what actions will trigger the popover to
 	 * be shown or hidden.
 	 */
-	#events = [];
+	#triggers = [];
 
 	/**
 	 * A list of event listeners attached to this popover.
@@ -83,13 +84,13 @@ export class PopoverData {
 	 * @param {string}				dataKey		A string instance, which defines what component is used for this popper. Provide `null` if `data` is `null`.
 	 * @param {PopoverData.EVENTS}	triggers	An array of strings. Allowed values are provided by the static enum `PopoverData.EVENTS`. Defaults to `PopoverData.EVENTS.FOCUS`.
 	 */
-	constructor(popover, dataKey = null, key = null, triggers = [PopoverData.EVENTS.FOCUS]) {
+	constructor(popover, dataKey = null, triggers = [PopoverData.TRIGGERS.FOCUS]) {
 		this.#popover = popover;
 		this.#dataKey = dataKey;
-		this.#events = triggers;
-		this.#id = new Date().getTime();
+		this.#triggers = triggers;
+		this.#id = crypto.randomUUID();
 
-		this.#attachListeners();
+		this.#attachTriggers();
 	}
 
 	// PRIVATE FUNCTIONS
@@ -99,7 +100,7 @@ export class PopoverData {
 	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
-	#clearListeners() {
+	#clearTriggers() {
 		// Iterate through the current listeners.
 		Object.keys(this.#listeners).forEach((v) => {
 			// Removes the given listener from the element.
@@ -116,7 +117,7 @@ export class PopoverData {
 	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
-	#attachListener(trigger) {
+	#attachTrigger(trigger) {
 		// Error handlers
 		let err = null;
 
@@ -135,8 +136,8 @@ export class PopoverData {
 				this.toggle();
 		};
 
-		this.#popover.state.elements.reference.addEventListener(PopoverData.#EVENT_TRIGGERS[trigger].on, this.#listeners[`${trigger}TogglePopover`]);
-		this.#popover.state.elements.reference.addEventListener(PopoverData.#EVENT_TRIGGERS[trigger].off, this.#listeners[`${trigger}TogglePopover`]);
+		this.#popover.state.elements.reference.addEventListener(PopoverData.#TRIGGERS_VANILLA[trigger].on, this.#listeners[`${trigger}TogglePopover`]);
+		this.#popover.state.elements.reference.addEventListener(PopoverData.#TRIGGERS_VANILLA[trigger].off, this.#listeners[`${trigger}TogglePopover`]);
 	}
 
 	/**
@@ -144,11 +145,11 @@ export class PopoverData {
 	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
-	#attachListeners() {
-		this.#events.forEach((v) => {
+	#attachTriggers() {
+		this.#triggers.forEach((v) => {
 			// If the event is in the list of allowed events, add a listener.
 			if (Object.values(PopoverData.EVENTS).includes(v)) {
-				this.#attachListener(v);
+				this.#attachTrigger(v);
 			}
 			// Otherwise, remove it from the list.
 			else {
@@ -169,9 +170,9 @@ export class PopoverData {
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	setListener(triggers = [PopoverData.EVENTS.FOCUS]) {
-		this.#clearListeners();
-		this.#events = triggers;
-		this.#attachListeners();
+		this.#clearTriggers();
+		this.#triggers = triggers;
+		this.#attachTriggers();
 	}
 
 	/**
@@ -187,9 +188,9 @@ export class PopoverData {
 
 		triggers.forEach((v) => {
 			if (Object.values(PopoverData.EVENTS).includes(v)) {
-				if (!this.#events.includes(v)) {
-					this.#attachListener(v);
-					this.#events.push(v);
+				if (!this.#triggers.includes(v)) {
+					this.#attachTrigger(v);
+					this.#triggers.push(v);
 				}
 			}
 		});
