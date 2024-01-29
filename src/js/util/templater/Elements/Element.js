@@ -385,19 +385,19 @@ export default class Element {
 	/**
 	 * Assign the Popover instance provided to this element.
 	 *
-	 * @param {Popper}	popover				A created popover instance.
-	 * @param {boolean}	storeAsPopoverData	Determines whether to store the popover as PopoverData or not. Default to `true`.
+	 * @param {bootstrap.Popover} popover	A created popover instance.
 	 *
 	 * @return {Element}	An instance of this class, which allows for function chaining.
 	 */
-	createPopover(popover, storeAsPopoverData = true) {
+	createPopover(popover) {
 		if (popover == undefined || popover == null)
 			throw new Error("Popover instance not provided.");
+		else if (!popover instanceof bootstrap.Popover)
+			throw new TypeError("Popover instance is not an instance of bootstrap.Popover.");
 
-		if (storeAsPopoverData)
-			this.#popover = new PopoverData(popover, Data, "templator", [PopoverData.EVENTS.CLICK]);
+		this.#popover = new PopoverData(popover, Data, "templater", PopoverData.TRIGGERS.CLICK);
 
-		Data.set(this.#element, "templator", this.#popover);
+		Data.set(this.#element, "templater", this.#popover);
 		return this;
 	}
 

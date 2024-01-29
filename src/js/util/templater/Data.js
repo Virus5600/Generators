@@ -2,7 +2,7 @@ const elMap = new Map();
 
 /**
  * Stores component instances on a 2D map, allowing a single component per element.
- * 
+ *
  * All credit goes to Bootstrap's source code as this was from their code base.
  */
 export default {

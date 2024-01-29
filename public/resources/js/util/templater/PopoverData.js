@@ -1,4 +1,4 @@
-import Data from "./Data";
+import Data from "./Data.js";
 
 /**
  * A Popover container, used for creating a tooltip-esq popup powered by PopperJS.
@@ -12,7 +12,7 @@ import Data from "./Data";
  * @author Satch Navida
  * @version 1.0.0
  */
-export class PopoverData extends Data {
+export class PopoverData {
 	// STATIC VARIABLES
 	static TRIGGERS = {
 		CLICK: `click`,
@@ -61,7 +61,7 @@ export class PopoverData extends Data {
 	 * Defines what actions will trigger the popover to
 	 * be shown or hidden.
 	 */
-	#triggers = [];
+	#trigger = PopoverData.TRIGGERS.FOCUS;
 
 	/**
 	 * A list of event listeners attached to this popover.
@@ -82,12 +82,12 @@ export class PopoverData extends Data {
 	 * @param {Popper}				popover		A PopperJS popper instance.
 	 * @param {Data}				data		An instance reference for the `Data` class used by the popover. Provide `null` if none.
 	 * @param {string}				dataKey		A string instance, which defines what component is used for this popper. Provide `null` if `data` is `null`.
-	 * @param {PopoverData.EVENTS}	triggers	An array of strings. Allowed values are provided by the static enum `PopoverData.EVENTS`. Defaults to `PopoverData.EVENTS.FOCUS`.
+	 * @param {PopoverData.EVENTS}	triggers	A string value. Allowed values are provided by the static enum `PopoverData.EVENTS`. Defaults to `PopoverData.EVENTS.FOCUS`.
 	 */
-	constructor(popover, dataKey = null, triggers = [PopoverData.TRIGGERS.FOCUS]) {
+	constructor(popover, data, dataKey = null, trigger = PopoverData.TRIGGERS.FOCUS) {
 		this.#popover = popover;
 		this.#dataKey = dataKey;
-		this.#triggers = triggers;
+		this.#trigger = trigger;
 		this.#id = crypto.randomUUID();
 
 		this.#attachTriggers();
@@ -146,16 +146,11 @@ export class PopoverData extends Data {
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	#attachTriggers() {
-		this.#triggers.forEach((v) => {
-			// If the event is in the list of allowed events, add a listener.
-			if (Object.values(PopoverData.EVENTS).includes(v)) {
-				this.#attachTrigger(v);
-			}
-			// Otherwise, remove it from the list.
-			else {
-				this.#listeners.pop(v);
-			}
-		});
+		let t = this.#trigger;
+		// If the event is in the list of allowed events, add a listener.
+		if (Object.values(PopoverData.#TRIGGERS_VANILLA).includes(this.#trigger)) {
+			this.#attachTrigger(this.#trigger);
+		}
 
 		return this;
 	}
@@ -169,31 +164,10 @@ export class PopoverData extends Data {
 	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
-	setListener(triggers = [PopoverData.EVENTS.FOCUS]) {
+	setListener(trigger = PopoverData.EVENTS.FOCUS) {
 		this.#clearTriggers();
-		this.#triggers = triggers;
+		this.#trigger = trigger;
 		this.#attachTriggers();
-	}
-
-	/**
-	 * Adds an event to the current list that will trigger the popover.
-	 *
-	 * @param {PopoverData.EVENTS}	triggers	A series of strings or enum value from `PopoverData.EVENTS`.
-	 *
-	 * @return {PopoverData} The same and current instance of PopoverData.
-	 */
-	addListener(...triggers) {
-		if (typeof triggers[0] === "object")
-			triggers = triggers[0];
-
-		triggers.forEach((v) => {
-			if (Object.values(PopoverData.EVENTS).includes(v)) {
-				if (!this.#triggers.includes(v)) {
-					this.#attachTrigger(v);
-					this.#triggers.push(v);
-				}
-			}
-		});
 	}
 
 	/**

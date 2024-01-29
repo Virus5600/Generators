@@ -11,7 +11,9 @@ function init() {
 			obj.on(`click`, (e) => {
 				const clazz = EL[0].toUpperCase() + EL.slice(1);
 				const ELEMENT_INSTANCE = new Elements[clazz]();
-				const OBJ = $(ELEMENT_INSTANCE);
+				// OBJ const currently has no use but will probably be used in the future.
+				// STATUS: Not used => Commented out
+				// const OBJ = $(ELEMENT_INSTANCE);
 
 				ELEMENT_INSTANCE.prop(`contentEditable`, true)
 					.text(clazz);
