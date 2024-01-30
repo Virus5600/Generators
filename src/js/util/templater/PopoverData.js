@@ -86,21 +86,25 @@ export class PopoverData {
 	 */
 	constructor(popover, data, dataKey = null, trigger = PopoverData.TRIGGERS.FOCUS) {
 		this.#popover = popover;
+		this.#data = data;
 		this.#dataKey = dataKey;
 		this.#trigger = trigger;
 		this.#id = crypto.randomUUID();
 
-		this.#attachTriggers();
+
+		this.#setTrigger(this.#trigger);
 	}
 
+	// -----------------
 	// PRIVATE FUNCTIONS
+	// -----------------
 
 	/**
-	 * Removes all currently attached listeners to this popover.
+	 * Removes the currently attached popover trigger to this popover.
 	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
-	#clearTriggers() {
+	#clearTrigger() {
 		// Iterate through the current listeners.
 		Object.keys(this.#listeners).forEach((v) => {
 			// Removes the given listener from the element.
@@ -113,61 +117,46 @@ export class PopoverData {
 	/**
 	 * Attaches the provided event to the parent element, provided a way to trigger the popover.
 	 *
-	 * @param {string}	trigger	A valid event from the provided `PopoverData.EVENTS`.
+	 * @param {PopoverData.TRIGGERS}	trigger	A valid event from the provided `PopoverData.EVENTS`.
 	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
-	#attachTrigger(trigger) {
+	#setTrigger(trigger) {
 		// Error handlers
 		let err = null;
 
-		if (trigger === null) {
-			err = `The "trigger" cannot be null.`;
-		}
-		else if (!Object.values(PopoverData.EVENTS).includes(trigger)) {
-			err = `Invalid trigger value. Triggers must be from "PopoverData.EVENTS"`;
-		}
+		if (trigger === null || trigger === undefined)
+			err = `The "trigger" cannot be null or undefined.`;
+		else if (!Object.values(PopoverData.TRIGGERS).includes(trigger))
+			err = `Invalid trigger value. Triggers must be from "PopoverData.TRIGGERS"`;
 
 		if (err)
-			throw new Error(err, PopoverData.EVENTS);
+			throw new Error(err, PopoverData.TRIGGERS);
 
 		this.#listeners[`${trigger}TogglePopover`] = (e) => {
-			if (e.srcElement == this.#popover.state.elements.reference)
+			if (e.srcElement == this.#popover._popper.state.elements.reference)
 				this.toggle();
 		};
 
-		this.#popover.state.elements.reference.addEventListener(PopoverData.#TRIGGERS_VANILLA[trigger].on, this.#listeners[`${trigger}TogglePopover`]);
-		this.#popover.state.elements.reference.addEventListener(PopoverData.#TRIGGERS_VANILLA[trigger].off, this.#listeners[`${trigger}TogglePopover`]);
+		this.#popover._element.addEventListener(PopoverData.#TRIGGERS_VANILLA[trigger].on, this.#listeners[`${trigger}TogglePopover`]);
+		this.#popover._element.addEventListener(PopoverData.#TRIGGERS_VANILLA[trigger].off, this.#listeners[`${trigger}TogglePopover`]);
 	}
 
-	/**
-	 * Attaches the current event list to the parent element, providing a way to trigger the popover.
-	 *
-	 * @return {PopoverData} The same and current instance of PopoverData.
-	 */
-	#attachTriggers() {
-		let t = this.#trigger;
-		// If the event is in the list of allowed events, add a listener.
-		if (Object.values(PopoverData.#TRIGGERS_VANILLA).includes(this.#trigger)) {
-			this.#attachTrigger(this.#trigger);
-		}
-
-		return this;
-	}
-
+	// ----------------
 	// PUBLIC FUNCTIONS
+	// ----------------
 
 	/**
-	 * Sets a new list of events that will trigger the popover.
+	 * Sets a new trigger for the popover.
 	 *
-	 * @param {PopoverData.EVENTS}	triggers	An array of strings. Allowed values are provided by the static enum `PopoverData.EVENTS`. Defaults to `PopoverData.EVENTS.FOCUS`.
+	 * @param {PopoverData.TRIGGERS}	triggers	A string value that defines what trigger to use. Allowed values are provided by the static enum `PopoverData.TRIGGERS`. Defaults to `PopoverData.TRIGGERS.FOCUS`.
 	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
-	setListener(trigger = PopoverData.EVENTS.FOCUS) {
-		this.#clearTriggers();
+	setTrigger(trigger = PopoverData.EVENTS.FOCUS) {
+		this.#clearTrigger();
 		this.#trigger = trigger;
-		this.#attachTriggers();
+		this.#setTrigger(this.#trigger);
 	}
 
 	/**
@@ -176,9 +165,18 @@ export class PopoverData {
 	 * @param {boolean}	visible	The current visibility of this Popover. `true` if visible; `false` otherwise.
 	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
+	 *
+	 * @throws {TypeError} If the provided `visible` value is not a boolean.
 	 */
 	setVisible(visible) {
+		if (typeof visible !== `boolean`)
+			throw new TypeError(`The "visible" value must be a boolean, provided "${typeof variable}".`);
+
 		this.visible = visible;
+		if (this.visible)
+			this.#popover.show();
+		else
+			this.#popover.hide();
 
 		return this;
 	}
@@ -204,11 +202,11 @@ export class PopoverData {
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	show() {
-		let tooltip = this.#popover.state.elements.popper;
-		let target = this.#popover.state.elements.reference;
+		let tooltip = this.#popover._popper.state.elements.popper;
+		let target = this.#popover._popper.state.elements.reference;
 
 		let tooltipEl = document.createElement(`template`);
-		tooltipEl.innerHTML = tooltip;
+		tooltipEl.innerHTML = tooltip.innerHTML;
 		tooltipEl = tooltipEl.content.children[0];
 
 		// Modify the data and attributes of this element.
@@ -220,7 +218,7 @@ export class PopoverData {
 		this.#popover.update();
 
 		// If successful, update the `visible` state
-		this.visible = true;
+		this.setVisible(true);
 
 		return this;
 	}
