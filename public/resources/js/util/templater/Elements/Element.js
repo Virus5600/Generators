@@ -426,7 +426,7 @@ export default class Element {
 	}
 
 	static getInstance(el) {
-		return 	Data.get(el, "templator");
+		return 	Data.get(el, "templater");
 	}
 
 	/**

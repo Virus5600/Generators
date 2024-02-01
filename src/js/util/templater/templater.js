@@ -25,7 +25,8 @@ function init() {
 						html: true,
 						placement: `top`,
 						template: toolbar(ELEMENT_INSTANCE.getTools()),
-						trigger: `focus`
+						trigger: `focus`,
+						sanitize: false,
 					});
 
 				ELEMENT_INSTANCE.createPopover(POPOVER, false);
@@ -50,25 +51,26 @@ function toolbar(tools) {
 	<div class="popover opacity-87.5 border-1 border-secondary dtrtg-toolbar" role="popover" contenteditable="false">
 		<div class="popover-arrow border-1 border-secondary" data-popper-arrow></div>
 
-		<div class="hstack px-2">
-			<div class="vr"></div>
+		<div class="hstack px-2 dtrtg-toolbar-content">
+			${tools}
 
-			<div class="dropdown">
-				<button class="btn btn-outline-secondary dropdown-toggle border-0" type="button" title="others" data-bs-toggle="dropdown" aria-expanded="false">
-					<i class="fas fa-ellipsis-vertical m-auto"></i>
-				</button>
+			<div class="hstack dtrtg-toolbar-content-end">
+				<div class="dropdown">
+					<button class="btn dropdown-toggle" type="button" title="others" data-bs-toggle="dropdown" aria-expanded="false">
+						<i class="fas fa-ellipsis-vertical m-auto"></i>
+					</button>
+				</div>
+
+				<span class="delete btn">
+					<i class="fas fa-trash fa-fw m-auto"></i>
+				</span>
+
+				<span class="handle btn">
+					<i class="fas fa-grip-vertical fa-fw m-auto"></i>
+				</span>
 			</div>
-
-			<span class="delete border-0 btn">
-				<i class="fas fa-trash fa-fw m-auto"></i>
-			</span>
-
-			<span class="handle border-0 btn">
-				<i class="fas fa-grip-vertical fa-fw m-auto"></i>
-			</span>
 		</div>
-	</div>
-	`;
+	</div>`;
 
 	return toReturn;
 }
@@ -78,9 +80,8 @@ $(() => {
 	init();
 
 	// Attach Event Listener to the delete button.
-	$(document.body).on(`click`, `.dtrtg-toolbar .delete`, (e) => {
+	$(document).on(`click`, `.dtrtg-toolbar .delete`, (e) => {
 		let target = $(e.currentTarget).closest(`[id]`)[0].id;
-
-		$(`#${target}`).parent().remove();
+		$(`[aria-describedby=${target}]`).remove();
 	});
 });

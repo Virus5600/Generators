@@ -1,1 +1,91 @@
-$prefix: "dtrtg";
+@import "./../../libs/bootstrap";
+
+// GENERAL VARIABLES
+$tmp-prefix: "dtrtg";
+
+// DTR VARIABLES
+$dtr-cell-width: calc(56px * .90625);
+$dtr-cell-height: calc(24px * .8125);
+
+$dtr-max-width: calc(#{$dtr-cell-width} * 7);
+$dtr-max-height: calc(#{$dtr-cell-height} * 48);
+
+$dtr-display: flex;
+$dtr-flex-direction: column;
+
+$dtr-padding-x: 0px;
+$dtr-padding-y: 4px;
+
+// DTR ROW VARIABLES
+$dtr-row-max-width: calc(#{$dtr-cell-width} * 7);
+$dtr-row-max-height: #{$dtr-cell-height};
+
+$dtr-row-display: flex;
+$dtr-row-flex-direction: row;
+
+// DTR CELL VARIABLES
+$dtr-cell-max-width: #{$dtr-cell-width};
+$dtr-cell-max-height: #{$dtr-cell-height};
+
+$dtr-cell-vertical-align: center;
+$dtr-cell-text-align: center;
+
+$dtr-cell-sizes: ();
+@for $i from 1 through 7 {
+	$dtr-cell-sizes: append($dtr-cell-sizes, calc(#{$dtr-cell-width} * $i));
+};
+
+// DTR CELL MODIFIERS
+$dtr-cell-holiday-fs: italic;
+$dtr-cell-holiday-bg: #ff0;
+$dtr-cell-holiday-color: #000;
+@mixin dtr-cell-holiday(
+	$font-style: $dtr-cell-holiday-fs,
+	$bg-color: $dtr-cell-holiday-bg,
+	$color: $dtr-cell-holiday-color
+) {
+	font-style: $font-style;
+	background-color: $bg-color;
+	color: $color;
+}
+
+$dtr-cell-date-align: right;
+@mixin dtr-cell-date($alignment: $dtr-cell-date-align) {
+	text-align: $alignment;
+}
+
+$dtr-cell-underline-pos: relative;
+$dtr-cell-underline-border-width: 2px;
+$dtr-cell-underline-border-style: solid;
+$dtr-cell-underline-border-color: #343a40;
+@mixin dtr-cell-underline(
+	$position: $dtr-cell-underline-pos,
+	$border-width: $dtr-cell-underline-border-width,
+	$border-style: $dtr-cell-underline-style,
+	$border-color: $dtr-cell-underline-color
+) {
+	position: $position;
+
+	&:after {
+		content: "";
+		position: absolute;
+
+		left: .5rem;
+		bottom: 0;
+
+		width: calc(100% - 1rem);
+		border-bottom: $border-width $border-style $border-color;
+	}
+}
+
+$dtr-secondary-fs: small;
+@mixin dtr-has-secondary(
+	$font-size: $dtr-secondary-fs,
+	$includeChild: false
+) {
+	font-size: $font-size !important;
+
+	@if ($includeChild) {
+		& > * { font-size: $font-size !important; }
+	}
+}

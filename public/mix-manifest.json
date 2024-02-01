@@ -14,6 +14,7 @@
     "/resources/modules/string-gen/index.css": "/resources/modules/string-gen/index.css",
     "/resources/modules/the-hub/index.css": "/resources/modules/the-hub/index.css",
     "/resources/css/widgets/card-widget.css": "/resources/css/widgets/card-widget.css",
+    "/resources/css/util/templater/templater.css": "/resources/css/util/templater/templater.css",
     "/resources/css/util/tutorial.js/tutorial.css": "/resources/css/util/tutorial.js/tutorial.css",
     "/resources/css/util/popover.js/popover.css": "/resources/css/util/popover.js/popover.css",
     "/resources/css/util/text-counter.css": "/resources/css/util/text-counter.css",

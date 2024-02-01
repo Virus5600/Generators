@@ -1,7 +1,66 @@
-.#{$prefix}-builder {
+.#{$tmp-prefix}-builder {
 	size: A4 portrait;
 	padding: 0;
+
+	min-height: 100vh;
+	background-color: white;
+
+	[contenteditable=true]:focus-visible {
+		outline-style: solid;
+	}
+
+	&, & > * {
+		color: var(--bs-body-color);
+	}
+
+	& > * {
+		transition: outline .25s, box-shadow .25s, background .25s, opacity .25s;
+
+		&[contenteditable=true]:empty:not(:focus):before {
+			content: attr(placeholder);
+			color: grey;
+			font-style: italic;
+		}
+
+		&:focus {
+			outline: solid 1px var(--bs-secondary);
+			box-shadow: var(--bs-secondary) 0px 0px 10px;
+		}
+
+		&.highlight {
+			outline: solid 1px var(--bs-primary);
+			box-shadow: var(--bs-primary) 0px 0px 10px;
+			background: inherit;
+			opacity: .75;
+		}
+	}
 }
 
-.#{$prefix}-builder {
+.#{$tmp-prefix}-toolbar {
+	.#{$tmp-prefix}-toolbar-content {
+		// Button Modification
+		.btn:not(.btn-default) {
+			@include button-outline-variant(
+				$dark,
+				$dark,
+				darken($light-bg-subtle, 10%),
+				$dark-bg-subtle,
+				darken($dark, 10%),
+			);
+
+			border-radius: 0;
+			--bs-btn-bg: #{$light-bg-subtle};
+			--bs-btn-hover-bg: #{darken($light-bg-subtle, 5%)};
+			--bs-btn-border-color: transparent;
+		}
+
+		// Toolbar Handle
+		.handle {
+			cursor: grab !important;
+
+			&:focus, &:active {
+				cursor: grabbing !important;
+			}
+		}
+	}
 }

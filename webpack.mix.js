@@ -36,7 +36,7 @@ mix.webpackConfig({
 	.sass('src/scss/util/text-counter.scss', '/resources/css/util')
 	.sass('src/scss/util/popover.js/popover.scss', '/resources/css/util/popover.js/popover.css')
 	.sass('src/scss/util/tutorial.js/tutorial.scss', '/resources/css/util/tutorial.js/tutorial.css')
-	// .sass('src/scss/util/templater/templater.scss', '/resources/css/util/templater/templater.css')
+	.sass('src/scss/util/templater/templater.scss', '/resources/css/util/templater/templater.css')
 
 	// Widgets Styles
 	.sass('src/scss/widgets/card-widget.scss', '/resources/css/widgets')
