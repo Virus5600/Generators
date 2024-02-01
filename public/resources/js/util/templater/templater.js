@@ -24,7 +24,7 @@ function init() {
 						fallbackPlacements: [`top`, `bottom`],
 						html: true,
 						placement: `top`,
-						template: toolbar(ELEMENT_INSTANCE.element(), ELEMENT_INSTANCE.getTools()),
+						template: toolbar(ELEMENT_INSTANCE.getTools()),
 						trigger: `focus`
 					});
 
@@ -40,29 +40,32 @@ function init() {
 	});
 }
 
-function toolbar(parent, tools) {
+function toolbar(tools) {
 	if (typeof tools === `string`)
 		tools += `<div class="vr"></div>`;
 	else
 		tools = ``;
 
 	let toReturn = `
-	<div class="popover opacity-87.5" role="popover" contenteditable="false">
-		<div class="popover-arrow border-secondary" data-popper-arrow></div>
+	<div class="popover opacity-87.5 border-1 border-secondary dtrtg-toolbar" role="popover" contenteditable="false">
+		<div class="popover-arrow border-1 border-secondary" data-popper-arrow></div>
 
-		<div class="hstack gap-2 px-2">
-
+		<div class="hstack px-2">
 			<div class="vr"></div>
 
 			<div class="dropdown">
 				<button class="btn btn-outline-secondary dropdown-toggle border-0" type="button" title="others" data-bs-toggle="dropdown" aria-expanded="false">
-				<i class="fas fa-ellipsis-vertical m-auto"></i>
-			</button>
+					<i class="fas fa-ellipsis-vertical m-auto"></i>
+				</button>
+			</div>
+
+			<span class="delete border-0 btn">
+				<i class="fas fa-trash fa-fw m-auto"></i>
+			</span>
 
 			<span class="handle border-0 btn">
 				<i class="fas fa-grip-vertical fa-fw m-auto"></i>
 			</span>
-			</div>
 		</div>
 	</div>
 	`;
@@ -71,5 +74,13 @@ function toolbar(parent, tools) {
 }
 
 $(() => {
+	// Initialize the code
 	init();
+
+	// Attach Event Listener to the delete button.
+	$(document.body).on(`click`, `.dtrtg-toolbar .delete`, (e) => {
+		let target = $(e.currentTarget).closest(`[id]`)[0].id;
+
+		$(`#${target}`).parent().remove();
+	});
 });
