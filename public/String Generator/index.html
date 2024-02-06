@@ -26,7 +26,7 @@
 	</head>
 
 	<body class="min-vh-100 d-flex flex-column custom-scrollbar apply-to-all" data-bs-theme="dark">
-		<form action="javascript:validate($(`#string_form`));" id="string_form" class="m-auto card col-10 col-md-6 col-lg-3 px-0 needs-validation" novalidate>
+		<form id="string_form" class="m-auto card col-10 col-md-6 col-lg-3 px-0 needs-validation" novalidate>
 			<!-- HEADER -->
 			<h4 class="card-header">String Generator</h4>
 
@@ -47,7 +47,7 @@
 					<div class="row mb-2" id="length_range">
 						<div class="col-12 col-md-6">
 							<label for="range_min" class="form-label">Min Range</label>
-							<input type="number" id="range_min" name="range_min" class="form-control" min="0" max="8" value="5" disabled required>
+							<input type="number" id="range_min" name="range_min" class="form-control" min="1" max="8" value="5" disabled required>
 						</div>
 
 						<div class="col-12 col-md-6">
@@ -60,7 +60,7 @@
 					<div class="row my-2" id="length_fixed">
 						<div class="col">
 							<label for="length" class="form-label">String Length</label>
-							<input type="number" id="length" name="length" class="form-control" min="0" max="255" value="8" required>
+							<input type="number" id="length" name="length" class="form-control" min="1" max="255" value="8" required>
 						</div>
 					</div>
 

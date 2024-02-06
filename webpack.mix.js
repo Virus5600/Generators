@@ -16,6 +16,9 @@ mix.webpackConfig({
 				path.resolve(__dirname),
 			],
 		},
+		externals: {
+			canvg: 'canvg',
+		},
 		devtool: 'inline-source-map'
 	})
 	/////////\\\\\\\\\\
@@ -49,6 +52,10 @@ mix.webpackConfig({
 	.js('src/modules/the-hub/scripts.js', 'resources/modules/the-hub/index.js')
 	.sass('src/modules/the-hub/styles.scss', 'resources/modules/the-hub/index.css')
 	.copy('src/resources/the-hub/', 'public/resources/modules/the-hub/assets')
+
+	// About Page Compiler
+	.js('src/modules/about/index.js', 'resources/modules/about/index.js')
+	.copy('src/resources/about/', 'public/resources/modules/about/assets')
 
 	// String Generator Compiler
 	.js('src/modules/string-generator/scripts.js', 'resources/modules/string-gen/index.js')

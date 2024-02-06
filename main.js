@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, session } = require('electron');
+const { app, BrowserWindow, ipcMain, session, Menu } = require('electron');
 const remote = require('@electron/remote/main');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
@@ -40,6 +40,8 @@ const createWindow = () => {
 	win.loadFile('public/index.html');
 };
 
+// Menu.setApplicationMenu(null);
+
 app.whenReady().then(() => {
 	// Sets the CSP
 	session
@@ -49,7 +51,7 @@ app.whenReady().then(() => {
 			callback({
 				responseHeaders: {
 					...details.responseHeaders,
-					'Content-Security-Policy': [`default-src 'self' 'unsafe-inline'`],
+					'Content-Security-Policy': [`default-src 'self' 'unsafe-inline'; img-src 'self' data: *; script-src 'self';`],
 				}
 			});
 		});
