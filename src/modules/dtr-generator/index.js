@@ -35,6 +35,7 @@ const DTR = {
 	},
 	list: [],
 	session: null,
+	session: null,
 	displayContent(e) {
 		DTR.reset();
 
@@ -71,7 +72,8 @@ const DTR = {
 		let leadingZero = this.options.leadingTimeZero ? "0" : "";
 
 		for (let i = 1; i <= 31; i++) {
-			let date = $(`#date-${i}`);
+			let date = $(`#date-${i}`),
+				absentBtn = ``;
 
 			dates += `
 			<div class="dtr-row" data-date="${date.attr("id")}">
@@ -86,29 +88,38 @@ const DTR = {
 				`;
 			}
 			else {
+				let dateChecked = date.prop(`checked`);
 				dates += `
 					<div class="dtr-cell border border-secondary small" data-update>
-						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? `${leadingZero}8:00` : ""}" readonly>
+						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${dateChecked ? `${leadingZero}8:00` : ""}" readonly>
 					</div>
 
 					<div class="dtr-cell border border-secondary small" data-update>
-						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? "12:00" : ""}" readonly>
+						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${dateChecked ? "12:00" : ""}" readonly>
 					</div>
 
-					<div class="dtr-cell border border-secondary small fst-italic fw-bold text-danger" data-update>${date.prop(`checked`) ? "BRK" : ""}</div>
+					<div class="dtr-cell border border-secondary small fst-italic fw-bold text-danger" data-update data-dtr-break>${dateChecked ? "BRK" : ""}</div>
 
 					<div class="dtr-cell border border-secondary small" data-update>
-						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? `${leadingZero}1:00` : ""}" readonly>
+						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${dateChecked ? `${leadingZero}1:00` : ""}" readonly>
 					</div>
 
 					<div class="dtr-cell border border-secondary small" data-update>
-						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${date.prop(`checked`) ? `${leadingZero}5:00` : ""}" readonly>
+						<input type="text" class="border-0 bg-transparent w-100 text-center" value="${dateChecked ? `${leadingZero}5:00` : ""}" readonly>
 					</div>
 
 					`;
+
+				absentBtn = `
+					<button class="btn btn btn-outline-dark attendance-toggle" data-bs-toggle="tooltip" data-bs-title="Change to ${dateChecked ? "Absent" : "Present"}" data-bs-custom-class="dtr-tooltip" data-bs-placement="right">
+						<i class="fa-solid fa-toggle-${dateChecked ? 'on' : 'off'} fa-xl"></i>
+					</button>
+				`;
 			}
 			dates += `
-				<div class="dtr-cell"></div>
+				<div class="dtr-cell">
+					${absentBtn}
+				</div>
 			</div>
 			`;
 		}
@@ -274,7 +285,9 @@ const DTR = {
 			return;
 		}
 
+		// Fetch the list of names and iterate through them.
 		$(`#listPreview li`).each((k, v) => {
+			// Trims the whitespace from the line.
 			let name = $(v).text().trim();
 
 			let DTR = $(`#dtrSample`).parent().clone()
@@ -355,6 +368,8 @@ const DTR = {
 
 		$(`#generatedDTR .has-secondary .dtr-cell[data-dtr-primary-verifier] > span, #generatedDTR .has-secondary .dtr-cell[data-dtr-secondary-verifier] > span`).css('font-size', max.name);
 		$(`#generatedDTR .has-secondary .dtr-cell[data-dtr-primary-verifier-position] > span, #generatedDTR .has-secondary .dtr-cell[data-dtr-secondary-verifier-position] > span`).css('font-size', max.pos);
+
+		$(`[data-bs-toggle="tooltip"]`).tooltip({trigger: `hover`});
 	},
 	print() {
 		// DATA PARSING
@@ -368,12 +383,11 @@ const DTR = {
 			data.find(`input`).each((i, o) => {
 				let input = $(o);
 				let parent = input.parent();
-				let grandParent = parent.parent();
 
-				parent.html(input.val());
+				input.addClass(`d-none`);
 
-				if (input.val().length <= 0)
-					grandParent.find(`[data-update]`).html(``);
+				parent.text(input.val())
+					.append(input);
 			});
 
 			if (DTR.options.duplicateDTR) {
@@ -390,7 +404,6 @@ const DTR = {
 		});
 
 		printTarget.html(toAppend + `</div>`);
-
 
 		// ACTUAL PRINTING
 		const elms = $(`body > *:not(script, style, link)`);
@@ -418,6 +431,21 @@ const DTR = {
 				await d.save(`(${document.querySelector(`[name=period]`).value}) DTR.pdf`, { returnPromise: true });
 				elms.removeClass(`print-enabled`);
 			}
+		});
+
+		// Re-add input fields
+		$(`#generatedDTR`).children().each((k, v) => {
+			let data = $(v);
+
+			data.find(`input`).each((i, o) => {
+				let input = $(o);
+				let parent = input.parent();
+
+				input.removeClass(`d-none`)
+					.val(parent.text());
+				parent.text("")
+					.append(input);
+			});
 		});
 	},
 	generateTutorial(target, end = false) {
@@ -1008,8 +1036,15 @@ $(() => {
 		.prop(`disabled`, true);
 
 	// TUTORIAL
-	$(`#tutorial`).on(`click`, () => {
-		if (!Tutorial.instantiated)
-			Tutorial.start(TUTORIAL.components, TUTORIAL.options);
+	$(`#tutorial`).on(`click`, TUTORIAL.init);
+	$(document).on(`click`, `#tutorial-overlay, #tutorial-backdrop`, TUTORIAL.next);
+	$(document).on(`keydown`, (e) => {
+		if (!TUTORIAL.instantiated)
+			return;
+
+		let keyCode = e.keyCode || e.which;
+
+		if (keyCode == 13 || keyCode == 32) TUTORIAL.next();
+		else if (keyCode == 27) TUTORIAL.end();
 	});
 });
