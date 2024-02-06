@@ -3,9 +3,23 @@
 		{
 			"version": "v1.1.0-beta.5",
 			"pre-release": true,
-			"date": "TBA",
-			"description": "TBA",
-			"changelog": {},
+			"date": "2024-02-05",
+			"description": "A small quality-of-life update for DTR Generator's (DTRG) attendance editing. The DTRG now allows the user to edit the attendance of the generated DTR preview and thus, a much easier and efficient way to mark a day as absent for a specific person's DTR instead of manually clearing the cells one-by-one. Furthermore, a bug fix was implemented after the discovery of this bug where when an attempt to print the DTR is done, or is actually done, the generated DTR preview prevents the user from editing the editable fields and cells.\n\nThis is a feature that was requested by the users and is now implemented. The feature is now in beta and will be tested for any bugs or issues that may arise.",
+			"changelog": {
+				"added": [
+					"Added the v1.1.0-beta.5's changelog to the changelog list.",
+					"Added the download link to v1.1.0-beta.3.",
+					"Added the download link to v1.1.0-beta.4.",
+					"Added a toggleable button on the right side of the generated DTR preview, allowing a row (a day) to be toggled as absent (blank and read only) or present (with time and editable).",
+					"Added two documentation comments to an iterator for `#listPreview li`.",
+					"Added new styling for the tooltip of attendance toggle buttons and for the toggle buttons itself.",
+					"Added more bugs that aren't found nor detected yet."
+				],
+				"updated": [
+					"Bumped the release version to v1.1.0-beta.5.",
+					"Fixed a bug where the generated DTR preview can't be modified after attempting to print the DTR due to the stupid developer who overlooked the effects of his code."
+				]
+			},
 			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.0-beta.5"
 		},
 		{

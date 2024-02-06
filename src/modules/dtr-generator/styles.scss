@@ -94,6 +94,26 @@
 					border-bottom: 2px solid #343a40;
 				}
 			}
+
+			.attendance-toggle {
+				display: none;
+
+				padding: 0;
+				margin-left: auto;
+				margin-right: auto;
+
+				width: 100%;
+				border: none;
+				background-color: transparent;
+
+				--bs-btn-hover-color: var(--bs-dark);
+			}
+
+			@media print {
+				.attendance-toggle {
+					display: none !important;
+				}
+			}
 		}
 
 		&.has-secondary, &.has-secondary > * {
@@ -146,6 +166,17 @@
 	}
 }
 
+#generatedDTR {
+	.attendance-toggle {
+		display: initial;
+	}
+}
+
 .print-enabled {
 	display: none !important;
+}
+
+.dtr-tooltip {
+	--bs-tooltip-bg: var(--bs-dark);
+	--bs-tooltip-color: var(--bs-white);
 }
