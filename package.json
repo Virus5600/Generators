@@ -1,6 +1,6 @@
 {
 	"name": "generators",
-	"version": "1.1.0-beta.5",
+	"version": "1.1.0-beta.6",
 	"description": "A series of mini-applications that all create a library of generator application",
 	"main": "main.js",
 	"license": "MIT",
@@ -79,8 +79,8 @@
 	],
 	"build": {
 		"appId": "com.virus5600.generators",
-		"productName": "Generators",
-		"artifactName": "${productName}_${version}_setup.${ext}",
+		"productName": "Generators (Portable)",
+		"artifactName": "${productName}_${version}_portable.${ext}",
 		"copyright": "Copyright (c) 2023 ${author}",
 		"generateUpdatesFilesForAllChannels": false,
 		"target": [
