@@ -123,7 +123,7 @@ export default class Tutorial {
 					Tutorial.end();
 				}
 
-				if (Tutorial.options.arrowBtns) {
+				if (Tutorial.options.arrowBtns && Tutorial.instantiated) {
 					if (e.target.closest(`.vs5-tutorial-left-arrow`)) {
 						this.#prev();
 					}
