@@ -34,6 +34,11 @@ export default class Tutorial {
 	/**
 	 * Defines a list of default keybindings that are used as keyboard controls for
 	 * the Tutorial.
+	 *
+	 * The default keybinds are as follows:
+	 * - ***Previous***: [37] - Left Arrow
+	 * - ***Next***: [13, 32, 39] - Enter, Space, Right Arrow
+	 * - ***End***: [27, 35] - Escape, End
 	 */
 	static #defaultKeybinds = {
 		prev: [37],
@@ -132,7 +137,7 @@ export default class Tutorial {
 			},
 			keyDown: (e) => {
 				if (!Tutorial.instantiated)
-					return;
+					return false;
 
 				let keyCode = e.keyCode || e.which;
 				e.preventDefault();
@@ -192,7 +197,7 @@ export default class Tutorial {
 			throw new Error(`The components parameter is required.`);
 
 		if (Tutorial.instantiated)
-			return;
+			return false;
 
 		Tutorial.#components = components;
 		Tutorial.#begin = true;
@@ -206,10 +211,12 @@ export default class Tutorial {
 
 	/**
 	 * Ends the tutorial and removes the backdrop.
+	 *
+	 * @param {boolean} trueEnd Identifies whether the tutorial was ended abruptly or reached the end of the tutorial. By default, the value is `false` which means that it was abruptly ended.
 	 */
 	static end(trueEnd = false) {
 		if (!Tutorial.instantiated)
-			return;
+			return false;
 
 		const prev = document.querySelector(Tutorial.#previous);
 
@@ -221,6 +228,7 @@ export default class Tutorial {
 		// Check if there's an end callback to call them before ending the tutorial
 		const component = Tutorial.#components[Tutorial.#previous];
 		if (Object.keys(component).includes(`callbackEnd`) && !trueEnd) {
+			console.log(component);
 			component.callbackEnd();
 		}
 
@@ -247,7 +255,7 @@ export default class Tutorial {
 	#init() {
 		// Prevents further initialization when the tutorial is already instantiated...
 		if (Tutorial.#instantiated)
-			return;
+			return false;
 
 		// Initialize some important variables
 		let body = document.body;
@@ -279,7 +287,7 @@ export default class Tutorial {
 	#prev() {
 		// If the index-1 is equal to 0, then do nothing at all. Lmao.
 		if ((Tutorial.#index - 1) <= 0)
-			return;
+			return false;
 
 		// Check if there's an end callback
 		const component = Tutorial.#components[Tutorial.#previous];
@@ -343,7 +351,7 @@ export default class Tutorial {
 			document.removeEventListener(`keydown`, this.#eventListener.keyDown);
 
 			Tutorial.end(true);
-			return;
+			return false;
 		}
 
 		// If the condition above is not met, then continue the tutorial
