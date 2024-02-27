@@ -79,8 +79,8 @@
 	],
 	"build": {
 		"appId": "com.virus5600.generators",
-		"productName": "Generators (Portable)",
-		"artifactName": "${productName}_${version}_portable.${ext}",
+		"productName": "Generators",
+		"artifactName": "${productName}_${version}_setup.${ext}",
 		"copyright": "Copyright (c) 2023 ${author}",
 		"generateUpdatesFilesForAllChannels": false,
 		"target": [
