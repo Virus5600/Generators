@@ -664,7 +664,7 @@ function initEventListeners() {
 					updated: null,
 					removed: null
 				},
-					navContent = `<div class="col-12 col-lg-2 d-flex flex-column position-relative">`,
+					navContent = `<div class="col-12 d-flex flex-column position-relative">`,
 					content = `<div class="col-12 col-lg-10" data-bs-spy="scroll" data-bs-target="#vcNavContent" tabindex="0" id="vcContent">`,
 					versions = [];
 
@@ -722,7 +722,7 @@ function initEventListeners() {
 				}
 
 				navContent += `
-				<nav class="border border-light rounded bg-body-tertiary sticky-top posabs-vertical-middle mx-3 mt-4 p-3" id="vcNavContent">
+				<nav class="border border-light rounded bg-body-tertiary mx-3 mt-4 p-3" id="vcNavContent">
 				`;
 				versions.forEach((v) => {navContent += `<a href="#${v}" class="btn btn-dark w-lg-100 mx-2 mx-lg-auto my-1">${v.replaceAll("_", ".")}</a>`;});
 				navContent += `
@@ -731,7 +731,7 @@ function initEventListeners() {
 
 				Swal.fire({
 					title: `<span id="top-vc">Version Changes</span>`,
-					html: `<div class="d-flex flex-column flex-lg-row">${navContent}</div>	${content.replaceAll(/(\<a.+".+")(\>)/gi, "$1 data-open-external$2")}</div></div>`,
+					html: `<div class="d-flex flex-column flex-lg-row">${navContent}</div>	${content.replaceAll(/(\< (!?href="#top-vc").+".+")(\>)/gi, "$1 data-open-external$2")}</div></div>`,
 					showDenyButton: false,
 					confirmButtonText: `Close`,
 					width: `75%`
