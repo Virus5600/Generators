@@ -9,7 +9,7 @@ import { PopoverData } from "../../PopoverData.js";
  * @author Satch Navida
  * @version 1.0.0
  */
-export class Text extends Element {
+export default class Text extends Element {
 	/**
 	 * Contains various types of text display. This list may be updated overtime, allowing
 	 * other types of text display that may be developed in the future.

@@ -11,6 +11,8 @@ import Data from "./Data.js";
  *
  * @author Satch Navida
  * @version 1.0.0
+ *
+ * @deprecated Unused and will be dropped on v1.1.0-beta.8
  */
 export class PopoverData {
 	// STATIC VARIABLES
@@ -79,7 +81,7 @@ export class PopoverData {
 	 * Creates an instance of Popover Data, which holds all necessary information for this popover, along
 	 * with some basic yet, useful functions.
 	 *
-	 * @param {Popper}				popover		A PopperJS popper instance.
+	 * @param {bootstrap.Popover}	popover		A Bootstrap's Popover instance.
 	 * @param {Data}				data		An instance reference for the `Data` class used by the popover. Provide `null` if none.
 	 * @param {string}				dataKey		A string instance, which defines what component is used for this popper. Provide `null` if `data` is `null`.
 	 * @param {PopoverData.EVENTS}	triggers	A string value. Allowed values are provided by the static enum `PopoverData.EVENTS`. Defaults to `PopoverData.EVENTS.FOCUS`.
@@ -90,7 +92,6 @@ export class PopoverData {
 		this.#dataKey = dataKey;
 		this.#trigger = trigger;
 		this.#id = crypto.randomUUID();
-
 
 		this.#setTrigger(this.#trigger);
 	}
@@ -134,8 +135,12 @@ export class PopoverData {
 			throw new Error(err, PopoverData.TRIGGERS);
 
 		this.#listeners[`${trigger}TogglePopover`] = (e) => {
-			if (e.srcElement == this.#popover._popper.state.elements.reference)
-				this.toggle();
+			if (e.target == e.currentTarget || e.target.closest(`[aria-describedby="popover-${this.#id}"]`)) {
+				this.show();
+			}
+			else {
+				this.hide();
+			}
 		};
 
 		this.#popover._element.addEventListener(PopoverData.#TRIGGERS_VANILLA[trigger].on, this.#listeners[`${trigger}TogglePopover`]);
@@ -197,11 +202,15 @@ export class PopoverData {
 	}
 
 	/**
-	 * Shows and makes the popover visible and interactible.
+	 * Shows and makes the popover visible and intractable.
 	 *
 	 * @return {PopoverData} The same and current instance of PopoverData.
 	 */
 	show() {
+		// Cleans up the palette first.
+		document.querySelectorAll(`#popover-${this.#id}`)
+			.forEach(el => el.remove());
+
 		let tooltip = this.#popover._popper.state.elements.popper;
 		let target = this.#popover._popper.state.elements.reference;
 
@@ -230,8 +239,8 @@ export class PopoverData {
 	 */
 	hide() {
 		// Fix hide
-		document.querySelector(`#popover-${this.#id}`)
-			.remove();
+		document.querySelectorAll(`#popover-${this.#id}`)
+			.forEach(el => el.remove());
 
 		// If successful, update the `visible` state
 		this.visible = false;
@@ -275,14 +284,14 @@ export class PopoverData {
 	 * Fetches the PopoverData instance from the given identifier. The identifier can either
 	 * be an instance of `Popper` or an `Element`.
 	 *
-	 * @param {Popper|Element} identifier An instance of Popper or Element which could identify the PopoverData instance.
+	 * @param {bootstrap.Popover|Element} identifier An instance of Bootstrap's Popover or Element which could identify the PopoverData instance.
 	 *
 	 * @return {PopoverData|null} The PopoverData instance if found; `null` otherwise.
 	 */
 	static getInstance(identifier) {
 		let instance = null;
 
-		if (identifier instanceof Popper)
+		if (identifier instanceof bootstrap.Popover)
 			instance = PopoverData.getInstance(identifier.state.elements.reference);
 		else if (identifier instanceof Element)
 			instance = bootstrap.Popover.getInstance(identifier);

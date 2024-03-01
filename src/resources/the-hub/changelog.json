@@ -1,10 +1,28 @@
 {
 	"changelogs": [
 		{
+			"version": "v1.1.0-beta.7",
+			"pre-release": true,
+			"date": "TBA",
+			"description": "Alpha version of the DTR Template Generator is now implemented. The sub-app can now be accessed in *The Hub* and but still has limited functions due to its current Alpha status. It will take more time to develop than anticipated and thus, the version v1.1.0 will be delayed further.",
+			"changelog": {
+				"added": [
+					"Added the v1.1.0-beta.7's changelog to the changelog list.",
+					"Alpha version of DTR Template Generator"
+				],
+				"updated": [
+					"Bumped the release version to v1.1.0-beta.7.",
+					"Marked PopoverData (templater) as deprecated",
+					"Marked Data (templater) as deprecated"
+				]
+			},
+			"download": "https://github.com/Virus5600/Generators/releases/tag/v1.1.0-beta.7"
+		},
+		{
 			"version": "v1.1.0-beta.6",
 			"pre-release": true,
 			"date": "2024-02-26",
-			"description": "A small hotfix for the Tutorial after a bug was detected. Particularly, the bug is where the Tutorial iterates and shows the tutorial popover for the 2nd component after reaching the end of the tutorial, resulting to the page being unusable as it loop endlessly. This is a hotfix for the bug and is now implemented. The feature is now in beta and will be tested for any bugs or issues that may arise. For more information on the bug, see Issue [#15](https://github.com/Virus5600/Generators/issues/15)",
+			"description": "A small hotfix for the Tutorial after a bug was detected. Particularly, the bug is where the Tutorial iterates and shows the tutorial popover for the 2nd component after reaching the end of the tutorial, resulting to the page being unusable as it loop endlessly. This is a hotfix for the bug and is now implemented. The feature is now in beta and will be tested for any bugs or issues that may arise. For more information on the bug, see Issue [#16](https://github.com/Virus5600/Generators/issues/16)",
 			"changelog": {
 				"added": [
 					"Added the v1.1.0-beta.6's changelog to the changelog list."

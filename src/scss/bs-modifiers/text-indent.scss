@@ -6,6 +6,22 @@ $utilities: map-merge(
 			class: text-indent,
 			responsive: true,
 			values: map-merge($spacers, (auto: auto))
+		),
+
+		"text-align": (
+			property: text-align,
+			class: text,
+			responsive: true,
+			values: map-merge(
+				map-get(
+					map-get(
+						$utilities,
+						"text-align"
+					),
+					"values"
+				),
+				(justify: justify)
+			)
 		)
 	)
 );

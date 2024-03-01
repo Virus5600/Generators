@@ -4,6 +4,8 @@ const elMap = new Map();
  * Stores component instances on a 2D map, allowing a single component per element.
  *
  * All credit goes to Bootstrap's source code as this was from their code base.
+ *
+ * @deprecated Unused and will be dropped on v1.1.0-beta.8
  */
 export default {
 	set(el, key, instance) {

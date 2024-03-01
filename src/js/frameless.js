@@ -220,6 +220,9 @@ function init() {
 		}
 	}
 
+	// Sets a public accessor for some app information
+	window.isPackaged = ipcRenderer.sendSync('isPackaged');
+
 	// Initialize Event Listeners
 	initEventListeners();
 
@@ -653,7 +656,9 @@ function initEventListeners() {
 		}
 		// CHANGELOG
 		else if (e.target.closest(`#check-version-changes`)) {
-			fetch("resources/modules/the-hub/assets/changelog.json").then((res) => {
+			let path = __dirname.substring(0, __dirname.indexOf(`public`) + `public`.length);
+
+			fetch(`${path}/resources/modules/the-hub/assets/changelog.json`).then((res) => {
 				return res.json();
 			}).then((data) => {
 				const changelogTypes = ["added", "updated", "removed"],
@@ -664,8 +669,8 @@ function initEventListeners() {
 					updated: null,
 					removed: null
 				},
-					navContent = `<div class="col-12 d-flex flex-column position-relative">`,
-					content = `<div class="col-12 col-lg-10" data-bs-spy="scroll" data-bs-target="#vcNavContent" tabindex="0" id="vcContent">`,
+					navContent = `<div class="col-12 d-flex flex-row position-relative">`,
+					content = `<div class="col-12">`,
 					versions = [];
 
 				for (let c of data.changelogs) {
@@ -715,29 +720,27 @@ function initEventListeners() {
 
 						<div class="card-footer text-end">
 							<a href="${c.download}" class="btn btn-secondary" data-open-external>Release Page</a>
-							<a href="#top-vc" class="btn btn-primary d-inline-block d-lg-none">Back to Top</a>
+							<a href="#top-vc" class="btn btn-primary">Back to Top</a>
 						</div>
 					</div>
 					`;
 				}
 
 				navContent += `
-				<nav class="border border-light rounded bg-body-tertiary mx-3 mt-4 p-3" id="vcNavContent">
+				<nav class="border border-light rounded bg-body-tertiary mx-3 mt-4 p-3">
 				`;
-				versions.forEach((v) => {navContent += `<a href="#${v}" class="btn btn-dark w-lg-100 mx-2 mx-lg-auto my-1">${v.replaceAll("_", ".")}</a>`;});
+				versions.forEach((v) => {navContent += `<a href="#${v}" class="btn btn-dark mx-2 my-1">${v.replaceAll("_", ".")}</a>`;});
 				navContent += `
 				</nav>
 				`;
 
 				Swal.fire({
 					title: `<span id="top-vc">Version Changes</span>`,
-					html: `<div class="d-flex flex-column flex-lg-row">${navContent}</div>	${content.replaceAll(/(\< (!?href="#top-vc").+".+")(\>)/gi, "$1 data-open-external$2")}</div></div>`,
+					html: `<div class="d-flex flex-column">${navContent}</div>	${content.replaceAll(/(\< (!?href="#top-vc").+".+")(\>)/gi, "$1 data-open-external$2")}</div></div>`,
 					showDenyButton: false,
 					confirmButtonText: `Close`,
 					width: `75%`
 				});
-
-				bootstrap.ScrollSpy.getOrCreateInstance(`#vcContent`);
 			});
 
 		}

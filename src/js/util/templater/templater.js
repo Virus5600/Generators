@@ -18,16 +18,16 @@ function init() {
 				ELEMENT_INSTANCE.prop(`contentEditable`, true)
 					.text(clazz);
 
-					const POPOVER = new bootstrap.Popover(ELEMENT_INSTANCE.element(), {
-						container: ELEMENT_INSTANCE.element(),
-						content: `TEST`,
-						fallbackPlacements: [`top`, `bottom`],
-						html: true,
-						placement: `top`,
-						template: toolbar(ELEMENT_INSTANCE.getTools()),
-						trigger: `focus`,
-						sanitize: false,
-					});
+				const POPOVER = new bootstrap.Popover(ELEMENT_INSTANCE.element(), {
+					container: ELEMENT_INSTANCE.element(),
+					content: `TEST`,
+					fallbackPlacements: [`top`, `bottom`],
+					html: true,
+					placement: `top`,
+					template: toolbar(ELEMENT_INSTANCE.getTools()),
+					trigger: `focus`,
+					sanitize: false,
+				});
 
 				ELEMENT_INSTANCE.createPopover(POPOVER, false);
 
@@ -42,9 +42,7 @@ function init() {
 }
 
 function toolbar(tools) {
-	if (typeof tools === `string`)
-		tools += `<div class="vr"></div>`;
-	else
+	if (typeof tools !== `string`)
 		tools = ``;
 
 	let toReturn = `
@@ -56,16 +54,19 @@ function toolbar(tools) {
 
 			<div class="hstack dtrtg-toolbar-content-end">
 				<div class="dropdown">
-					<button class="btn dropdown-toggle" type="button" title="others" data-bs-toggle="dropdown" aria-expanded="false">
+					<button class="btn dropdown-toggle" type="button" title="Others" data-bs-toggle="dropdown" aria-expanded="false">
 						<i class="fas fa-ellipsis-vertical m-auto"></i>
 					</button>
+
+					<div class="dropdown-menu">
+					</div>
 				</div>
 
-				<span class="delete btn">
+				<span class="delete btn" title="Remove">
 					<i class="fas fa-trash fa-fw m-auto"></i>
 				</span>
 
-				<span class="handle btn">
+				<span class="handle btn" title="Re-order">
 					<i class="fas fa-grip-vertical fa-fw m-auto"></i>
 				</span>
 			</div>

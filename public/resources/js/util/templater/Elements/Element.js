@@ -253,6 +253,8 @@ export default class Element {
 	// PRIVATE VARIABLES
 	/**
 	 * The actual HTML element fetched from the newly created Element.
+	 *
+	 * @type {HTMLElement}
 	 */
 	#element = null;
 	/**
@@ -395,7 +397,8 @@ export default class Element {
 		else if (!popover instanceof bootstrap.Popover)
 			throw new TypeError("Popover instance is not an instance of bootstrap.Popover.");
 
-		this.#popover = new PopoverData(popover, Data, "templater", PopoverData.TRIGGERS.CLICK);
+		// Commented out due to PopoverData being utterly unused and useless after the in-house popover was dropped.
+		// this.#popover = new PopoverData(popover, Data, "templater", PopoverData.TRIGGERS.CLICK);
 
 		Data.set(this.#element, "templater", this.#popover);
 		return this;
@@ -426,22 +429,41 @@ export default class Element {
 	}
 
 	static getInstance(el) {
-		return 	Data.get(el, "templater");
+		return Data.get(el, "templater");
 	}
 
 	/**
 	 * Deletes this element and removes it from the editor. This is a static method and can
 	 * be called without an instance of the class.
 	 *
-	 * @param {Element} el The element to delete.
+	 * @param {Element|HTMLElement} el The element to delete.
 	 *
 	 * @throws {TypeError} If the parameter is not an instance of Element.
 	 */
 	static delete(el) {
-		if (!el instanceof Element) {
-			throw new TypeError(`${el} is not an instance of Element.`);
-		}
+		if (!el instanceof Element && !el instanceof HTMLElement)
+			throw new TypeError(`${el} is not an instance of Element or HTMLElement.`);
 
-		el.element().remove();
+		if (el instanceof Element)
+			Element.delete(el.element());
+
+		el.remove();
+	}
+
+	/**
+	 * Binds a context to an arrow function. This is useful when binding a function to a
+	 * context that is not provided as `this` in the function.
+	 *
+	 * @param {Object} ctx The context to bind the arrow function to. Usually the instance of the class or the keyword `this`.
+	 * @param {*} fn The function to bind to the context to.
+	 *
+	 * @returns {Function} The function bound to the context.
+	 */
+	static arrowBind(ctx, fn) {
+		let arrowFnStr = fn.toString();
+
+		return (function() {
+			return eval(arrowFnStr);
+		}).call(ctx);
 	}
 }

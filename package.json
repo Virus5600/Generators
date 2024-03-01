@@ -1,6 +1,6 @@
 {
 	"name": "generators",
-	"version": "1.1.0-beta.6",
+	"version": "1.1.0-beta.7",
 	"description": "A series of mini-applications that all create a library of generator application",
 	"main": "main.js",
 	"license": "MIT",
@@ -58,7 +58,7 @@
 		"resolve-url-loader": "^5.0.0",
 		"sass": "^1.60.0",
 		"sass-loader": "^13.2.1",
-		"sweetalert2": "^10.16.9",
+		"sweetalert2": "11.4.8",
 		"textfit": "^2.4.0",
 		"webpack": "^5.76.3",
 		"webpack-cli": "^5.0.1"

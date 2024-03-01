@@ -35,7 +35,6 @@ const DTR = {
 	},
 	list: [],
 	session: null,
-	session: null,
 	displayContent(e) {
 		DTR.reset();
 
@@ -1036,15 +1035,52 @@ $(() => {
 		.prop(`disabled`, true);
 
 	// TUTORIAL
-	$(`#tutorial`).on(`click`, TUTORIAL.init);
-	$(document).on(`click`, `#tutorial-overlay, #tutorial-backdrop`, TUTORIAL.next);
-	$(document).on(`keydown`, (e) => {
-		if (!TUTORIAL.instantiated)
-			return;
+	$(`#tutorial`).on(`click`, () => {
+		if (!Tutorial.instantiated)
+			Tutorial.start(TUTORIAL.components, TUTORIAL.options);
+	});
 
-		let keyCode = e.keyCode || e.which;
+	// PRESENT/ABSENT TOGGLE
+	$(document).on(`click`, `.attendance-toggle`, (e) => {
+		let obj = $(e.currentTarget),
+			tooltip = bootstrap.Tooltip.getInstance(e.currentTarget),
+			status = obj.attr(`data-bs-title`).replaceAll(/^[\w\s]+\s(\w+)$/g, "$1").toLowerCase();
 
-		if (keyCode == 13 || keyCode == 32) TUTORIAL.next();
-		else if (keyCode == 27) TUTORIAL.end();
+		let newStatus = `Change to ${status == 'present' ? 'Absent' : 'Present'}`;
+
+		obj.attr(`data-bs-title`, newStatus)
+			.find(`svg.fa-toggle-on, svg.fa-toggle-off`)
+			.removeClass(`fa-toggle-on fa-toggle-off`)
+			.addClass(`fa-toggle-${status == 'present' ? 'on' : 'off'}`);
+
+		tooltip.setContent({
+			'.tooltip-inner': newStatus
+		});
+
+		// Store the values
+		obj.closest(`.dtr-row`)
+			.find(`.dtr-cell input`)
+			.each((k, v) => {
+				let inp = $(v),
+					val = inp.val().length > 0 ? inp.val() : inp.prop(`data-dtr-value`);
+
+				if (status == 'present') {
+					inp.prop('data-dtr-value', '')
+						.prop(`readonly`, false)
+						.val(val);
+				}
+				else {
+					inp.prop('data-dtr-value', val)
+						.prop(`readonly`, true)
+						.val('');
+				}
+			})
+		// Remove the "BRK" in the middle
+		.closest(`.dtr-row`)
+			.find(`.dtr-cell[data-dtr-break]`)
+			.each((k, v) => {
+				$(v).text(status == 'present' ? 'BRK' : '');
+			});
+		;
 	});
 });

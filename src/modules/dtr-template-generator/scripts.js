@@ -21,4 +21,22 @@ $(() => {
 	$(`#builder`).on(`change`, (e) => {
 		$(e.currentTarget).sortable(`refresh`);
 	});
+
+	if (window.isPackaged) {
+		Swal.fire({
+			title: `This Generator is still in Alpha Phase`,
+			text: `DTR Template Generator (DTRG) is still under development and currently unusable. Please wait for further updates.`,
+			icon: `info`,
+			confirmButtonText: `Leave`,
+			confirmButtonColor: `#dc3545`,
+			allowOutsideClick: false,
+			customClass: {
+				htmlContainer: `text-white`
+			}
+		}).then((result) => {
+			if (result.isConfirmed) {
+				window.location.href = `../index.html`;
+			}
+		});
+	}
 });

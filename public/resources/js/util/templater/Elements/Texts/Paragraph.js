@@ -1,6 +1,6 @@
 import Element from "../Element.js";
 
-export class Paragraph extends Element {
+export default class Paragraph extends Element {
 	constructor(props = {}) {
 		props = {
 			...props,

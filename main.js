@@ -1,8 +1,9 @@
-const { app, BrowserWindow, ipcMain, session, Menu } = require('electron');
+const fs = require('fs');
+const crypto = require('crypto');
+const { app, BrowserWindow, ipcMain, session } = require('electron');
 const remote = require('@electron/remote/main');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
-const fs = require('fs');
 const log = require('electron-log');
 
 remote.initialize();
@@ -28,6 +29,7 @@ const createWindow = () => {
 		frame: false,
 		icon: 'icon.ico',
 		webPreferences: {
+			preload: path.join(__dirname, 'preload.js'),
 			plugins: true,
 			enableRemoteModule: true,
 			contextIsolation: false,
@@ -43,18 +45,43 @@ const createWindow = () => {
 // Menu.setApplicationMenu(null);
 
 app.whenReady().then(() => {
+	// Generates a random nonce for CSP
+	global.rndCryptNnc = crypto.randomBytes(32).toString('base64');
+
+	const fnCb = (details, callback, from) => {
+		// Check if the app is at DTRG
+		let url = details.url;
+		url = url.substring(url.indexOf("public") + "public/".length)
+			.replace(/%20/g, " ")
+			.replace(/\.html/g, "")
+			.replace(/(\/?)index/g, "$1");
+		url = url.length == 0 ? "/" : url;
+
+		let isInDTRTG = url.match(/DTR[\s-]?Template[\s-]?Generator/gi) !== null;
+
+		const CSP = `default-src 'self' 'unsafe-inline'; img-src 'self' data: *; script-src 'self' ${isInDTRTG ? `'unsafe-eval'` : `'nonce-${global.rndCryptNnc}'`};`
+
+		if (!app.isPackaged) {
+			console.log(`==================================== ${from}`)
+			console.log(`URL: ${url}\n`);
+			console.log(Object.assign({'Content-Security-Policy': [CSP]}, details.responseHeaders));
+			console.log("------------------------------------")
+			console.log(details);
+			console.log(`====================================\n`)
+		}
+
+		callback({
+			responseHeaders: Object.assign({
+				'Content-Security-Policy': [CSP],
+			}, details.responseHeaders)
+		});
+	}
+
 	// Sets the CSP
 	session
 		.defaultSession
 		.webRequest
-		.onHeadersReceived((details, callback) => {
-			callback({
-				responseHeaders: {
-					...details.responseHeaders,
-					'Content-Security-Policy': [`default-src 'self' 'unsafe-inline'; img-src 'self' data: *; script-src 'self';`],
-				}
-			});
-		});
+		.onHeadersReceived((d, c) => fnCb(d, c, "onHeadersReceived"));
 
 	initUpdater();
 	createWindow();
@@ -179,3 +206,12 @@ if (!app.isPackaged) {
 		}
 	}
 }
+
+// EXPOSE TO GLOBAL
+ipcMain.on('global.rndCryptNnc', (event) => {
+	event.returnValue = global.rndCryptNnc;
+});
+
+ipcMain.on('global.generateHash', (event, len) => {
+	event.returnValue = crypto.randomBytes(len).toString('base64');
+});

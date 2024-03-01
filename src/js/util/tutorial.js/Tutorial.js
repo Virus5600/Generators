@@ -88,7 +88,7 @@ export default class Tutorial {
 	 * from {@link Tutorial.#begin} as the latter defines whether **it can** instantiate or
 	 * not while this defines whether **it is already** instantiated or not.
 	 */
-	static #instantiated = false;
+	static instantiated = false;
 
 	/**
 	 * Identifies what component the Tutorial is currently on.
@@ -103,7 +103,7 @@ export default class Tutorial {
 	/**
 	 * Defines the event listeners used by the `Tutorial` instance. Default value is `null`.
 	 */
-	#eventListener = null;
+	static #eventListener = null;
 
 	/**
 	 * @throws Error `Tutorial` is a static singleton class. It cannot be instantiated. Instead, please use `Tutorial.start()`.
@@ -113,22 +113,25 @@ export default class Tutorial {
 			throw Error('Tutorial is a static class and cannot be instantiated');
 
 		// Add the listeners
-		this.#eventListener = {
+		Tutorial.#eventListener = {
 			click: (e) => {
+				if (!Tutorial.instantiated)
+					return false;
+
 				if (e.target.closest(`#vs5-tutorial-overlay, #vs5-tutorial-backdrop`)) {
-					this.#next();
+					Tutorial.#next();
 				}
 
 				if (e.target.closest(`button#vs5EndTutorial`)) {
 					Tutorial.end();
 				}
 
-				if (Tutorial.options.arrowBtns && Tutorial.instantiated) {
+				if (Tutorial.options.arrowBtns) {
 					if (e.target.closest(`.vs5-tutorial-left-arrow`)) {
-						this.#prev();
+						Tutorial.#prev();
 					}
 					else if (e.target.closest(`.vs5-tutorial-right-arrow`)) {
-						this.#next();
+						Tutorial.#next();
 					}
 					else if (e.target.closest(`.vs5-tutorial-exit-btn`)) {
 						Tutorial.end();
@@ -143,17 +146,14 @@ export default class Tutorial {
 				e.preventDefault();
 				e.stopPropagation();
 
-				if (Tutorial.keybinds.prev.includes(keyCode)) this.#prev();
-				else if (Tutorial.keybinds.next.includes(keyCode)) this.#next();
+				if (Tutorial.keybinds.prev.includes(keyCode)) Tutorial.#prev();
+				else if (Tutorial.keybinds.next.includes(keyCode)) Tutorial.#next();
 				else if (Tutorial.keybinds.end.includes(keyCode)) Tutorial.end();
 			}
 		}
 
-		this.#eventListener.click = this.#eventListener.click.bind(this);
-		this.#eventListener.keyDown = this.#eventListener.keyDown.bind(this);
-
-		document.addEventListener(`click`, this.#eventListener.click, false);
-		document.addEventListener(`keydown`, this.#eventListener.keyDown, false);
+		document.addEventListener(`click`, Tutorial.#eventListener.click, false);
+		document.addEventListener(`keydown`, Tutorial.#eventListener.keyDown, false);
 
 		this.#init();
 	}
@@ -235,7 +235,11 @@ export default class Tutorial {
 		Tutorial.#index = 0;
 		Tutorial.#previous = null;
 		Tutorial.#begin = false;
-		Tutorial.#instantiated = false;
+		Tutorial.instantiated = false;
+
+		// Removes the event listeners
+		document.removeEventListener(`click`, Tutorial.#eventListener.click, false);
+		document.removeEventListener(`keydown`, Tutorial.#eventListener.keydown, false);
 
 		document.body
 			.classList
@@ -254,7 +258,7 @@ export default class Tutorial {
 	 */
 	#init() {
 		// Prevents further initialization when the tutorial is already instantiated...
-		if (Tutorial.#instantiated)
+		if (Tutorial.instantiated)
 			return false;
 
 		// Initialize some important variables
@@ -277,14 +281,14 @@ export default class Tutorial {
 		body.insertAdjacentHTML('beforeend', backdrop);
 
 		// Official
-		Tutorial.#instantiated = true;
-		this.#iterate(0);
+		Tutorial.instantiated = true;
+		Tutorial.#iterate(0);
 	}
 
 	/**
 	 * Moves the tutorial to the previous component
 	 */
-	#prev() {
+	static #prev() {
 		// If the index-1 is equal to 0, then do nothing at all. Lmao.
 		if ((Tutorial.#index - 1) <= 0)
 			return false;
@@ -317,7 +321,7 @@ export default class Tutorial {
 	/**
 	 * Moves the tutorial to the next component
 	 */
-	#next() {
+	static #next() {
 		// If the index is greater or equal than 0, then set the `previous` variable
 		if ((Tutorial.#index - 1) >= 0) {
 			// Sets the variables needed for later
@@ -347,15 +351,16 @@ export default class Tutorial {
 
 		// Ends the tutorial if the index is greater or equal to the length of the components
 		if (Tutorial.#index >= keyLen) {
-			document.removeEventListener(`click`, this.#eventListener.click);
-			document.removeEventListener(`keydown`, this.#eventListener.keyDown);
+			document.removeEventListener(`click`, Tutorial.#eventListener.click);
+			document.removeEventListener(`keydown`, Tutorial.#eventListener.keyDown);
 
 			Tutorial.end(true);
 			return false;
 		}
 
 		// If the condition above is not met, then continue the tutorial
-		this.#iterate(Tutorial.#index);
+		Tutorial.instantiated = true;
+		Tutorial.#iterate(Tutorial.#index);
 	}
 
 	/**
@@ -363,7 +368,7 @@ export default class Tutorial {
 	 *
 	 * @param {number} index The current index of the tutorial
 	 */
-	#iterate(index) {
+	static #iterate(index) {
 		// Fetch the component
 		const key = Object.keys(Tutorial.#components)[index++];
 		const component = Tutorial.#components[key];
@@ -442,17 +447,6 @@ export default class Tutorial {
 	}
 
 	/// GETTERS \\\
-	/**
-	 * Defines whether the `Tutorial` is already instantiated or not. This is different
-	 * from {@link Tutorial.#begin} as the latter defines whether **it can** instantiate or
-	 * not while this defines whether **it is already** instantiated or not.
-	 *
-	 * @return {boolean} Returns `true` if an instance already exist; `false` otherwise.
-	 */
-	static get instantiated() {
-		return Tutorial.#instantiated;
-	}
-
 	/**
 	 * Returns the default keybinds used for each actions in the form of JSON object.
 	 * The default values are as follows:

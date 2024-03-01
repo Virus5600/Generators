@@ -107,4 +107,5 @@ body {
 /* Sweet Alert 2 Modification */
 body .swal2-container {
 	top: 32px !important;
+	height: calc(100% - 32px) !important;
 }
