@@ -49,7 +49,7 @@ app.whenReady().then(() => {
 	global.rndCryptNnc = crypto.randomBytes(32).toString('base64');
 
 	const fnCb = (details, callback, from) => {
-		// Check if the app is at DTRG
+		// Check if the app is at DTRTG
 		let url = details.url;
 		url = url.substring(url.indexOf("public") + "public/".length)
 			.replace(/%20/g, " ")

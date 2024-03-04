@@ -155,6 +155,7 @@ function init() {
 					showDenyButton: false,
 					timer: 2500,
 					timerProgressBar: true,
+					backdrop: true,
 					allowOutsideClick: true,
 					allowEscapeKey: true,
 					allowEnterKey: false,
