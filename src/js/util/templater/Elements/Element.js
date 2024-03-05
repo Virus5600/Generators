@@ -1,5 +1,4 @@
 import Data from '../Data.js';
-import { PopoverData } from '../PopoverData.js';
 
 // ---------------------------------------------------------------------------------------------- //
 // This counter will serve as the time (in hours) the developer tried to understand and fix this
@@ -7,7 +6,7 @@ import { PopoverData } from '../PopoverData.js';
 //
 // Let this be a warning...
 //
-// Counter: 2
+// Counter: 3
 //
 // ---------------------------------------------------------------------------------------------- //
 
@@ -302,6 +301,8 @@ export default class Element {
 		this.#element.replaceWith(elm);
 		this.#element = elm;
 
+		this.setToolbar();
+
 		return this;
 	}
 
@@ -335,8 +336,11 @@ export default class Element {
 	 *
 	 * @return {HTMLElement}	An instance of HTML element.
 	 */
-	element() {
-		return this.#element;
+	element(elm = null) {
+		if (elm === null)
+			return this.#element;
+
+		this.#changeElm(elm);
 	}
 
 	/**
@@ -411,6 +415,68 @@ export default class Element {
 	 */
 	getPopover() {
 		return this.#popover;
+	}
+
+	/**
+	 * Sets the toolbar for the element. This will create a popover for the element and
+	 * assign the toolbar to it.
+	 */
+	setToolbar() {
+		let popover = new bootstrap.Popover(this.element(), {
+			container: this.element(),
+			content: `T O O L B A R`,
+			fallbackPlacements: [`top`, `bottom`],
+			html: true,
+			placement: `top`,
+			template: Element.generateToolbar(this.getTools()),
+			trigger: `focus`,
+			sanitize: false,
+		});
+
+		this.createPopover(popover);
+	}
+
+	/**
+	 * Generates the full HTML code of the toolbar for the element. This is a static method
+	 * and can be called without an instance of the class.
+	 *
+	 * @param {string} tools The HTML code of the tools to be rendered on the toolbar.
+	 *
+	 * @returns {string} The full HTML code of the toolbar.
+	 */
+	static generateToolbar(tools) {
+		if (typeof tools !== `string`)
+			tools = ``;
+
+		let toReturn = `
+		<div class="popover opacity-87.5 border-1 border-secondary dtrtg-toolbar" role="popover" contenteditable="false">
+			<div class="popover-arrow border-1 border-secondary" data-popper-arrow></div>
+
+			<div class="hstack px-2 dtrtg-toolbar-content">
+				${tools}
+
+				<div class="hstack dtrtg-toolbar-content-end">
+					<div class="dropdown">
+						<button class="btn dropdown-toggle" type="button" title="Others" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="fas fa-ellipsis-vertical m-auto"></i>
+						</button>
+
+						<div class="dropdown-menu">
+						</div>
+					</div>
+
+					<span class="delete btn" title="Remove">
+						<i class="fas fa-trash fa-fw m-auto"></i>
+					</span>
+
+					<span class="handle btn" title="Re-order">
+						<i class="fas fa-grip-vertical fa-fw m-auto"></i>
+					</span>
+				</div>
+			</div>
+		</div>`;
+
+		return toReturn;
 	}
 
 	// OVERRIDE FUNCTIONS

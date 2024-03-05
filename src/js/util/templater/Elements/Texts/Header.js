@@ -1,11 +1,21 @@
-import Element from "../Element.js";
 import Text from "./Text.js";
 import SwalFlash from "./../../../swal-flash/swal-flash.mod.js";
 
-export default class Header extends Element {
+/**
+ * Creates a header element. By default, the header element is an `h1` element. The header
+ * element is a type of text display and is a subclass of the {@link Text} class.
+ *
+ * @see {@link Text}
+ *
+ * @author Satch Navida
+ * @version 1.0.0
+ */
+export default class Header extends Text {
 	/**
 	 * Contains various types of header. This list may be updated overtime, allowing
 	 * other types of headers that may be developed in the future.
+	 *
+	 * @override {@link Text.TYPES}
 	 */
 	static TYPES = [
 		`h1`, `h2`,
@@ -13,6 +23,10 @@ export default class Header extends Element {
 		`h5`, `h6`
 	];
 
+	/**
+	 * @inheritdoc
+	 * @override {@link Text.TOOLS}
+	 */
 	static TOOLS = {
 		center: {
 			types: {
@@ -30,6 +44,13 @@ export default class Header extends Element {
 				values: {
 					// Added at the bottom of the file
 				},
+			},
+			header: {
+				type: `dropdown`,
+				icon: `fa-heading`,
+				values: {
+					// Added at the bottom of the file
+				},
 			}
 		}
 	};
@@ -43,7 +64,7 @@ export default class Header extends Element {
 			el: document.createElement(type)
 		};
 
-		super(props);
+		super(Text.TYPES.header ,props);
 	}
 
 	/**
@@ -139,10 +160,6 @@ export default class Header extends Element {
 								e.preventDefault();
 								e.stopPropagation();
 
-								console.log(this.element())
-								console.log(t.action)
-								console.log(e)
-
 								e = Object.assign({
 									vsElement: {
 										triggerName: name,
@@ -176,7 +193,7 @@ let icons = [
 	`fa-paragraph`,
 	`fa-i-cursor fa-rotate-90`,
 ];
-Text.TYPES.forEach((v, k) => {
+Object.keys(Text.TYPES).forEach((v, k) => {
 	Header.TOOLS.center.types.values[v] = {
 		type: `action`,
 		icon: icons[k],
@@ -186,22 +203,20 @@ Text.TYPES.forEach((v, k) => {
 	};
 });
 
-// Update the Header.TOOLS.center.types.values to include the Text.TYPES
+// Update the Header.TOOLS.end.alignment.values to include the Text.TYPES
 icons = [
 	`fa-align-left`,
 	`fa-align-center`,
 	`fa-align-right`,
 	`fa-align-justify`,
+	`fa-text-slash`
 ];
-[`left`, `center`, `right`, `justify`].forEach((v, k) => {
+[`left`, `center`, `right`, `justify`, `default`].forEach((v, k) => {
 	Header.TOOLS.end.alignment.values[v] = {
 		type: `action`,
 		icon: icons[k],
 		action: (e) => {
 			let vsEl = e.vsElement;
-			console.log(e);
-			console.log(vsEl.instance);
-
 			let pos = vsEl.triggerName.toLowerCase();
 
 			if (pos == `left`)
@@ -209,8 +224,54 @@ icons = [
 			else if (pos == `right`)
 				pos = `end`;
 
-			$(vsEl.instance.element()).removeClass(`text-start text-center text-end text-justify`)
-				.addClass(`text-${pos}`);
+			let el = $(vsEl.instance.element())
+			el.removeClass(`text-start text-center text-end text-justify`);
+
+			if (pos != `default`)
+				el.addClass(`text-${pos}`);
+		}
+	};
+});
+
+// Update the Header.TOOLS.end.header.values to include the Header.TYPES
+icons = [
+	`fa-heading`,
+	`fa-heading`,
+	`fa-heading`,
+	`fa-heading`,
+	`fa-heading`,
+	`fa-heading`,
+];
+Header.TYPES.forEach((v, k) => {
+	Header.TOOLS.end.header.values[v] = {
+		type: `action`,
+		icon: icons[k],
+		action: (e) => {
+			// Gets the instance of the element
+			let vsEl = e.vsElement;
+			let thiz = vsEl.instance;
+
+			// Popover handler
+			bootstrap.Popover
+				.getInstance(thiz.element())
+				?.dispose();
+
+			// Creates and replaces the element
+			let tmpEl = vsEl.triggerName.toLowerCase();
+			tmpEl = document.createElement(tmpEl);
+			// thiz.element().replaceWith(tmpEl);
+
+			// Copies the attributes and innerHTML
+			tmpEl.innerHTML = thiz.element().innerHTML;
+			[...thiz.element().attributes].forEach((attr) => {
+				tmpEl.setAttribute(attr.name, attr.value);
+			});
+
+			// thiz.element().remove();
+			thiz.element(tmpEl);
+		},
+		additionalData: {
+			type: v
 		}
 	};
 });

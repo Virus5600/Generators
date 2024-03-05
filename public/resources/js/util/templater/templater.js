@@ -18,19 +18,6 @@ function init() {
 				ELEMENT_INSTANCE.prop(`contentEditable`, true)
 					.text(clazz);
 
-				const POPOVER = new bootstrap.Popover(ELEMENT_INSTANCE.element(), {
-					container: ELEMENT_INSTANCE.element(),
-					content: `TEST`,
-					fallbackPlacements: [`top`, `bottom`],
-					html: true,
-					placement: `top`,
-					template: toolbar(ELEMENT_INSTANCE.getTools()),
-					trigger: `focus`,
-					sanitize: false,
-				});
-
-				ELEMENT_INSTANCE.createPopover(POPOVER, false);
-
 				target.append(ELEMENT_INSTANCE.element());
 				target.trigger(`change`);
 			});
@@ -39,41 +26,6 @@ function init() {
 			console.warning(`Templater does not specify what element to create.`, v);
 		}
 	});
-}
-
-function toolbar(tools) {
-	if (typeof tools !== `string`)
-		tools = ``;
-
-	let toReturn = `
-	<div class="popover opacity-87.5 border-1 border-secondary dtrtg-toolbar" role="popover" contenteditable="false">
-		<div class="popover-arrow border-1 border-secondary" data-popper-arrow></div>
-
-		<div class="hstack px-2 dtrtg-toolbar-content">
-			${tools}
-
-			<div class="hstack dtrtg-toolbar-content-end">
-				<div class="dropdown">
-					<button class="btn dropdown-toggle" type="button" title="Others" data-bs-toggle="dropdown" aria-expanded="false">
-						<i class="fas fa-ellipsis-vertical m-auto"></i>
-					</button>
-
-					<div class="dropdown-menu">
-					</div>
-				</div>
-
-				<span class="delete btn" title="Remove">
-					<i class="fas fa-trash fa-fw m-auto"></i>
-				</span>
-
-				<span class="handle btn" title="Re-order">
-					<i class="fas fa-grip-vertical fa-fw m-auto"></i>
-				</span>
-			</div>
-		</div>
-	</div>`;
-
-	return toReturn;
 }
 
 $(() => {

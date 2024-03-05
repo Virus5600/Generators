@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import Tutorial from '../../js/util/tutorial.js/Tutorial.js';
 
 $(() => {
@@ -46,7 +45,14 @@ $(() => {
 	}
 });
 
+let tutorialAttempts = 0;
 const tutorial = () => {
+	if (document.querySelector(`#title-bar`) === null && tutorialAttempts < 10) {
+		tutorialAttempts++;
+		setTimeout(tutorial, 100);
+		return false;
+	}
+
 	Tutorial.start({
 		'#title-bar': {
 			title: "Title Bar",
@@ -67,6 +73,10 @@ const tutorial = () => {
 		"#dtr-gen": {
 			title: "DTR Generator",
 			content: "Creates a DTR from a pre-defined DTR template. Allows mass creation of DTR by just providing a text file with names per single line and providing desired values to the inputs."
+		},
+		"#dtr-tmp-gen": {
+			title: "DTR Template Generator",
+			content: "Creates a DTR Template that could be used by the DTR Generator. It allows you to create a template with a custom set of inputs and outputs."
 		}
 	});
 

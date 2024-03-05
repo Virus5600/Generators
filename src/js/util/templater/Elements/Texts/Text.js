@@ -1,5 +1,4 @@
 import Element from "../Element.js";
-import { PopoverData } from "../../PopoverData.js";
 
 /**
  * The base class for all Text display elements for the Templater. It extends the {@link Element}
@@ -14,11 +13,28 @@ export default class Text extends Element {
 	 * Contains various types of text display. This list may be updated overtime, allowing
 	 * other types of text display that may be developed in the future.
 	 */
-	static TYPES = [
-		`header`,
-		`paragraph`,
-		`span`
-	];
+	static TYPES = {
+		/**
+		 * The header element is a type of text display that is used to display a header. By
+		 * default, the header element is an `h1` element.
+		 */
+		header: `h1`,
+		/**
+		 * The paragraph element is a type of text display that is used to display a paragraph.
+		 * The paragraph element is a `p` element, and has no other types.
+		 */
+		paragraph: `p`,
+		/**
+		 * The span element is a type of text display that is used to display a span. The span
+		 * element is a `span` element, and has no other types.
+		 */
+		span: `span`,
+		/**
+		 * The code element is a type of text display that is used to display a code. The code
+		 * element is a `code` element, and has no other types.
+		 */
+		code: `code`,
+	};
 
 	/**
 	 * Specify what tools to show on the element's popover. The tools is composed of three
@@ -63,17 +79,23 @@ export default class Text extends Element {
 	/**
 	 * The constructor for the {@link Text} class. It accepts two parameters, the `type` and `props`.
 	 *
-	 * @param {string} type - The type of text display to render. This is optional and will default to `paragraph` if none is provided.
+	 * @param {Text.TYPES} type - The type of text display to render. This is optional and will default to `paragraph` if none is provided.
 	 * @param {Object} props - The properties of the element. This is optional and will default to an empty object if none is provided.
+	 *
+	 * @see {@link Text.TYPES}
 	 */
-	constructor(type = Text.TYPES[0], props = {}) {
-		if (!Text.TYPES.includes(type))
-			type = Text.TYPES[0];
+	constructor(type = Text.TYPES.paragraph, props = {}) {
+		if (!Object.values(Text.TYPES).includes(type))
+			type = Text.TYPES.paragraph;
 
 		props = {
 			...props,
 			el: document.createElement(type)
 		};
+
+		super(props);
+
+		this.setToolbar();
 	}
 
 	/**

@@ -88,7 +88,7 @@ class SwalFlash {
 	 * @param {SwalFlash.defaultParams} params The parameters for the flash message. Refer to {@link SwalFlash.defaultParams} for more information.
 	 */
 	static error(params = this.defaultParams) {
-		SwalFlash.#sendEvent(`flash_error`, params);
+		SwalFlash.#sendEvent(`flash_error`, SwalFlash.#validate(params));
 	}
 
 	/**
@@ -97,7 +97,7 @@ class SwalFlash {
 	 * @param {SwalFlash.defaultParams} params The parameters for the flash message. Refer to {@link SwalFlash.defaultParams} for more information.
 	 */
 	static info(params = this.defaultParams) {
-		SwalFlash.#sendEvent(`flash_info`, params);
+		SwalFlash.#sendEvent(`flash_info`, SwalFlash.#validate(params));
 	}
 
 	/**
@@ -106,7 +106,18 @@ class SwalFlash {
 	 * @param {SwalFlash.defaultParams} params The parameters for the flash message. Refer to {@link SwalFlash.defaultParams} for more information.
 	 */
 	static success(params = this.defaultParams) {
-		SwalFlash.#sendEvent(`flash_success`, params);
+		SwalFlash.#sendEvent(`flash_success`, SwalFlash.#validate(params));
+	}
+
+	static #validate(params) {
+		if (typeof params === `string`) {
+			params = {
+				...this.defaultParams,
+				title: params
+			};
+		}
+
+		return params;
 	}
 
 	/**
