@@ -23,6 +23,15 @@ export default class Paragraph extends Text {
 			el: document.createElement(`p`)
 		};
 
-		super(props);
+		super(Text.TYPES.paragraph, props);
+	}
+
+	/**
+	 * Fetches the tools defined for the {@link Paragraph} class element.
+	 */
+	get tools() {
+		// Copies the tools from the parent class
+		Paragraph.TOOLS = this.mergeTools(Paragraph.TOOLS, super.tools);
+		return Paragraph.TOOLS;
 	}
 }

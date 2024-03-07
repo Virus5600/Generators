@@ -37,44 +37,26 @@ export default class Text extends Element {
 	};
 
 	/**
-	 * Specify what tools to show on the element's popover. The tools is composed of three
-	 * sections which are the `start`, `center`, and `end`, and are positioned on the left,
-	 * center, and right respectively.
-	 *
-	 * The tools are defined as `<position>.<name>` where `<position>` is the three sections
-	 * mentioned earlier. The `<name>` is the name of the tool that will be rendered and will also
-	 * serve as its default tooltip name.
-	 *
-	 * A tool has several parameters, three of which are required.
-	 * - **`name`** - This option defines the name of the tool. It is optional and will default to the tool's key name if none is provided.
-	 * - **`type`** - The `type` option identifies whether the button is a drop-down or an action button.
-	 * 	- `dropdown` defines that the button is a drop-down button.
-	 * 	- `button` defines that the button is an action button.
-	 * - **`values`** - This option defines what a drop-down `type` option contains. It is required and will throw an error if none is found if the `type` is `dropdown`. This option only accepts arrays.
-	 * - **`icon`** - This option is required and defines what icon to render for the said button. This utilizes Fontawesome 6's class name. An example value would be `fa-font`.
-	 * - **`action`** - This option defines what actions will be done when the tool's button or items are clicked. It is basically a callback.
-	 * 	- If the `type` is `dropdown`, the `action` option accepts an array of functions. The function's index will determine what drop-down item it will get attached to.
-	 * 	- If the `type` is `button`, the `action` option accepts a single callback. If an array of function is passed, it will only accept the first function in the array.
-	 * 	- All callback functions that will be provided in this option will receive the element instance as its first parameter.
+	 * @inheritdoc
 	 */
 	static TOOLS = {
 		center: {
-			types: {
-				name: `Types`,
+			alignment: {
 				type: `dropdown`,
-				values: Text.TYPES,
-				icon: `fa-font`
-			}
-		},
-		end: {
-			delete: {
-				name: `Delete`,
-				type: `button`,
-				icon: `fa-trash`,
-				action: Element.delete
+				icon: `fa-align-justify`,
+				values: {
+					// Added at the bottom of the file
+				},
+			},
+			types: {
+				type: `dropdown`,
+				icon: `fa-font`,
+				values: {
+					// Added at the bottom of the file
+				},
 			}
 		}
-	}
+	};
 
 	/**
 	 * The constructor for the {@link Text} class. It accepts two parameters, the `type` and `props`.
@@ -99,103 +81,60 @@ export default class Text extends Element {
 	}
 
 	/**
-	 * Gets the tools to render on the element's popover. The tools is composed of three
-	 * sections which are the `start`, `center`, and `end`, and are positioned on the left,
-	 * center, and right respectively.
+	 * Fetches the tools defined for the specified element.
 	 *
-	 * The contents of this method is defined by the local static {@link Text.TOOLS} property.
-	 *
-	 * @see {@link Text.TOOLS}
+	 * @returns {Object} The tools defined for the element.
+	 * @throws {Error} The `tools` property must be defined in the subclass.
 	 */
-	getTools() {
-		if (this.__tools)
-			return this.__tools;
-
-		let tools = {
-			start: [],
-			center: [],
-			end: []
-		};
-
-		// Iterate through the positions of the tool first.
-		for (let position in Text.TOOLS) {
-			// Filters the position to only allow the three positions.
-			if (!Object.keys(tools).includes(position))
-				continue;
-
-			// Then iterate through the given tools in the position.
-			for (let tool in position) {
-				// Fetch the tool's properties.
-				let name = Text.TOOLS[position][tool].name ?? tool,
-					type = Text.TOOLS[position][tool].type,
-					icon = Text.TOOLS[position][tool].icon ?? `fa-gear`,
-					values = Text.TOOLS[position][tool].values,
-					action = Text.TOOLS[position][tool].action;
-
-				// Capitalize the name.
-				name = name.charAt(0).toUpperCase() + name.slice(1);
-
-				// Create the button.
-				let id = crypto.randomUUID();
-				let btn = `
-					<button class="btn btn-outline-secondary" class="${type == 'dropdown' ? `dropdown-toggle` : `` } border-0" type="button" title="${name}" ${btnType == 'dropdown' ? `data-bs-toggle="dropdown" aria-expanded="false"` : `id="${id}"`} contenteditable="false">
-						<i class="fas ${icon}"></i>
-					</button>
-				`;
-
-				// If the button is a dropdown, create the dropdown.
-				if (type == `dropdown`) {
-					// Start of the dropdown menu.
-					let dropdown = `
-					<div class="dropdown" contenteditable="false">
-						${btn}
-						<ul class="dropdown-menu" contenteditable="false">`;
-
-					// Iterate through the values of the dropdown.
-					values.forEach((v, k) => {
-						id = crypto.randomUUID();
-						dropdown + `\n<li class="dropdown-item" contenteditable="false" id="${id}">${v}</li>`;
-						document.addEventListener(`click`, (e) => {
-							if (e.closest(`#${id}`)) {
-								e.preventDefault();
-								e.stopPropagation();
-
-								action[k](this);
-							}
-						});
-					});
-
-					// Dropdown closing
-					dropdown += `
-						</ul>
-					</div>
-					`;
-				}
-				// If the button is an action button, create the action button.
-				else if (type == `button`) {
-					tools[position].push(btn);
-
-					// Check if the `action` property is an array or not.
-					// If it is an array, only get the first function.
-					if (action instanceof Array)
-						action = action[0];
-
-					// Create the action.
-					document.addEventListener(`click`, (e) => {
-						if (e.closest(`#${id}`)) {
-							e.preventDefault();
-							e.stopPropagation();
-
-							action(this);
-						}
-					});
-				}
-			}
-		}
-
-		// Attach the generated tools to the base class to prevent re-initialization, then
-		// return the tools.
-		this.__tools = tools;
-		return this.__tools;
+	get tools() {
+		// Copies the tools from the parent class
+		Text.TOOLS = Element.mergeTools(Text.TOOLS, super.tools);
+		return Text.TOOLS;
 	}
 }
+
+// Update the Text.TOOLS.center.types.values to include the Text.TYPES
+let icons = [
+	`fa-heading`,
+	`fa-paragraph`,
+	`fa-i-cursor fa-rotate-90`,
+];
+Object.keys(Text.TYPES).forEach((v, k) => {
+	Text.TOOLS.center.types.values[v] = {
+		type: `action`,
+		icon: icons[k],
+		action: (e) => {
+			SwalFlash.info(`This is a ${v}!`);
+		}
+	};
+});
+
+// Update the Text.TOOLS.center.alignment.values to include the Text.TYPES
+icons = [
+	`fa-align-left`,
+	`fa-align-center`,
+	`fa-align-right`,
+	`fa-align-justify`,
+	`fa-text-slash`
+];
+[`left`, `center`, `right`, `justify`, `default`].forEach((v, k) => {
+	Text.TOOLS.center.alignment.values[v] = {
+		type: `action`,
+		icon: icons[k],
+		action: (e) => {
+			let vsEl = e.vsElement;
+			let pos = vsEl.triggerName.toLowerCase();
+
+			if (pos == `left`)
+				pos = `start`;
+			else if (pos == `right`)
+				pos = `end`;
+
+			let el = $(vsEl.instance.element())
+			el.removeClass(`text-start text-center text-end text-justify`);
+
+			if (pos != `default`)
+				el.addClass(`text-${pos}`);
+		}
+	};
+});

@@ -31,10 +31,4 @@ function init() {
 $(() => {
 	// Initialize the code
 	init();
-
-	// Attach Event Listener to the delete button.
-	$(document).on(`click`, `.dtrtg-toolbar .delete`, (e) => {
-		let target = $(e.currentTarget).closest(`[id]`)[0].id;
-		$(`[aria-describedby=${target}]`).remove();
-	});
 });

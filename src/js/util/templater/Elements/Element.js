@@ -6,7 +6,7 @@ import Data from '../Data.js';
 //
 // Let this be a warning...
 //
-// Counter: 3
+// Counter: 5
 //
 // ---------------------------------------------------------------------------------------------- //
 
@@ -246,8 +246,38 @@ export default class Element {
 		VIRTUAL_KEYBOARD_POLICY: `virtualKeyboardPolicy`,
 	};
 
-	// PROTECTED(?) VARIABLES
-	__tools = null;
+	/**
+	 * Specify what tools to show on the element's popover. The tools is composed of three
+	 * sections which are the `start`, `center`, and `end`, and are positioned on the left,
+	 * center, and right respectively.
+	 *
+	 * The tools are defined as `<position>.<name>` where `<position>` is the three sections
+	 * mentioned earlier. The `<name>` is the name of the tool that will be rendered and will also
+	 * serve as its default tooltip name.
+	 *
+	 * A tool has several parameters, three of which are required.
+	 * - **`name`** - This option defines the name of the tool. It is optional and will default to the tool's key name if none is provided.
+	 * - **`type`** - The `type` option identifies whether the button is a drop-down or an action button.
+	 * 	- `dropdown` defines that the button is a drop-down button.
+	 * 	- `button` defines that the button is an action button.
+	 * - **`values`** - This option defines what a drop-down `type` option contains. It is required and will throw an error if none is found if the `type` is `dropdown`. This option only accepts arrays.
+	 * - **`icon`** - This option is required and defines what icon to render for the said button. This utilizes Fontawesome 6's class name. An example value would be `fa-font`.
+	 * - **`action`** - This option defines what actions will be done when the tool's button or items are clicked. It is basically a callback.
+	 * 	- If the `type` is `dropdown`, the `action` option accepts an array of functions. The function's index will determine what drop-down item it will get attached to.
+	 * 	- If the `type` is `button`, the `action` option accepts a single callback. If an array of function is passed, it will only accept the first function in the array.
+	 * 	- All callback functions that will be provided in this option will receive the element instance as its first parameter.
+	 *
+	 * @throws {Error} The `TOOLS` property must be defined in the subclass.
+	 */
+	static TOOLS = {
+		end: {
+			remove: {
+				type: `action`,
+				icon: `fa-trash fa-fw m-auto`,
+				action: this.delete,
+			}
+		}
+	};
 
 	// PRIVATE VARIABLES
 	/**
@@ -302,32 +332,7 @@ export default class Element {
 		this.#element = elm;
 
 		this.setToolbar();
-
 		return this;
-	}
-
-	/**
-	 * Toggles the popover to show.
-	 */
-	#showPopover() {
-		if (this.#popover.visible)
-			return;
-
-		this.#popover.show();
-	}
-
-	/**
-	 * Toggles the popover to hide.
-	 */
-	#hidePopover() {
-		if (!this.#popover.visible)
-			return;
-
-		this.#popover.hide();
-	}
-
-	#togglePopover() {
-		this.#popover.toggle();
 	}
 
 	// PUBLIC FUNCTIONS
@@ -418,6 +423,33 @@ export default class Element {
 	}
 
 	/**
+	 * Toggles the popover to show.
+	 */
+	showPopover() {
+		if (this.#popover.visible)
+			return;
+
+		this.#popover.show();
+	}
+
+	/**
+	 * Toggles the popover to hide.
+	 */
+	hidePopover() {
+		if (!this.#popover.visible)
+			return;
+
+		this.#popover.hide();
+	}
+
+	/**
+	 * Toggles the popover to show or hide.
+	 */
+	togglePopover() {
+		this.#popover.toggle();
+	}
+
+	/**
 	 * Sets the toolbar for the element. This will create a popover for the element and
 	 * assign the toolbar to it.
 	 */
@@ -455,47 +487,120 @@ export default class Element {
 			<div class="hstack px-2 dtrtg-toolbar-content">
 				${tools}
 
-				<div class="hstack dtrtg-toolbar-content-end">
-					<div class="dropdown">
-						<button class="btn dropdown-toggle" type="button" title="Others" data-bs-toggle="dropdown" aria-expanded="false">
-							<i class="fas fa-ellipsis-vertical m-auto"></i>
-						</button>
-
-						<div class="dropdown-menu">
-						</div>
-					</div>
-
-					<span class="delete btn" title="Remove">
-						<i class="fas fa-trash fa-fw m-auto"></i>
-					</span>
-
-					<span class="handle btn" title="Re-order">
-						<i class="fas fa-grip-vertical fa-fw m-auto"></i>
-					</span>
-				</div>
+				${''/* Drag Handle which allows the element to be moved around */}
+				<span class="handle btn" title="Re-order">
+					<i class="fas fa-grip-vertical fa-fw m-auto"></i>
+				</span>
 			</div>
 		</div>`;
 
 		return toReturn;
 	}
 
-	// OVERRIDE FUNCTIONS
 	/**
-	 * Gets the tools to render on the element's popover. The tools is composed of three
-	 * sections which are the `start`, `center`, and `end`, and are positioned on the left,
-	 * center, and right respectively.
+	 * Merges the properties of the destination object with the source object.
 	 *
-	 * The contents of this method is defined by the local static {@link TOOLS} property.
+	 * Its primary aim is to easily merge tools from the parent class to the subclass,
+	 * allowing the subclass to inherit the tools from the parent class and thus, shortening
+	 * the implementation of tools.
+	 *
+	 * If there are no sources provided, the method will return the destination object.
+	 *
+	 * ---
+	 *
+	 * **NOTE:** The method will merge the source and put it on the left most side of the
+	 * toolbar. This means that the source will be the first to be rendered on the toolbar
+	 * while the destination will always be on the right most hand side of the toolbar.
+	 *
+	 * **NOTE:** Same properties in the same position will overwrite the destination's properties.
+	 * Likewise, same properties in the same position from source[0] will overwrite the properties
+	 * of source[1] and so on.
+	 *
+	 * @param {Object} destination The object that will receive the properties of the sources.
+	 * @param  {...Object} sources The objects that will be merged into the destination.
+	 *
+	 * @returns {Object} The merged object.
+	 *
+	 * @throws {Error} When the destination object is not provided.
+	 * @throws {TypeError} When the destination object is not an object.
 	 */
-	getTools() {
-		if (this.__tools)
-			return this.__tools;
-
-		throw new Error(`Unimplemented abstract method: getTools()`);
+	mergeTools(destination, ...sources) {
+		return Element.mergeTools(destination, ...sources);
 	}
 
-	static getInstance(el) {
-		return Data.get(el, "templater");
+	/**
+	 * Merges the properties of the destination object with the source object. This is a
+	 * static method and can be called without an instance of the class.
+	 *
+	 * Its primary aim is to easily merge tools from the parent class to the subclass,
+	 * allowing the subclass to inherit the tools from the parent class and thus, shortening
+	 * the implementation of tools.
+	 *
+	 * If there are no sources provided, the method will return the destination object.
+	 *
+	 * ---
+	 *
+	 * **NOTE:** The method will merge the source and put it on the left most side of the
+	 * toolbar. This means that the source will be the first to be rendered on the toolbar
+	 * while the destination will always be on the right most hand side of the toolbar.
+	 *
+	 * **NOTE:** Same properties in the same position will overwrite the destination's properties.
+	 * Likewise, same properties in the same position from source[0] will overwrite the properties
+	 * of source[1] and so on.
+	 *
+	 * @param {Object} destination The object that will receive the properties of the sources.
+	 * @param  {...Object} sources The objects that will be merged into the destination.
+	 *
+	 * @returns {Object} The merged object.
+	 *
+	 * @throws {Error} When the destination object is not provided.
+	 * @throws {TypeError} When the destination object is not an object.
+	 */
+	static mergeTools(destination, ...sources) {
+		// Checks if there's a destination.
+		if (destination == undefined || destination == null)
+			throw new Error(`Destination object not provided.`);
+		// Checks if the destination is an object.
+		else if (typeof destination !== `object`)
+			throw new TypeError(`Destination object must be an object.`);
+
+		// Checks if there are sources.
+		if (sources.length == 0)
+			return destination;
+
+		// Initialize the positions as constants.
+		const POS =  ['start', 'center', 'end'];
+		// Initialize the container.
+		let tools = {
+			// Include all the positions of the tools.
+			start: {},
+			center: {},
+			end: {}
+		};
+
+		// Then insert the destination's properties.
+		for (let pos of POS) {
+			Object.assign(tools[pos], destination[pos] ?? {});
+		}
+
+		// Iterate through the sources
+		for (let source of sources) {
+			// Iterate through the positions of the tools.
+			for (let pos of POS) {
+				Object.assign(tools[pos], source[pos] ?? {});
+			}
+		}
+
+		for (let pos of POS) {
+			if (Object.keys(tools[pos]).length === 0)
+				delete tools[pos];
+		}
+
+		return tools;
+	}
+
+	delete() {
+		Element.delete(this);
 	}
 
 	/**
@@ -507,13 +612,154 @@ export default class Element {
 	 * @throws {TypeError} If the parameter is not an instance of Element.
 	 */
 	static delete(el) {
-		if (!el instanceof Element && !el instanceof HTMLElement)
-			throw new TypeError(`${el} is not an instance of Element or HTMLElement.`);
+		if (!(el instanceof Element) && !(el instanceof HTMLElement) && !(el instanceof Event))
+			throw new TypeError(`${el} is not an instance of Element, HTMLElement, or Event.`);
 
 		if (el instanceof Element)
 			Element.delete(el.element());
 
-		el.remove();
+		if (el instanceof Event)
+			Element.delete(this.element());
+
+		if (el instanceof HTMLElement)
+			el.remove();
+	}
+
+	// OVERRIDE FUNCTIONS
+	/**
+	 * Builds the template for the tools that this element will use. The tools are
+	 * defined by the static property {@link Element.TOOLS}, which follows this dot
+	 * notation:
+	 * `position.tool.properties`
+	 *
+	 * - The `position` is the position of the tool, which can be `start`, `center`, or
+	 * `end`.
+	 * - The `tool` is the name of the tool.
+	 * - The `properties` are the properties that tool will have.
+	 *
+	 * ---
+	 *
+	 * The properties contains the following:
+	 *
+	 * - `type` - The type of the tool. This can be `action` or `dropdown`. If the type is
+	 * `action`, the tool will be rendered as a button and will require an `action` property
+	 * that defines the action to be done when the button is clicked. If the type is `dropdown`,
+	 * the tool will be rendered as a dropdown button and will require a `values` property that
+	 * defines an array of objects with the same property as a `type: action` tool.
+	 * - `icon` - The icon of the tool. This utilizes Fontawesome 6's class name. An example
+	 * value would be `fa-font`. As of the current version, the only icon that could be rendered
+	 * are solid icons.
+	 * - `action` - This option defines what actions will be done when the tool's button or items
+	 * are clicked. It is basically a callback.
+	 * **(REQUIRED if `type` is `action`)**
+	 * - `values` - This option defines what items will be rendered in the dropdown.
+	 * **(REQUIRED if `type` is `dropdown`)**
+	 *
+	 * @returns {string} The template of the tools that will be rendered on the element's popover.
+	 */
+	getTools() {
+		let tools = ``;
+
+		// Iterate through the positions of the tool first.
+		Object.keys(this.tools).forEach((pos) => {
+			// Iterate through the tools of the position.
+			Object.keys(this.tools[pos]).forEach((tool) => {
+				let toolName = tool.split('/\s+/g').map((v) => {
+					return v.charAt(0).toUpperCase() + v.slice(1);
+				}).join(' ');
+				let hTool = this.tools[pos][tool];
+				let btnType = hTool.type;
+
+				let btn = `
+					<button class="btn btn-outline-secondary ${btnType == 'dropdown' ? `dropdown-toggle` : `` } border-0" type="button" title="${toolName}" ${btnType == 'dropdown' ? `data-bs-toggle="dropdown" aria-expanded="false"` : ``} contenteditable="false" data-if-id>
+						<i class="fas ${hTool.icon ?? `fa-gear`}"></i>
+					</button>
+				`;
+
+				if (btnType == 'action') {
+					let id = `tool-${toolName}-${generateHash(8)}`.replace(/[=\+-/\\]/g, "");
+					btn = btn.replace(`data-if-id`, `id="${id}"`);
+					tools += btn;
+
+					this.element().addEventListener(`click`, (e) => {
+						if (e.target.closest(`#${id}`)) {
+							e.preventDefault();
+							e.stopPropagation();
+
+							// hTool.action.bind(this);
+							hTool.action = Element.arrowBind(this, hTool.action);
+							hTool.action(e);
+						}
+					});
+				}
+				else if (btnType == 'dropdown') {
+					btn = btn.replace(`btn-if-id`, ``);
+					tools += `
+						<div class="dropdown" contenteditable="false">
+							${btn}
+
+							<ul class="dropdown-menu" contenteditable="false">`;
+
+					for (let t in hTool.values) {
+						let name = t.split('/\s+/g')
+							.map((v) => {
+								return v.charAt(0).toUpperCase() + v.slice(1);
+							})
+							.join(' ');
+
+						t = hTool.values[t];
+
+						let id = `tool-${name}-${generateHash(8)}`.replace(/[=\+-/\\]/g, "");
+						tools += `\n<li class="dropdown-item cursor-pointer" contenteditable="false" id="${id}" title="${name}">
+							<i class="fas ${t.icon ?? 'fa-gear'} me-2"></i>
+							${name}
+						</li>`;
+
+						let fn = (e) => {
+							if (e.target.closest(`#${id}`)) {
+								e.preventDefault();
+								e.stopPropagation();
+
+								e = Object.assign({
+									vsElement: {
+										triggerName: name,
+										instance: this,
+									}
+								}, e);
+
+								t.action(e);
+							}
+						};
+						this.element().addEventListener(`click`, fn.bind(this));
+					}
+
+					tools += `
+							</ul>
+						</div>
+					`;
+				}
+			});
+
+			tools += `<div class="vr"></div>`;
+		});
+
+		// Removes the last vertical line.
+		tools = tools.replace(/<div class="vr"><\/div>$/, ``);
+
+		return tools;
+	}
+
+	/**
+	 * Fetches the tools defined for the specified element.
+	 *
+	 * @returns {Object} The tools defined for the element.
+	 */
+	get tools() {
+		return Element.TOOLS;
+	}
+
+	static getInstance(el) {
+		return Data.get(el, "templater");
 	}
 
 	/**
@@ -527,9 +773,12 @@ export default class Element {
 	 */
 	static arrowBind(ctx, fn) {
 		let arrowFnStr = fn.toString();
+		let regex = /^(?:(?:\/\*[^(?:\*\/)]*\*\/\s*)|(?:\/\/[^\r\n]*))*\s*(?:(?:(?:async\s(?:(?:\/\*[^(?:\*\/)]*\*\/\s*)|(?:\/\/[^\r\n]*))*\s*)?function|class)(?:\s|(?:(?:\/\*[^(?:\*\/)]*\*\/\s*)|(?:\/\/[^\r\n]*))*)|(?:[_$\w][\w0-9_$]*\s*(?:\/\*[^(?:\*\/)]*\*\/\s*)*\s*\()|(?:\[\s*(?:\/\*[^(?:\*\/)]*\*\/\s*)*\s*(?:(?:['][^']+['])|(?:["][^"]+["]))\s*(?:\/\*[^(?:\*\/)]*\*\/\s*)*\s*\]\())/;
 
-		return (function() {
-			return eval(arrowFnStr);
-		}).call(ctx);
+		if (typeof fn === 'function' && !regex.test(arrowFnStr))
+			return (function() {
+				return eval(arrowFnStr);
+			}).call(ctx);
+		return fn.bind(ctx);
 	}
 }
