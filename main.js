@@ -61,14 +61,14 @@ app.whenReady().then(() => {
 
 		const CSP = `default-src 'self' 'unsafe-inline'; img-src 'self' data: *; script-src 'self' ${isInDTRTG ? `'unsafe-eval'` : `'nonce-${global.rndCryptNnc}'`};`
 
-		if (!app.isPackaged) {
-			console.log(`==================================== ${from}`)
-			console.log(`URL: ${url}\n`);
-			console.log(Object.assign({'Content-Security-Policy': [CSP]}, details.responseHeaders));
-			console.log("------------------------------------")
-			console.log(details);
-			console.log(`====================================\n`)
-		}
+		// if (!app.isPackaged) {
+		// 	console.log(`==================================== ${from}`)
+		// 	console.log(`URL: ${url}\n`);
+		// 	console.log(Object.assign({'Content-Security-Policy': [CSP]}, details.responseHeaders));
+		// 	console.log("------------------------------------")
+		// 	console.log(details);
+		// 	console.log(`====================================\n`)
+		// }
 
 		callback({
 			responseHeaders: Object.assign({

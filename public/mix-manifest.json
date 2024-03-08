@@ -37,6 +37,7 @@
     "/resources/js/util/templater/Elements/Element.js": "/resources/js/util/templater/Elements/Element.js",
     "/resources/js/util/templater/Elements/index.js": "/resources/js/util/templater/Elements/index.js",
     "/resources/js/util/templater/Elements/Inputs/Input.js": "/resources/js/util/templater/Elements/Inputs/Input.js",
+    "/resources/js/util/templater/Elements/Texts/Formatters/Formatter.js": "/resources/js/util/templater/Elements/Texts/Formatters/Formatter.js",
     "/resources/js/util/templater/Elements/Texts/Header.js": "/resources/js/util/templater/Elements/Texts/Header.js",
     "/resources/js/util/templater/Elements/Texts/Paragraph.js": "/resources/js/util/templater/Elements/Texts/Paragraph.js",
     "/resources/js/util/templater/Elements/Texts/Text.js": "/resources/js/util/templater/Elements/Texts/Text.js",

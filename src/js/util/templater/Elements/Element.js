@@ -274,7 +274,7 @@ export default class Element {
 			remove: {
 				type: `action`,
 				icon: `fa-trash fa-fw m-auto`,
-				action: this.delete,
+				action: e => Element.delete(e.target.closest(this.type)),
 			}
 		}
 	};
@@ -286,6 +286,13 @@ export default class Element {
 	 * @type {HTMLElement}
 	 */
 	#element = null;
+
+	/**
+	 * Defines what element type the current instance is. Primarily used to lock on to
+	 * the closes element of the same type when a tool is clicked.
+	 */
+	#elType = `div`;
+
 	/**
 	 * Contains all data for the popover.
 	 */
@@ -304,6 +311,9 @@ export default class Element {
 	 * @see {@link Element.PROPS}
 	 */
 	constructor(props) {
+		// Assign the element type
+		this.#elType = props.el.tagName.toLowerCase();
+
 		// Assign the element to this instance
 		this.#element = props.el;
 
@@ -330,6 +340,7 @@ export default class Element {
 
 		this.#element.replaceWith(elm);
 		this.#element = elm;
+		this.#elType = elm.tagName.toLowerCase();
 
 		this.setToolbar();
 		return this;
@@ -599,30 +610,39 @@ export default class Element {
 		return tools;
 	}
 
+	/**
+	 * Deletes the element and removes it from the editor.
+	 * @throws {TypeError} If the parameter is not an instance of Element.
+	 */
 	delete() {
-		Element.delete(this);
+		Element.delete(this.element());
 	}
 
 	/**
 	 * Deletes this element and removes it from the editor. This is a static method and can
 	 * be called without an instance of the class.
 	 *
-	 * @param {Element|HTMLElement} el The element to delete.
+	 * @param {Element|HTMLElement} el The element to delete. If the parameter is an
+	 * instance of Event, the method will identify which .
 	 *
 	 * @throws {TypeError} If the parameter is not an instance of Element.
 	 */
 	static delete(el) {
-		if (!(el instanceof Element) && !(el instanceof HTMLElement) && !(el instanceof Event))
-			throw new TypeError(`${el} is not an instance of Element, HTMLElement, or Event.`);
+		if (!(el instanceof Element) && !(el instanceof HTMLElement))
+			throw new TypeError(`${el} is not an instance of Element or HTMLElement.`);
 
 		if (el instanceof Element)
 			Element.delete(el.element());
 
-		if (el instanceof Event)
-			Element.delete(this.element());
-
 		if (el instanceof HTMLElement)
 			el.remove();
+	}
+
+	/**
+	 * Fetches the type of element used by this instance.
+	 */
+	get type() {
+		return this.#elType;
 	}
 
 	// OVERRIDE FUNCTIONS

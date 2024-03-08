@@ -11,7 +11,7 @@ import Element from "../Element.js";
 export default class Text extends Element {
 	/**
 	 * Contains various types of text display. This list may be updated overtime, allowing
-	 * other types of text display that may be developed in the future.
+	 * other types of text display that may be developed in the future to be added.
 	 */
 	static TYPES = {
 		/**
@@ -41,6 +41,13 @@ export default class Text extends Element {
 	 */
 	static TOOLS = {
 		center: {
+			formatting: {
+				type: `dropdown`,
+				icon: `fa-highlighter`,
+				values: {
+					// Added at the bottom of the file
+				},
+			},
 			alignment: {
 				type: `dropdown`,
 				icon: `fa-align-justify`,
@@ -61,8 +68,8 @@ export default class Text extends Element {
 	/**
 	 * The constructor for the {@link Text} class. It accepts two parameters, the `type` and `props`.
 	 *
-	 * @param {Text.TYPES} type - The type of text display to render. This is optional and will default to `paragraph` if none is provided.
-	 * @param {Object} props - The properties of the element. This is optional and will default to an empty object if none is provided.
+	 * @param {Text.TYPES} type The type of text display to render. This is optional and will default to `paragraph` if none is provided.
+	 * @param {Object} props The properties of the element. This is optional and will default to an empty object if none is provided.
 	 *
 	 * @see {@link Text.TYPES}
 	 */
@@ -93,8 +100,32 @@ export default class Text extends Element {
 	}
 }
 
+let icons;
+
+// Update the Text.TOOLS.center.formatting.values to include common text formatting.
+icons = [
+	`fa-bold`,
+	`fa-italic`,
+	`fa-underline`,
+	`fa-strikethrough`
+];
+[`bold`, `italic`, `underline`, `strikethrough`].forEach((v, k) => {
+	Text.TOOLS.center.formatting.values[v] = {
+		type: `action`,
+		icon: icons[k],
+		action: (e) => {
+			let selected = window.getSelection();
+			let range = selected.getRangeAt(0);
+			let format = document.createElement('b');
+			format.innerText = selected.toString();
+			range.deleteContents();
+			range.insertNode(format);
+		}
+	};
+});
+
 // Update the Text.TOOLS.center.types.values to include the Text.TYPES
-let icons = [
+icons = [
 	`fa-heading`,
 	`fa-paragraph`,
 	`fa-i-cursor fa-rotate-90`,
@@ -104,7 +135,27 @@ Object.keys(Text.TYPES).forEach((v, k) => {
 		type: `action`,
 		icon: icons[k],
 		action: (e) => {
-			SwalFlash.info(`This is a ${v}!`);
+			// Gets the instance of the element
+			let vsEl = e.vsElement;
+			let thiz = vsEl.instance;
+
+			// Popover handler
+			bootstrap.Popover
+				.getInstance(thiz.element())
+				?.dispose();
+
+			// Creates and replaces the element
+			let tmpEl = vsEl.triggerName.toLowerCase();
+			tmpEl = Text.TYPES[tmpEl];
+			tmpEl = document.createElement(tmpEl);
+
+			// Copies the attributes
+			tmpEl.innerHTML = thiz.element().innerHTML;
+			[...thiz.element().attributes].forEach((attr) => {
+				tmpEl.setAttribute(attr.name, attr.value);
+			});
+
+			thiz.element(tmpEl);
 		}
 	};
 });

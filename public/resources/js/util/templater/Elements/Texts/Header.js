@@ -93,7 +93,6 @@ Header.TYPES.forEach((v, k) => {
 				tmpEl.setAttribute(attr.name, attr.value);
 			});
 
-			// thiz.element().remove();
 			thiz.element(tmpEl);
 		},
 	};
