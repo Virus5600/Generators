@@ -1,4 +1,5 @@
 import Element from "../Element.js";
+import Formatter from "./Formatters/Formatter.js";
 
 /**
  * The base class for all Text display elements for the Templater. It extends the {@link Element}
@@ -68,13 +69,13 @@ export default class Text extends Element {
 	/**
 	 * The constructor for the {@link Text} class. It accepts two parameters, the `type` and `props`.
 	 *
-	 * @param {Text.TYPES} type The type of text display to render. This is optional and will default to `paragraph` if none is provided.
+	 * @param {Text.TYPES|Formatter.TYPES} type The type of text display to render. This is optional and will default to `paragraph` if none is provided.
 	 * @param {Object} props The properties of the element. This is optional and will default to an empty object if none is provided.
 	 *
 	 * @see {@link Text.TYPES}
 	 */
 	constructor(type = Text.TYPES.paragraph, props = {}) {
-		if (!Object.values(Text.TYPES).includes(type))
+		if (!Object.values(Text.TYPES).includes(type) && !Object.values(Formatter.TYPES).includes(type))
 			type = Text.TYPES.paragraph;
 
 		props = {

@@ -279,6 +279,32 @@ export default class Element {
 		}
 	};
 
+	/**
+	 * An empty event handler. This is used to prevent the element from being unusable if the
+	 * element is empty or has no text content.
+	 */
+	static #EMPTY_EL_HANDLER = (e) => {
+		let obj = e.currentTarget;
+
+		if (obj.textContent.length > 0 && obj.hasAttribute('data-vstmp-empty') && obj.innerHTML.match(/^\s+/)) {
+			obj.removeAttribute('data-vstmp-empty');
+			return false;
+		}
+
+		if (!obj.hasAttribute('data-vstmp-empty'))
+			obj.setAttribute('data-vstmp-empty', true);
+
+		if (e.type === "focus") {
+			e.preventDefault();
+			e.stopPropagation();
+
+			obj.innerHTML = `&nbsp;`;
+		}
+		else {
+			obj.innerHTML = ``;
+		}
+	};
+
 	// PRIVATE VARIABLES
 	/**
 	 * The actual HTML element fetched from the newly created Element.
@@ -326,6 +352,14 @@ export default class Element {
 
 			this.#element[p] = props[p];
 		}
+
+		// Adds a placeholder
+		if (this.#element.placeholder === undefined)
+			this.#element.setAttribute(`placeholder`, `Type something...`);
+
+		// Adds the empty element handler
+		this.#element.addEventListener(`focus`, Element.#EMPTY_EL_HANDLER);
+		this.#element.addEventListener(`blur`, Element.#EMPTY_EL_HANDLER);
 	}
 
 	// PRIVATE FUNCTIONS
@@ -341,6 +375,11 @@ export default class Element {
 		this.#element.replaceWith(elm);
 		this.#element = elm;
 		this.#elType = elm.tagName.toLowerCase();
+
+		if (this.#element.placeholder === undefined)
+			this.#element.placeholder = `Type something...`;
+
+		this.#element.addEventListener(`focus`, Element.#EMPTY_EL_HANDLER);
 
 		this.setToolbar();
 		return this;

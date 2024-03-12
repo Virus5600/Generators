@@ -52,9 +52,19 @@ export default class Formatter extends Element {
 	/**
 	 * The constructor for the {@link Text} class. It accepts two parameters, the `type` and `props`.
 	 *
-	 * @param {Formatter.TYPES} type The type of text formatting to render.
+	 * @param {Formatter.TYPES} type The type of text formatting to render. **Required**
 	 * @param {Object} propsThe properties of the element. This is optional and will default to an empty object if none is provided.
 	 */
 	constructor(type, props = {}) {
+		if (type === undefined || type === null) {
+			throw new Error(`The type of the Formatter element is required.`);
+		}
+
+		props = {
+			...props,
+			el: document.createElement(type),
+		};
+
+		super(props);
 	}
 }

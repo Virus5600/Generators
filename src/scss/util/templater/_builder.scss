@@ -16,10 +16,12 @@
 	& > * {
 		transition: outline .25s, box-shadow .25s, background .25s, opacity .25s;
 
-		&[contenteditable=true]:empty:not(:focus):before {
-			content: attr(placeholder);
-			color: grey;
-			font-style: italic;
+		&[contenteditable=true]:empty{
+			&:not(:focus):before {
+				content: attr(placeholder);
+				color: grey;
+				font-style: italic;
+			}
 		}
 
 		&:focus {
